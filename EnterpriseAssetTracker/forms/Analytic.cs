@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Windows.Forms;
-using PR_TRPO.Scripts;
+using EnterpriseAssetTracker.Scripts;
 using MySql.Data.MySqlClient;
 using LiveCharts;
 using LiveCharts.Wpf;
@@ -10,7 +10,7 @@ using Word = Microsoft.Office.Interop.Word;
 using System.Reflection;
 using LiveCharts.Defaults;
 
-namespace PR_TRPO.Forms
+namespace EnterpriseAssetTracker.Forms
 {
     public partial class Chart : Form
     {
@@ -43,7 +43,7 @@ namespace PR_TRPO.Forms
         {
             List<string> MOL = new List<string>();
             List<int> KOL = new List<int>();
-            Database db = new Database();
+            DatabaseHelper db = new DatabaseHelper();
             DataTable table = new DataTable();
             MySqlDataAdapter adapter = new MySqlDataAdapter();
             MySqlCommand command = new MySqlCommand("SELECT CONCAT(`мол`.`ф`,' ',`мол`.`и`,' ',`мол`.`о`), COUNT(`закрепление`.`id_мол`) FROM `мол` INNER JOIN `закрепление` on `мол`.`id_мол`=`закрепление`.`id_мол` GROUP BY CONCAT(`мол`.`ф`,' ',`мол`.`и`,' ',`мол`.`о`);", db.GetConnection());
@@ -72,7 +72,7 @@ namespace PR_TRPO.Forms
             List<string> god = new List<string>();
             for (int i = 2015; i <= DateTime.Now.Year; i++)
             {
-                Database db = new Database();
+                DatabaseHelper db = new DatabaseHelper();
                 DataTable table = new DataTable();
                 MySqlDataAdapter adapter = new MySqlDataAdapter();
                 MySqlCommand command = new MySqlCommand("SELECT SUM(`фин_стоимость`) FROM `ос` WHERE `дата_принятия` BETWEEN '"+i+ "-01-01' AND '" + (i+1) + "-01-01'", db.GetConnection());
@@ -110,7 +110,7 @@ namespace PR_TRPO.Forms
             List<string> god = new List<string>();
             for (int i = 2015; i <= DateTime.Now.Year; i++)
             {
-                Database db = new Database();
+                DatabaseHelper db = new DatabaseHelper();
                 DataTable table = new DataTable();
                 MySqlDataAdapter adapter = new MySqlDataAdapter();
                 MySqlCommand command = new MySqlCommand("SELECT SUM(`фин_стоимость`) FROM `ос` INNER JOIN `списание` on `ос`.`id_ос`=`списание`.`id_ос` WHERE `дата_списания` BETWEEN '" + i + "-01-01' AND '" + (i + 1) + "-01-01'", db.GetConnection());
@@ -153,7 +153,7 @@ namespace PR_TRPO.Forms
             List<string> god = new List<string>();
             for (int i = 2015; i <= DateTime.Now.Year; i++)
             {
-                Database db = new Database();
+                DatabaseHelper db = new DatabaseHelper();
                 DataTable table = new DataTable();
                 MySqlDataAdapter adapter = new MySqlDataAdapter();
                 MySqlCommand command = new MySqlCommand("SELECT SUM(`сум_затрат`) FROM `ос` INNER JOIN `ремонт` on `ос`.`id_ос`=`ремонт`.`id_ос` WHERE `дата_окончания` BETWEEN '" + i + "-01-01' AND '" + (i + 1) + "-01-01'", db.GetConnection());
@@ -198,7 +198,7 @@ namespace PR_TRPO.Forms
             for (int i = 2015; i <= DateTime.Now.Year; i++)
             {
                 SNG = 0; pos = 0; spisi = 0; SIG = 0;
-                Database db = new Database();
+                DatabaseHelper db = new DatabaseHelper();
                 DataTable table = new DataTable();
                 MySqlDataAdapter adapter = new MySqlDataAdapter();
                 MySqlCommand command = new MySqlCommand("SELECT SUM(`фин_стоимость`) FROM `ос` WHERE `статус`= 1 AND `дата_принятия`< '" + i + "-01-01'", db.GetConnection());
@@ -213,7 +213,7 @@ namespace PR_TRPO.Forms
                     catch { SNG = 0; }
                     
                 }
-                Database db2 = new Database();
+                DatabaseHelper db2 = new DatabaseHelper();
                 DataTable table2 = new DataTable();
                 MySqlDataAdapter adapter2 = new MySqlDataAdapter();
                 MySqlCommand command2 = new MySqlCommand("SELECT SUM(`фин_стоимость`) FROM `ос` WHERE `статус`= 1 AND `дата_принятия` BETWEEN '" + i + "-01-01' AND '" + (i + 1) + "-01-01'", db2.GetConnection());
@@ -227,7 +227,7 @@ namespace PR_TRPO.Forms
                     }
                     catch { pos = 0; }
                 }
-                Database db3 = new Database();
+                DatabaseHelper db3 = new DatabaseHelper();
                 DataTable table3 = new DataTable();
                 MySqlDataAdapter adapter3 = new MySqlDataAdapter();
                 MySqlCommand command3 = new MySqlCommand("SELECT SUM(`фин_стоимость`) FROM `ос` INNER JOIN `списание` on `ос`.`id_ос`=`списание`.`id_ос` WHERE `статус`= 0 AND `дата_списания` BETWEEN '" + i + "-01-01' AND '" + (i + 1) + "-01-01'", db3.GetConnection());
@@ -312,7 +312,7 @@ namespace PR_TRPO.Forms
             dat2 = $"{d1.Day}-{d1.Month}-{d1.Year}";
             dat4 = $"{d1.Year}-{d1.Month}-{d1.Day}";
 
-            Database db = new Database();
+            DatabaseHelper db = new DatabaseHelper();
             DataTable table = new DataTable();
             MySqlDataAdapter adapter = new MySqlDataAdapter();
             MySqlCommand command = new MySqlCommand("SELECT `ос`.`наименование`, `ин`, `дата_принятия` FROM `вид_ос` INNER JOIN `ос` ON `вид_ос`.`id_вида_ос`=`ос`.`id_вида_ос` WHERE `дата_принятия` BETWEEN '" + dat3 + "' AND '" + dat4 + "';", db.GetConnection());
@@ -327,7 +327,7 @@ namespace PR_TRPO.Forms
                 d_ps1.Add(d_na);
             }
 
-            Database db2 = new Database();
+            DatabaseHelper db2 = new DatabaseHelper();
             DataTable table2 = new DataTable();
             MySqlDataAdapter adapter2 = new MySqlDataAdapter();
             MySqlCommand command2 = new MySqlCommand("SELECT `ос`.`наименование`, `ин`, `дата_списания` FROM `списание` INNER JOIN `ос` ON `списание`.`id_ос`=`ос`.`id_ос` INNER JOIN `причины` ON `списание`.`id_причины`=`причины`.`id_причины` WHERE `дата_списания` BETWEEN '" + dat3 + "' AND '" + dat4 + "';", db2.GetConnection());
@@ -424,7 +424,7 @@ namespace PR_TRPO.Forms
         {
             MessageBox.Show("Начало процесса формирования документа!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
             double SNG = 0, pos = 0, spisi = 0, SIG = 0;
-            Database db = new Database();
+            DatabaseHelper db = new DatabaseHelper();
             DataTable table = new DataTable();
             MySqlDataAdapter adapter = new MySqlDataAdapter();
             MySqlCommand command = new MySqlCommand("SELECT SUM(`фин_стоимость`) FROM `ос` WHERE `статус`= 1 AND `дата_принятия`< '" + DateTime.Now.Year + "-01-01'", db.GetConnection());
@@ -434,7 +434,7 @@ namespace PR_TRPO.Forms
             {
                 SNG = Convert.ToDouble(item[0]);
             }
-            Database db2 = new Database();
+            DatabaseHelper db2 = new DatabaseHelper();
             DataTable table2 = new DataTable();
             MySqlDataAdapter adapter2 = new MySqlDataAdapter();
             MySqlCommand command2 = new MySqlCommand("SELECT SUM(`фин_стоимость`) FROM `ос` WHERE `статус`= 1 AND `дата_принятия`> '" + DateTime.Now.Year + "-01-01'", db2.GetConnection());
@@ -444,7 +444,7 @@ namespace PR_TRPO.Forms
             {
                 pos = Convert.ToDouble(item[0]);
             }
-            Database db3 = new Database();
+            DatabaseHelper db3 = new DatabaseHelper();
             DataTable table3 = new DataTable();
             MySqlDataAdapter adapter3 = new MySqlDataAdapter();
             MySqlCommand command3 = new MySqlCommand("SELECT SUM(`фин_стоимость`) FROM `ос` INNER JOIN `списание` on `ос`.`id_ос`=`списание`.`id_ос` WHERE `статус`= 0 AND `дата_списания`> '" + DateTime.Now.Year + "-01-01'", db3.GetConnection());

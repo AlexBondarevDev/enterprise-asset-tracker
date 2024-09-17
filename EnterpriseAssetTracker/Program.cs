@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using PR_TRPO.Forms;
+using EnterpriseAssetTracker.Forms;
 
-namespace PR_TRPO
+namespace EnterpriseAssetTracker
 {
     static class Program
     {
@@ -17,7 +14,7 @@ namespace PR_TRPO
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form_Work_User());
+            Application.Run(new LoadingForm());
         }
     }
 }  

@@ -8,14 +8,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.OleDb;
-using PR_TRPO.Forms;
-using PR_TRPO.Scripts;
+using EnterpriseAssetTracker.Forms;
+using EnterpriseAssetTracker.Scripts;
 using MySql.Data.MySqlClient;
 using Word = Microsoft.Office.Interop.Word;
 using System.IO;
 using System.Reflection;
 
-namespace PR_TRPO.Scripts
+namespace EnterpriseAssetTracker.Scripts
 {
     class WordHelper
     {

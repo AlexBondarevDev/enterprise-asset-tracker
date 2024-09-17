@@ -1,5 +1,5 @@
 ﻿
-namespace PR_TRPO.Forms
+namespace EnterpriseAssetTracker.Forms
 {
     partial class Chart
     {
