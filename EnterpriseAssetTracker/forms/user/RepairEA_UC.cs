@@ -17,13 +17,13 @@ using System.Reflection;
 
 namespace EnterpriseAssetTracker.UsersControlers
 {
-    public partial class RemontOS : UserControl
+    public partial class RepairEA_UC : UserControl
     {
         DatabaseHelper db = new DatabaseHelper();
         List<string> editItem = new List<string>();
         public int pr = 0, pr1 = 0;
         DateTime d = DateTime.Now;
-        public RemontOS()
+        public RepairEA_UC()
         {
             InitializeComponent();
             DatabaseHelper db = new DatabaseHelper();

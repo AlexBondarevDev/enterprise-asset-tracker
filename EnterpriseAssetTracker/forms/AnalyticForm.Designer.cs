@@ -1,7 +1,7 @@
 ﻿
 namespace EnterpriseAssetTracker.Forms
 {
-    partial class Chart
+    partial class AnalyticForm
     {
         /// <summary>
         /// Required designer variable.
@@ -32,7 +32,7 @@ namespace EnterpriseAssetTracker.Forms
             this.components = new System.ComponentModel.Container();
             BunifuAnimatorNS.Animation animation2 = new BunifuAnimatorNS.Animation();
             Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderEdges borderEdges4 = new Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderEdges();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Chart));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AnalyticForm));
             Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderEdges borderEdges3 = new Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderEdges();
             this.cartesianChart1 = new LiveCharts.WinForms.CartesianChart();
             this.bunifuElipse1 = new Bunifu.Framework.UI.BunifuElipse(this.components);

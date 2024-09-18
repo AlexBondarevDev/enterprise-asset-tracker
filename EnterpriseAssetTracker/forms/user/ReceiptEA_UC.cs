@@ -18,12 +18,12 @@ using System.Reflection;
 namespace EnterpriseAssetTracker.UsersControlers
 {
 
-    public partial class PostyplenieOS : UserControl
+    public partial class ReceiptEA_UC : UserControl
     {
         DatabaseHelper db = new DatabaseHelper();
         int PODSCHIT = 0;
         DateTime d = DateTime.Now;
-        public PostyplenieOS()
+        public ReceiptEA_UC()
         {
             InitializeComponent();
             DatabaseHelper db = new DatabaseHelper();

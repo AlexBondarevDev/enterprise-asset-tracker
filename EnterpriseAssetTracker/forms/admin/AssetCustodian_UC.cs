@@ -19,12 +19,12 @@ using MySql.Data.MySqlClient;
 namespace EnterpriseAssetTracker.UsersControlers
 {
 
-    public partial class MOL : UserControl
+    public partial class AssetCustodian_UC : UserControl
     {
         DatabaseHelper db = new DatabaseHelper();
         public int pr = 0;
         List<string> editItem = new List<string>();
-        public MOL()
+        public AssetCustodian_UC()
         {
             InitializeComponent();
             DatabaseHelper db = new DatabaseHelper();

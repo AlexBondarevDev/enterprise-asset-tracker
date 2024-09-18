@@ -4,21 +4,21 @@ using EnterpriseAssetTracker.UsersControlers;
 
 namespace EnterpriseAssetTracker.Forms
 {
-
     public partial class AdminForm : Form
     {
-        public string User { get; set; }
+        public string User;
+
         public AdminForm()
         {
             InitializeComponent();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void AdminForm_Load(object sender, EventArgs e)
         {
             bunifuCustomLabel1.Text += User;
         }
 
-        private void bunifuImageButton2_Click(object sender, EventArgs e)
+        private void BunifuCloseButton_Click(object sender, EventArgs e)
         {
             DialogResult result = MessageBox.Show($"{User}, Вы уверены, что хотите закончить работу?", "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Information); ;
             if (result.ToString() == "Yes")
@@ -26,51 +26,61 @@ namespace EnterpriseAssetTracker.Forms
                 this.Close();
             }
         }
-        private void ButtonMeny_Click(object sender, EventArgs e)
+
+        /// <summary>
+        /// Switch between expanded and collapsed menu positions.
+        /// </summary>
+        private void MenyButton_Click(object sender, EventArgs e)
         {
-            if (sidemenu.Width == 60)
+            if (menuPanel.Width == 60)
             {
-                sidemenu.Visible = false;
-                sidemenu.Width = 240;
-                PanelAnimator2.ShowSync(sidemenu);
-                LogoAnimator.ShowSync(logo);
+                menuPanel.Visible = false;
+                menuPanel.Width = 240;
+                panelAnimator2.ShowSync(menuPanel);
+                logoAnimator.ShowSync(logo);
             }
             else
             {
-                LogoAnimator.HideSync(logo);
-                sidemenu.Visible = false;
-                sidemenu.Width = 60;
-                PanelAnimator1.ShowSync(sidemenu);
+                logoAnimator.HideSync(logo);
+                menuPanel.Visible = false;
+                menuPanel.Width = 60;
+                panelAnimator1.ShowSync(menuPanel);
             }
         }
-        private void addControll(UserControl uc)
+
+        private void BunifuDeletingDataEAButton_Click(object sender, EventArgs e)
         {
-            panel3.Controls.Clear();
-            uc.Dock = DockStyle.Fill;
-            panel3.Controls.Add(uc);
-            uc.BringToFront();
-        }
-        private void bunifuFlatButton1_Click(object sender, EventArgs e)
-        {
-            Udalenie uc = new Udalenie();
-            addControll(uc);
-        }
-        private void bunifuFlatButton2_Click(object sender, EventArgs e)
-        {
-            Spravochniki uc = new Spravochniki();
-            addControll(uc);
+            DeletingDataEA_UC deletingDataEA_UC = new DeletingDataEA_UC();
+            AddControll(deletingDataEA_UC);
         }
 
-        private void bunifuFlatButton3_Click(object sender, EventArgs e)
+        private void BunifuDirectoriesButton_Click(object sender, EventArgs e)
         {
-            MOL uc = new MOL();
-            addControll(uc);
+            Directories_UC directories_UC = new Directories_UC();
+            AddControll(directories_UC);
         }
 
-        private void bunifuFlatButton4_Click(object sender, EventArgs e)
+        private void BunifuAssetCustodianButton_Click(object sender, EventArgs e)
         {
-            Avtorizacia uc = new Avtorizacia();
-            addControll(uc);
+            AssetCustodian_UC assetCustodian_UC = new AssetCustodian_UC();
+            AddControll(assetCustodian_UC);
+        }
+
+        private void BunifuEditingLoginButton_Click(object sender, EventArgs e)
+        {
+            EditingLogin_UC editingLogin_UC = new EditingLogin_UC();
+            AddControll(editingLogin_UC);
+        }
+
+        /// <summary>
+        /// Adding user сontrols to the work panel.
+        /// </summary>
+        private void AddControll(UserControl userControl)
+        {
+            workPanel.Controls.Clear();
+            userControl.Dock = DockStyle.Fill;
+            workPanel.Controls.Add(userControl);
+            userControl.BringToFront();
         }
     }
 }

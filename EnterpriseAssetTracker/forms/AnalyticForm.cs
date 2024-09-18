@@ -12,10 +12,10 @@ using LiveCharts.Defaults;
 
 namespace EnterpriseAssetTracker.Forms
 {
-    public partial class Chart : Form
+    public partial class AnalyticForm : Form
     {
         public int ID_User;
-        public Chart()
+        public AnalyticForm()
         {
             InitializeComponent();
             DateTime d = DateTime.Now;

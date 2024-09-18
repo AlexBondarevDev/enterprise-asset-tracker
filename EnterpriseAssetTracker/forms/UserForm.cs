@@ -1,25 +1,24 @@
 ﻿using System;
 using System.Windows.Forms;
 using EnterpriseAssetTracker.UsersControlers;
-using EnterpriseAssetTracker.Forms;
 
 namespace EnterpriseAssetTracker.Forms
 {
-    
     public partial class UserForm : Form
     {
-        public string User { get; set; }
+        public string User;
+
         public UserForm()
         {
             InitializeComponent();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void UserForm_Load(object sender, EventArgs e)
         {
             bunifuCustomLabel1.Text += User;
         }
 
-        private void bunifuImageButton2_Click(object sender, EventArgs e)
+        private void BunifuCloseButton_Click(object sender, EventArgs e)
         {
             DialogResult result = MessageBox.Show($"{User}, Вы уверены, что хотите закончить работу?", "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Information); ;
             if (result.ToString() == "Yes")
@@ -27,56 +26,67 @@ namespace EnterpriseAssetTracker.Forms
                 this.Close();
             }
         }
-        private void ButtonMeny_Click(object sender, EventArgs e)
+
+        /// <summary>
+        /// Switch between expanded and collapsed menu positions.
+        /// </summary>
+        private void MenyButton_Click(object sender, EventArgs e)
         {
-            if (sidemenu.Width==60)
+            if (menuPanel.Width == 60)
             {
-                sidemenu.Visible = false;
-                sidemenu.Width = 240;
-                PanelAnimator2.ShowSync(sidemenu);
-                LogoAnimator.ShowSync(logo);
+                menuPanel.Visible = false;
+                menuPanel.Width = 240;
+                panelAnimator2.ShowSync(menuPanel);
+                logoAnimator.ShowSync(logo);
             }
             else
             {
-                LogoAnimator.HideSync(logo);
-                sidemenu.Visible = false;
-                sidemenu.Width = 60;
-                PanelAnimator1.ShowSync(sidemenu);
+                logoAnimator.HideSync(logo);
+                menuPanel.Visible = false;
+                menuPanel.Width = 60;
+                panelAnimator1.ShowSync(menuPanel);
             }
         }
-        private void addControll(UserControl uc)
+
+        private void BunifuAnalyticButton_Click(object sender, EventArgs e)
         {
-            panel3.Controls.Clear();
-            uc.Dock = DockStyle.Fill;
-            panel3.Controls.Add(uc);
-            uc.BringToFront();
-        }
-        private void bunifuFlatButton1_Click(object sender, EventArgs e)
-        {
-            PostyplenieOS uc = new PostyplenieOS();
-            addControll(uc);
-        }
-        private void bunifuFlatButton2_Click(object sender, EventArgs e)
-        {
-            RemontOS uc = new RemontOS();
-            addControll(uc);
+            AnalyticForm analyticForm = new AnalyticForm();
+            analyticForm.Show();
         }
 
-        private void bunifuFlatButton3_Click(object sender, EventArgs e)
+        private void BunifuReceiptEAButton_Click(object sender, EventArgs e)
         {
-            SpisanieOS uc = new SpisanieOS();
-            addControll(uc);
+            ReceiptEA_UC receiptEA_UC = new ReceiptEA_UC();
+            AddControll(receiptEA_UC);
         }
 
-        private void bunifuFlatButton4_Click(object sender, EventArgs e)
+        private void BunifuRepairEAButton_Click(object sender, EventArgs e)
         {
-            Zakreplenie uc = new Zakreplenie();
-            addControll(uc);
+            RepairEA_UC repairEA_UC = new RepairEA_UC();
+            AddControll(repairEA_UC);
         }
-        private void bunifuFlatButton5_Click(object sender, EventArgs e)
+
+        private void BunifuWriteOffEAButton_Click(object sender, EventArgs e)
         {
-            Chart f = new Chart();
-            f.Show();
+            WriteOffEA_UC writeOffEA_UC = new WriteOffEA_UC();
+            AddControll(writeOffEA_UC);
         }
-    }   
+
+        private void BunifuAssignmentEAButton_Click(object sender, EventArgs e)
+        {
+            AssignmentEA_UC assignmentEA_UC = new AssignmentEA_UC();
+            AddControll(assignmentEA_UC);
+        }
+
+        /// <summary>
+        /// Adding user сontrols to the work panel.
+        /// </summary>
+        private void AddControll(UserControl userControl)
+        {
+            workPanel.Controls.Clear();
+            userControl.Dock = DockStyle.Fill;
+            workPanel.Controls.Add(userControl);
+            userControl.BringToFront();
+        }
+    }
 }

@@ -15,13 +15,13 @@ using Word = Microsoft.Office.Interop.Word;
 
 namespace EnterpriseAssetTracker.UsersControlers
 {
-    public partial class SpisanieOS : UserControl
+    public partial class WriteOffEA_UC : UserControl
     {
         DatabaseHelper db = new DatabaseHelper();
         List<string> editItem = new List<string>();
         public int pr = 0, pr1 = 0; DateTime d = DateTime.Now;
 
-        public SpisanieOS()
+        public WriteOffEA_UC()
         {
             InitializeComponent();
             DatabaseHelper db = new DatabaseHelper();

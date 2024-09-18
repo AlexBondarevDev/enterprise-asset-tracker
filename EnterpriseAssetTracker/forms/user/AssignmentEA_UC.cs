@@ -16,13 +16,13 @@ using System.Reflection;
 
 namespace EnterpriseAssetTracker.UsersControlers
 {
-    public partial class Zakreplenie : UserControl
+    public partial class AssignmentEA_UC : UserControl
     {
         DatabaseHelper db = new DatabaseHelper();
         DateTime d = DateTime.Now;
         public int pr = 0;
         List<string> editItem = new List<string>();
-        public Zakreplenie()
+        public AssignmentEA_UC()
         {
             InitializeComponent();
             DatabaseHelper db = new DatabaseHelper();
