@@ -73,7 +73,7 @@ namespace EnterpriseAssetTracker.Forms
         public string GetAccessСode()
         {
             string AccessСode = null;
-            string query = "SELECT value FROM `accessсode`";
+            string query = "SELECT value FROM access_code";
 
             try
             {

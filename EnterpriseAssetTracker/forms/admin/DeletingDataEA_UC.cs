@@ -1,299 +1,333 @@
 ﻿using System;
-using System.IO;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Data.OleDb;
-using EnterpriseAssetTracker.Forms;
 using EnterpriseAssetTracker.Scripts;
-using Word = Microsoft.Office.Interop.Word;
 using MySql.Data.MySqlClient;
-
-
 
 namespace EnterpriseAssetTracker.UsersControlers
 {
-
     public partial class DeletingDataEA_UC : UserControl
     {
-        DatabaseHelper db = new DatabaseHelper();
-        public int pr = 0;
-        List<string> editItem = new List<string>();
+        DatabaseHelper dbHelper = new DatabaseHelper();
+        bool isSelectEditRecord;
+        (int, int) idRecordAndIdEAForEdit;
+
         public DeletingDataEA_UC()
         {
             InitializeComponent();
-            DatabaseHelper db = new DatabaseHelper();
-            DataTable table = new DataTable();
-            MySqlDataAdapter adapter = new MySqlDataAdapter();
-            MySqlCommand command = new MySqlCommand(db.selectOS_so_spis, db.GetConnection());
-            adapter.SelectCommand = command;
-            adapter.Fill(table);
-            bunifuDataGridView1.DataSource = table.DefaultView;
-            bunifuDataGridView1.Columns[0].Visible = false;
-
+            LoadEA_on_writeoff_Data();
         }
 
-        private void bunifuButton2_Click(object sender, EventArgs e)    //КНОПКА УДАЛЕНИЯ
+
+        private void LoadEA_on_writeoff_Data()
         {
-            if (pr == 0 || pr == null)
+            LoadDataInMainDataGridView(dbHelper.selectEA_on_writeoff);
+
+            bunifuMainDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+
+            bunifuMainDataGridView.Columns[0].Visible = false;
+            bunifuMainDataGridView.Columns[1].Visible = true;
+            bunifuMainDataGridView.Columns[2].Visible = true;
+        }
+
+        private void LoadRepairEA_Data()
+        {
+            LoadDataInMainDataGridView(dbHelper.selectRepairEA);
+
+            bunifuMainDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+
+            bunifuMainDataGridView.Columns[0].Visible = false;
+            bunifuMainDataGridView.Columns[1].Visible = false;
+            bunifuMainDataGridView.Columns[2].Visible = false;
+        }
+
+        private void LoadWriteOffEA_Data()
+        {
+            LoadDataInMainDataGridView(dbHelper.selectWriteOffEA);
+
+            bunifuMainDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+            bunifuMainDataGridView.Columns[0].Visible = false;
+            bunifuMainDataGridView.Columns[1].Visible = false;
+            bunifuMainDataGridView.Columns[2].Visible = false;
+        }
+
+
+        public void LoadDataInMainDataGridView(string query)
+        {
+            using (var connection = dbHelper.GetConnection())
             {
-                MessageBox.Show("Не выбрана запись для удаления!", "Внимание!");
-            }
-            else
-            {
-                if (pr == 0 || pr == null)
+                connection.Open();
+
+                using (var command = new MySqlCommand(query, connection))
                 {
-                    MessageBox.Show("Не выбран сотрудник для удаления!", "Внимание!");
-                }
-                else
-                {
-                    DialogResult result = MessageBox.Show($"Вы уверены, что хотите удалить запись?", "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Information); ;
-                    if (result.ToString() == "Yes")
+                    using (var adapter = new MySqlDataAdapter(command))
                     {
-                        DatabaseHelper db = new DatabaseHelper();
                         DataTable table = new DataTable();
-                        MySqlDataAdapter adapter = new MySqlDataAdapter();
-                        MySqlCommand command = new MySqlCommand();
-                        db.openConnection();
-                        if (bunifuCheckBox1.Checked == true)
-                        {
-                            MySqlCommand command2 = new MySqlCommand("DELETE FROM `ос` WHERE `ос`.`id_ос` = " + editItem[0] + ";", db.GetConnection());
-                            if (command2.ExecuteNonQuery() == 1)
-                            {
-                                MessageBox.Show("Запись о поступлении ОС удалена.", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-                                pr = 0;
-                                queri = db.selectAvtorisaciaVse;
-                                command = new MySqlCommand(db.selectOS_so_spis, db.GetConnection());
-                                adapter.SelectCommand = command;
-                                adapter.Fill(table);
-                                bunifuDataGridView1.DataSource = table.DefaultView;
-                                bunifuDataGridView1.Columns[0].Visible = false; bunifuDataGridView1.Columns[1].Visible = true; bunifuDataGridView1.Columns[2].Visible = true;
-                                bunifuDataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
-                                db.closeConnection(); bunifuDataGridView2.Visible = false;
-                            }
-                            else
-                            {
-                                MessageBox.Show("Ошибка удаления! Попробуете ещё раз или перезагрузите программу.", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                pr = 0;
-                            }   
-                        }
-                        else if (bunifuCheckBox2.Checked == true)
-                        {
-                            MySqlCommand command2 = new MySqlCommand("DELETE FROM `ремонт` WHERE `ремонт`.`id_р` = " + editItem[0] + ";", db.GetConnection());
-                            if (command2.ExecuteNonQuery() == 1)
-                            {
-                                MessageBox.Show("Запись о ремонте ОС удалена.", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-                                pr = 0;
-                                queri = db.selectAvtorisaciaEko;
-                                command = new MySqlCommand(db.selectREM_OS, db.GetConnection());
-                                adapter.SelectCommand = command;
-                                adapter.Fill(table);
-                                bunifuDataGridView1.DataSource = table.DefaultView;
-                                bunifuDataGridView1.Columns[0].Visible = false; bunifuDataGridView1.Columns[1].Visible = false; bunifuDataGridView1.Columns[2].Visible = false;
-                                bunifuDataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
-                                db.closeConnection(); bunifuDataGridView2.Visible = false;
-                            }
-                            else
-                            {
-                                MessageBox.Show("Ошибка удаления! Попробуете ещё раз или перезагрузите программу.", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                pr = 0;
-                            }   
-                        }
-                        else if (bunifuCheckBox3.Checked == true)
-                        {
-                            MySqlCommand command2 = new MySqlCommand("DELETE FROM `списание` WHERE `списание`.`id_спис` = " + editItem[0] + ";", db.GetConnection());
-                            if (command2.ExecuteNonQuery() == 1)
-                            {
-                                MessageBox.Show("Запись о списании ОС удалена.", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-                                pr = 0;
-                                queri = db.selectAvtorisaciaAdmin;
-                                command = new MySqlCommand(db.selectSPIS_OS, db.GetConnection());
-                                adapter.SelectCommand = command;
-                                adapter.Fill(table);
-                                bunifuDataGridView1.DataSource = table.DefaultView;
-                                bunifuDataGridView1.Columns[0].Visible = false; bunifuDataGridView1.Columns[1].Visible = false; bunifuDataGridView1.Columns[2].Visible = false;
-                                bunifuDataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-                                db.closeConnection(); bunifuDataGridView2.Visible = false;
-
-                                DatabaseHelper db2 = new DatabaseHelper();
-                                MySqlCommand command5 = new MySqlCommand("UPDATE `ос` SET `статус` = '1' WHERE `ос`.`id_ос` = " + editItem[1] + ";", db2.GetConnection());
-                                db2.openConnection();
-                                if (command5.ExecuteNonQuery() == 1)
-                                {
-                                    MessageBox.Show("Статус учёта ОС обновлён.", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                }
-                                else
-                                {
-                                    MessageBox.Show("Ошибка обновления статуса! Попробуете ещё раз или перезагрузите программу.", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                }
-                                db2.closeConnection();
-
-                                DatabaseHelper db4 = new DatabaseHelper();
-                                MySqlCommand command6 = new MySqlCommand("INSERT INTO `закрепление` (`id_ос`, `id_мол`) VALUES ('" + editItem[1] + "', '1');", db4.GetConnection());
-                                db4.openConnection();
-                                if (command6.ExecuteNonQuery() == 1)
-                                {
-                                    MessageBox.Show("Запись о закреплении ОС за МОЛ добавлена. Основное средство закреплено за директором.", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                }
-                                else
-                                {
-                                    MessageBox.Show("Ошибка добавления записи о закреплении! Попробуете ещё раз или перезагрузите программу.", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                }
-                                db4.closeConnection();
-                            }
-                            else
-                            {
-                                MessageBox.Show("Ошибка удаления! Попробуете ещё раз или перезагрузите программу.", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                pr = 0;
-                            } 
-                        }
+                        adapter.Fill(table);
+                        bunifuMainDataGridView.DataSource = table.DefaultView;
                     }
                 }
             }
         }
-        char key;
 
-        private void bunifuDataGridView1_CellClick_1(object sender, DataGridViewCellEventArgs e)
+        public void LoadDataInEditRecordDataGridView(string query)
         {
+            using (var connection = dbHelper.GetConnection())
+            {
+                connection.Open();
+
+                using (var command = new MySqlCommand(query, connection))
+                {
+                    using (var adapter = new MySqlDataAdapter(command))
+                    {
+                        DataTable table = new DataTable();
+                        adapter.Fill(table);
+                        bunifuEditRecordDataGridView.DataSource = table.DefaultView;
+                        bunifuEditRecordDataGridView.Visible = true;
+                    }
+                }
+            }
+        }
+
+
+
+        private void bunifuDeletingButton_Click(object sender, EventArgs e)
+        {
+            if (!isSelectEditRecord)
+            {
+                MessageBox.Show("Не выбрана запись для удаления!", "Внимание!");
+                return;
+            }
+
+            DialogResult result = MessageBox.Show($"Вы уверены, что хотите удалить запись?", "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Information); ;
+            if (result.ToString() == "No") return;
+            
+
+            if (bunifu_EA_on_writeoff_CheckBox.Checked == true)
+            {
+                DeleteRecord(new MySqlCommand("DELETE FROM `enterprise_assets` WHERE `enterprise_assets`.`id_enterprise_assets` = @idDeletedRecord;", dbHelper.GetConnection()));
+                LoadEA_on_writeoff_Data();
+            }
+            else if (bunifuRepairEA_CheckBox.Checked == true)
+            {
+                DeleteRecord(new MySqlCommand("DELETE FROM `repair` WHERE `repair`.`id_repair` = @idDeletedRecord;", dbHelper.GetConnection()));
+                LoadRepairEA_Data();
+            }
+            else
+            {
+                DeleteRecord(new MySqlCommand("DELETE FROM `writeoff_ea` WHERE `writeoff_ea`.`id_writeoff_ea` = @idDeletedRecord;", dbHelper.GetConnection()));
+                RestoringRelationsAfterWriteoff();
+                LoadWriteOffEA_Data();
+            }
+        }
+
+        private void DeleteRecord(MySqlCommand command)
+        {
+            dbHelper.openConnection();
             try
             {
-                pr = 1;
-                editItem.Clear();
-                for (int i = 0; i < bunifuDataGridView1.ColumnCount; i++)
+                using (var connection = dbHelper.GetConnection())
                 {
-                    editItem.Add(bunifuDataGridView1.Rows[e.RowIndex].Cells[i].Value.ToString());
+                    command.Parameters.AddWithValue("@idDeletedRecord", idRecordAndIdEAForEdit.Item1);
+
+                    if (command.ExecuteNonQuery() == 1)
+                    {
+                        MessageBox.Show("Запись успешно удалена!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Ошибка удаления! Попробуете ещё раз или перезагрузите программу!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+
+                    isSelectEditRecord = false;
+                    bunifuEditRecordDataGridView.Visible = false;
                 }
-                if (bunifuCheckBox1.Checked == true)
-                {
-                    DatabaseHelper db = new DatabaseHelper();
-                    DataTable table = new DataTable();
-                    MySqlDataAdapter adapter = new MySqlDataAdapter();
-                    MySqlCommand command = new MySqlCommand("SELECT `ос`.`id_ос`, `ос`.`наименование` AS `Наименование ОС`, `ин` AS `Инвентарный номер`, `вид_ос`.`наименование` AS `Вид ОС`, `дата_принятия` AS `Дата принятия`, `пер_стоимость` AS `Первоначальная стоимость: руб.`, `спи` AS `СПИ: лет`, `норма_ндс` AS `Норма НДС: %`, `сумма_ндс` AS `Сумма НДС: руб.`, `год_сум_а` AS `ГСА: руб.`, `списание`.`дата_списания` AS `Дата списания` , `фин_стоимость` AS `Финальная стоимость: руб.`FROM `вид_ос` INNER JOIN (`ос` LEFT JOIN `списание` ON `ос`.`id_ос`=`списание`.`id_ос`) ON `вид_ос`.`id_вида_ос`=`ос`.`id_вида_ос` WHERE `ос`.`id_ос`=" + editItem[0] + ";", db.GetConnection());
-                    adapter.SelectCommand = command;
-                    adapter.Fill(table);
-                    bunifuDataGridView2.DataSource = table.DefaultView;
-                    bunifuDataGridView2.Columns[0].Visible = false; bunifuDataGridView2.Columns[1].Visible = true; bunifuDataGridView2.Columns[2].Visible = true;
-                    bunifuDataGridView2.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
-                }
-                else if (bunifuCheckBox2.Checked == true)
-                {
-                    DatabaseHelper db = new DatabaseHelper();
-                    DataTable table = new DataTable();
-                    MySqlDataAdapter adapter = new MySqlDataAdapter();
-                    MySqlCommand command = new MySqlCommand("SELECT `id_р`, `ос`.`наименование` AS `Наименование ОС`, `ин` AS `Инвентарный номер`, `вид_р`.`наименование` AS `Вид ремонта`, `дата_начала` AS `Дата начала ремонта`, `дата_окончания` AS `Дата окончания ремонта`, `сум_затрат` AS `Сумма затрат на ремонт: руб.` FROM `ремонт` INNER JOIN `ос` ON `ремонт`.`id_ос`=`ос`.`id_ос` INNER JOIN `вид_р` ON `ремонт`.`id_вида_р`=`вид_р`.`id_вида_р` WHERE `ремонт`.`id_р`=" + editItem[0] + ";", db.GetConnection());
-                    adapter.SelectCommand = command;
-                    adapter.Fill(table);
-                    bunifuDataGridView2.DataSource = table.DefaultView;
-                    bunifuDataGridView2.Columns[0].Visible = false; bunifuDataGridView2.Columns[1].Visible = true; bunifuDataGridView2.Columns[2].Visible = true;
-                    bunifuDataGridView2.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
-                }
-                else if(bunifuCheckBox3.Checked == true)
-                {
-                    DatabaseHelper db = new DatabaseHelper();
-                    DataTable table = new DataTable();
-                    MySqlDataAdapter adapter = new MySqlDataAdapter();
-                    MySqlCommand command = new MySqlCommand("SELECT `id_спис`, `ос`.`id_ос`, `причины`.`id_причины`, `ос`.`наименование` AS `Наименование ОС`, `ин` AS `Инвентарный номер`, `причины`.`наименование` AS `Причина списания`, `дата_списания` AS `Дата списания` FROM `списание` INNER JOIN `ос` ON `списание`.`id_ос`=`ос`.`id_ос` INNER JOIN `причины` ON `списание`.`id_причины`=`причины`.`id_причины` WHERE `списание`.`id_спис`=" + editItem[0] + ";", db.GetConnection());
-                    adapter.SelectCommand = command;
-                    adapter.Fill(table);
-                    bunifuDataGridView2.DataSource = table.DefaultView;
-                    bunifuDataGridView2.Columns[0].Visible = false; bunifuDataGridView2.Columns[1].Visible = false; bunifuDataGridView2.Columns[2].Visible = false;
-                    bunifuDataGridView2.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-                }
-                bunifuDataGridView2.Visible = true;
             }
             catch
             {
-                pr = 0;
+                MessageBox.Show("Связь с базой данных потеряна! Проверьте соединение с сетью и перезапустите программу!", "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                dbHelper.closeConnection();
             }
         }
 
-        string queri = "";
-        private void bunifuCheckBox1_CheckedChanged(object sender, Bunifu.UI.WinForms.BunifuCheckBox.CheckedChangedEventArgs e)
+        /// <summary>
+        /// When deleting a record of writing off an EA, it is also necessary to restore the status of the EA as unwritten off, as well as the record of assignment to an asset custodian.
+        /// </summary>
+        private void RestoringRelationsAfterWriteoff()
         {
-            if (bunifuCheckBox1.Checked == true)
+            try
             {
-                bunifuCheckBox2.Checked = false; bunifuCheckBox3.Checked = false;
-                queri = db.selectAvtorisaciaVse;
-                DataTable table = new DataTable();
-                MySqlDataAdapter adapter = new MySqlDataAdapter();
-                MySqlCommand command = new MySqlCommand(db.selectOS_so_spis, db.GetConnection());
-                adapter.SelectCommand = command;
-                adapter.Fill(table);
-                bunifuDataGridView1.DataSource = table.DefaultView;
-                bunifuDataGridView1.Columns[0].Visible = false; bunifuDataGridView1.Columns[1].Visible = true; bunifuDataGridView1.Columns[2].Visible = true;
-                bunifuDataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+                dbHelper.openConnection();
+
+                string updateQuery = "UPDATE `enterprise_assets` SET `status` = 1 WHERE `id_enterprise_assets` = @id";
+                MySqlCommand command = new MySqlCommand(updateQuery, dbHelper.GetConnection());
+                command.Parameters.AddWithValue("@id", idRecordAndIdEAForEdit.Item2);
+
+                if (command.ExecuteNonQuery() == 1)
+                {
+                    MessageBox.Show("Статус учёта ОС обновлён!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show("Ошибка обновления статуса! Попробуйте ещё раз или перезагрузите программу!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+
+                string insertQuery = "INSERT INTO `assignment_ea` (`id_enterprise_assets`, `id_asset_custodian`) VALUES (@id, 1)";
+                command = new MySqlCommand(insertQuery, dbHelper.GetConnection());
+                command.Parameters.AddWithValue("@id", idRecordAndIdEAForEdit.Item2);
+
+                if (command.ExecuteNonQuery() == 1)
+                {
+                    MessageBox.Show("Запись о закреплении ОС за МОЛ добавлена! Основное средство закреплено за директором!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show("Ошибка добавления записи о закреплении! Попробуйте ещё раз или перезагрузите программу!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Произошла ошибка: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                dbHelper.closeConnection();
             }
         }
 
-        private void bunifuCheckBox2_CheckedChanged(object sender, Bunifu.UI.WinForms.BunifuCheckBox.CheckedChangedEventArgs e)
+
+
+        private void BunifuMainDataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (bunifuCheckBox2.Checked == true)
+            try
             {
-                bunifuCheckBox1.Checked = false; bunifuCheckBox3.Checked = false;
-                queri = db.selectAvtorisaciaEko;
-                DataTable table = new DataTable();
-                MySqlDataAdapter adapter = new MySqlDataAdapter();
-                MySqlCommand command = new MySqlCommand(db.selectREM_OS, db.GetConnection());
-                adapter.SelectCommand = command;
-                adapter.Fill(table);
-                bunifuDataGridView1.DataSource = table.DefaultView;
-                bunifuDataGridView1.Columns[0].Visible = false; bunifuDataGridView1.Columns[1].Visible = false; bunifuDataGridView1.Columns[2].Visible = false;
-                bunifuDataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+                isSelectEditRecord = true;
+
+                idRecordAndIdEAForEdit.Item1 = Convert.ToInt32(bunifuMainDataGridView.Rows[e.RowIndex].Cells[0].Value);
+
+                if (int.TryParse(bunifuMainDataGridView.Rows[e.RowIndex].Cells[1].Value.ToString(), out int idEA))
+                {
+                    idRecordAndIdEAForEdit.Item2 = idEA;
+                }
+                else
+                {
+                    idRecordAndIdEAForEdit.Item2 = -1;
+                }
+
+                if (bunifu_EA_on_writeoff_CheckBox.Checked == true)
+                {
+                    LoadDataInEditRecordDataGridView(dbHelper.selectEA_on_writeoff + "WHERE `enterprise_assets`.`id_enterprise_assets` = " + idRecordAndIdEAForEdit.Item1);
+
+                    bunifuEditRecordDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+                    bunifuEditRecordDataGridView.Columns[0].Visible = false;
+                    bunifuEditRecordDataGridView.Columns[1].Visible = true;
+                    bunifuEditRecordDataGridView.Columns[2].Visible = true;
+                }
+                else if (bunifuRepairEA_CheckBox.Checked == true)
+                {
+                    LoadDataInEditRecordDataGridView(dbHelper.selectRepairEA + "WHERE `repair`.`id_repair` = " + idRecordAndIdEAForEdit.Item1);
+
+                    bunifuEditRecordDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+                    bunifuEditRecordDataGridView.Columns[0].Visible = false;
+                    bunifuEditRecordDataGridView.Columns[1].Visible = false;
+                    bunifuEditRecordDataGridView.Columns[2].Visible = false;
+                }
+                else if (bunifuWriteOffEA_CheckBox.Checked == true)
+                {
+                    LoadDataInEditRecordDataGridView(dbHelper.selectWriteOffEA + "WHERE `writeoff_ea`.`id_writeoff_ea` = " + idRecordAndIdEAForEdit.Item1);
+
+                    bunifuEditRecordDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                    bunifuEditRecordDataGridView.Columns[0].Visible = false;
+                    bunifuEditRecordDataGridView.Columns[1].Visible = false;
+                    bunifuEditRecordDataGridView.Columns[2].Visible = false;
+                }
+
+                bunifuEditRecordDataGridView.Visible = true;
+            }
+            catch
+            {
+                isSelectEditRecord = false;
+                idRecordAndIdEAForEdit = (-1,-1);
+                bunifuEditRecordDataGridView.Visible = false;
             }
         }
 
-        private void bunifuCheckBox3_CheckedChanged(object sender, Bunifu.UI.WinForms.BunifuCheckBox.CheckedChangedEventArgs e)
+
+
+        private void Bunifu_EA_on_writeoff_CheckBox_CheckedChanged(object sender, Bunifu.UI.WinForms.BunifuCheckBox.CheckedChangedEventArgs e)
         {
-            if (bunifuCheckBox3.Checked == true)
+            if (bunifu_EA_on_writeoff_CheckBox.Checked == true)
             {
-                bunifuCheckBox1.Checked = false; bunifuCheckBox2.Checked = false;
-                queri = db.selectAvtorisaciaAdmin;
-                DataTable table = new DataTable();
-                MySqlDataAdapter adapter = new MySqlDataAdapter();
-                MySqlCommand command = new MySqlCommand(db.selectSPIS_OS, db.GetConnection());
-                adapter.SelectCommand = command;
-                adapter.Fill(table);
-                bunifuDataGridView1.DataSource = table.DefaultView;
-                bunifuDataGridView1.Columns[0].Visible = false; bunifuDataGridView1.Columns[1].Visible = false; bunifuDataGridView1.Columns[2].Visible = false;
-                bunifuDataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                bunifu_EA_on_writeoff_CheckBox.Enabled = false;
+                bunifuRepairEA_CheckBox.Enabled = true;
+                bunifuWriteOffEA_CheckBox.Enabled = true;
+                bunifuRepairEA_CheckBox.Checked = false;
+                bunifuWriteOffEA_CheckBox.Checked = false;
+
+                LoadEA_on_writeoff_Data();
+
+                bunifuEditRecordDataGridView.Visible = false;
+                isSelectEditRecord = false;
             }
         }
 
-        private void bunifuTextBox15_KeyUp(object sender, KeyEventArgs e)
+        private void BunifuRepairEA_CheckBox_CheckedChanged(object sender, Bunifu.UI.WinForms.BunifuCheckBox.CheckedChangedEventArgs e)
         {
-            for (int i = 0; i < bunifuDataGridView1.RowCount; i++)
+            if (bunifuRepairEA_CheckBox.Checked == true)
             {
-                bunifuDataGridView1.Rows[i].Selected = false;
-                for (int j = 0; j < bunifuDataGridView1.ColumnCount; j++)
-                    if (bunifuDataGridView1.Rows[i].Cells[j].Value != null)
-                        if (bunifuDataGridView1.Rows[i].Cells[j].Value.ToString().ToLower().Contains(bunifuTextBox15.Text.ToLower()))
+                bunifu_EA_on_writeoff_CheckBox.Enabled = true;
+                bunifuRepairEA_CheckBox.Enabled = false;
+                bunifuWriteOffEA_CheckBox.Enabled = true;
+                bunifu_EA_on_writeoff_CheckBox.Checked = false;
+                bunifuWriteOffEA_CheckBox.Checked = false;
+
+                LoadRepairEA_Data();
+
+                bunifuEditRecordDataGridView.Visible = false;
+                isSelectEditRecord = false;
+            }
+        }
+
+        private void BunifuWriteOffEA_CheckBox_CheckedChanged(object sender, Bunifu.UI.WinForms.BunifuCheckBox.CheckedChangedEventArgs e)
+        {
+            if (bunifuWriteOffEA_CheckBox.Checked == true)
+            {
+                bunifu_EA_on_writeoff_CheckBox.Enabled = true;
+                bunifuRepairEA_CheckBox.Enabled = true;
+                bunifuWriteOffEA_CheckBox.Enabled = false;
+                bunifuRepairEA_CheckBox.Checked = false;
+                bunifu_EA_on_writeoff_CheckBox.Checked = false;
+
+                LoadWriteOffEA_Data();
+
+                bunifuEditRecordDataGridView.Visible = false;
+                isSelectEditRecord = false;
+            }
+        }
+
+
+
+        private void BunifuSearchTextBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            for (int i = 0; i < bunifuMainDataGridView.RowCount; i++)
+            {
+                bunifuMainDataGridView.Rows[i].Selected = false;
+                for (int j = 0; j < bunifuMainDataGridView.ColumnCount; j++)
+                    if (bunifuMainDataGridView.Rows[i].Cells[j].Value != null)
+                        if (bunifuMainDataGridView.Rows[i].Cells[j].Value.ToString().ToLower().Contains(bunifuSearchTextBox.Text.ToLower()))
                         {
-                            bunifuDataGridView1.Rows[i].Selected = true;
+                            bunifuMainDataGridView.Rows[i].Selected = true;
                             break;
                         }
             }
-            if (bunifuTextBox15.Text == "")
+            if (bunifuSearchTextBox.Text == "")
             {
-                bunifuDataGridView1.ClearSelection();
+                bunifuMainDataGridView.ClearSelection();
             }
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
