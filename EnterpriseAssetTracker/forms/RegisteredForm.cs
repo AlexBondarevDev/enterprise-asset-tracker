@@ -170,7 +170,7 @@ namespace EnterpriseAssetTracker.Forms
 
         public List<string> GetUsers()
         {
-            List<string> userList = dbHelper.GetUsers();
+            List<string> userList = dbHelper.GetUsers_fieldName();
 
             return userList ?? new List<string>();
         }

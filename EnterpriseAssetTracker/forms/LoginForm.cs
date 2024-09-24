@@ -29,7 +29,7 @@ namespace EnterpriseAssetTracker.Forms
         /// </summary>
         public List<string> GetUsers()
         {
-            List<string> userList = dbHelper.GetUsers();
+            List<string> userList = dbHelper.GetUsers_fieldName();
 
             if (userList == null)
             {

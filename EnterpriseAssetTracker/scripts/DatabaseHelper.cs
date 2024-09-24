@@ -1,5 +1,6 @@
 ﻿using MySql.Data.MySqlClient;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Windows.Forms;
 
 namespace EnterpriseAssetTracker.Scripts
@@ -27,10 +28,36 @@ namespace EnterpriseAssetTracker.Scripts
             return connection;
         }
 
-        public List<string> GetUsers()
+
+
+        public List<string> GetUsers_fieldName()
         {
-            string query = "SELECT name_economist FROM authorization ORDER BY name_economist ASC";
-            List<string> userList = new List<string>();
+            return GetDirectories("SELECT name_economist FROM authorization ORDER BY name_economist ASC");
+        }
+
+        public List<string> GetTypesEA_fieldName(string optionalWHERE)
+        {
+            return GetDirectories($"SELECT `name` FROM `types_ea` {optionalWHERE}");
+        }
+
+        public List<string> GetPositions_fieldName(string optionalWHERE)
+        {
+            return GetDirectories($"SELECT `name` FROM `positions` {optionalWHERE}");
+        }
+
+        public List<string> GetTypesRepair_fieldName(string optionalWHERE)
+        {
+            return GetDirectories($"SELECT `name` FROM `types_repair` {optionalWHERE}");
+        }
+
+        public List<string> GetReasonsWriteoff_fieldName(string optionalWHERE)
+        {
+            return GetDirectories($"SELECT `name` FROM `reasons_writeoff` {optionalWHERE}");
+        }
+
+        private List<string> GetDirectories(string query)
+        {
+            List<string> recordList = new List<string>();
 
             try
             {
@@ -43,7 +70,7 @@ namespace EnterpriseAssetTracker.Scripts
                         {
                             while (reader.Read())
                             {
-                                userList.Add(reader.GetString(0));
+                                recordList.Add(reader.GetString(0));
                             }
                         }
                     }
@@ -56,14 +83,8 @@ namespace EnterpriseAssetTracker.Scripts
                 return null;
             }
 
-            return userList;
+            return recordList;
         }
-
-
-
-
-
-
 
 
 
@@ -106,7 +127,10 @@ namespace EnterpriseAssetTracker.Scripts
 
 
 
-
+        public string selectTypes_ea = "SELECT `id_type_ea`, `name` AS `Наименование вида ОС` FROM `types_ea`";
+        public string selectPositions = "SELECT `id_position`, `name` AS `Наименование должности` FROM `positions`";
+        public string selectTypes_repair = "SELECT `id_type_repair`, `name` AS `Наименование вида ремонта` FROM `types_repair`";
+        public string selectReasons_writeoff = "SELECT `id_reason_writeoff`, `name` AS `Причины списания` FROM `reasons_writeoff`";
 
 
 
@@ -159,10 +183,5 @@ namespace EnterpriseAssetTracker.Scripts
         public string selectAvtorisaciaAdmin = "SELECT `id_эко`, `fio` AS `ФИО работника`, `password` AS `Пароль`,`admin` FROM `авторизация` WHERE `admin`=1;";
 
         public string selectMOL = "SELECT `id_мол`, `мол`.`id_должности`, `ф` AS `Фамилия`, `и` AS `Имя`, `о` AS `Отчество`, `должности`.`наименование` AS `Должность` FROM `мол` INNER JOIN `должности` on `мол`.`id_должности`=`должности`.`id_должности`;";
-
-        public string selectSvidOS = "SELECT `id_вида_ос`, `наименование` AS `Наименование вида ОС` FROM `вид_ос`";
-        public string selectSdolgnosti = "SELECT `id_должности`, `наименование` AS `Наименование должности` FROM `должности`";
-        public string selectSvid_r = "SELECT `id_вида_р`, `наименование` AS `Наименование вида ремонта` FROM `вид_р`";
-        public string selectSprichini = "SELECT `id_причины`, `наименование` AS `Причины списания` FROM `причины`";
     }
 }
