@@ -160,21 +160,24 @@ namespace EnterpriseAssetTracker.UsersControlers
                 isSelectEditRecord = true;
                 fieldsEditedRecord.Clear();
 
-                bunifuEditSurnameTextBox.Text = bunifuMainDataGridView.Rows[e.RowIndex].Cells[2].Value.ToString();
-                bunifuEditNameTextBox.Text = bunifuMainDataGridView.Rows[e.RowIndex].Cells[3].Value.ToString();
-                bunifuEditFather_nameTextBox.Text = bunifuMainDataGridView.Rows[e.RowIndex].Cells[4].Value.ToString();
-                bunifuEditPageDropdown.Text = bunifuMainDataGridView.Rows[e.RowIndex].Cells[5].Value.ToString();
-
-                if (bunifuEditPageDropdown.Text == "Директор")
-                {
-                    bunifuEditPageDropdown.Enabled = false;
-                }
-                else bunifuEditPageDropdown.Enabled = true;
-
-
                 for (int i = 0; i < bunifuMainDataGridView.ColumnCount; i++)
                 {
                     fieldsEditedRecord.Add(bunifuMainDataGridView.Rows[e.RowIndex].Cells[i].Value.ToString());
+                }
+
+
+                if (bunifuPages.SelectedTab == EditPage)
+                {
+                    bunifuEditSurnameTextBox.Text = bunifuMainDataGridView.Rows[e.RowIndex].Cells[2].Value.ToString();
+                    bunifuEditNameTextBox.Text = bunifuMainDataGridView.Rows[e.RowIndex].Cells[3].Value.ToString();
+                    bunifuEditFather_nameTextBox.Text = bunifuMainDataGridView.Rows[e.RowIndex].Cells[4].Value.ToString();
+                    bunifuEditPageDropdown.Text = bunifuMainDataGridView.Rows[e.RowIndex].Cells[5].Value.ToString();
+
+                    if (bunifuEditPageDropdown.Text == "Директор")
+                    {
+                        bunifuEditPageDropdown.Enabled = false;
+                    }
+                    else bunifuEditPageDropdown.Enabled = true;
                 }
             }
             catch
@@ -224,6 +227,7 @@ namespace EnterpriseAssetTracker.UsersControlers
                             isSelectEditRecord = false;
                             fieldsEditedRecord.Clear();
                             bunifuPages.SelectedTab = StartPage;
+                            groupBox.Text = "Операция:";
 
                             foreach (var textBox in nameTextBoxesArray)
                             {
@@ -246,6 +250,7 @@ namespace EnterpriseAssetTracker.UsersControlers
                 isSelectEditRecord = false;
                 fieldsEditedRecord.Clear();
                 bunifuPages.SelectedTab = StartPage;
+                groupBox.Text = "Операция:";
                 dbHelper.closeConnection();
             }
         }
@@ -292,6 +297,7 @@ namespace EnterpriseAssetTracker.UsersControlers
                             isSelectEditRecord = false;
                             fieldsEditedRecord.Clear();
                             bunifuPages.SelectedTab = StartPage;
+                            groupBox.Text = "Операция:";
 
                             LoadDataInMainDataGridView(dbHelper.selectAsset_custodian);
                         }
@@ -309,6 +315,7 @@ namespace EnterpriseAssetTracker.UsersControlers
                 isSelectEditRecord = false;
                 fieldsEditedRecord.Clear();
                 bunifuPages.SelectedTab = StartPage;
+                groupBox.Text = "Операция:";
                 dbHelper.closeConnection();
             }
         }
@@ -362,14 +369,14 @@ namespace EnterpriseAssetTracker.UsersControlers
                 return;
             }
 
+            bunifuPages.SelectedTab = EditPage;
+            groupBox.Text = "Операция: Изменение данных";
+            bunifuEditSurnameTextBox.Focus();
+
             bunifuEditSurnameTextBox.Text = fieldsEditedRecord[2];
             bunifuEditNameTextBox.Text = fieldsEditedRecord[3];
             bunifuEditFather_nameTextBox.Text = fieldsEditedRecord[4];
             bunifuEditPageDropdown.Text = fieldsEditedRecord[5];
-
-            bunifuPages.SelectedTab = EditPage;
-            groupBox.Text = "Операция: Изменение данных";
-            bunifuEditSurnameTextBox.Focus();
         }
 
         private void BunifuGoFiltrationPageButton_Click(object sender, EventArgs e)
@@ -401,7 +408,7 @@ namespace EnterpriseAssetTracker.UsersControlers
 
             if (Char.IsLetter(key) || Char.IsControl(key))
             {
-                if (textBox.Text.Length == 0)
+                if (textBox.Text.Length == 0 || textBox.SelectionLength == textBox.Text.Length)
                 {
                     e.KeyChar = char.ToUpper(e.KeyChar);
                 }

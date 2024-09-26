@@ -416,11 +416,12 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if not exist "$(TargetDir)libraries" mkdir "$(TargetDir)libraries"
-xcopy /d /s "$(SolutionDir)libraries\*.*" "$(TargetDir)libraries"
+xcopy /d /s /y "$(SolutionDir)libraries\*.*" "$(TargetDir)libraries"
 
 if not exist "$(TargetDir)libraries\LiveCharts" mkdir "$(TargetDir)libraries\LiveCharts"
-xcopy /d /s "$(SolutionDir)packages\LiveCharts.0.9.7\lib\net45\*.*" "$(TargetDir)libraries\LiveCharts"
-xcopy /d /s "$(SolutionDir)packages\LiveCharts.WinForms.0.9.7.1\lib\net45\*.*" "$(TargetDir)libraries\LiveCharts"
-xcopy /d /s "$(SolutionDir)packages\LiveCharts.Wpf.0.9.7\lib\net45\*.*" "$(TargetDir)libraries\LiveCharts"</PostBuildEvent>
+xcopy /d /s /y "$(SolutionDir)packages\LiveCharts.0.9.7\lib\net45\*.*" "$(TargetDir)libraries\LiveCharts"
+xcopy /d /s /y "$(SolutionDir)packages\LiveCharts.WinForms.0.9.7.1\lib\net45\*.*" "$(TargetDir)libraries\LiveCharts"
+xcopy /d /s /y "$(SolutionDir)packages\LiveCharts.Wpf.0.9.7\lib\net45\*.*" "$(TargetDir)libraries\LiveCharts"
+</PostBuildEvent>
   </PropertyGroup>
 </Project>

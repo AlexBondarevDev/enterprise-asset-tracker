@@ -1,364 +1,435 @@
 ﻿using System;
-using System.IO;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Data.OleDb;
-using EnterpriseAssetTracker.Forms;
 using EnterpriseAssetTracker.Scripts;
-using Word = Microsoft.Office.Interop.Word;
 using MySql.Data.MySqlClient;
+using BunifuTextbox = Bunifu.UI.WinForms.BunifuTextbox;
 
 
 
 namespace EnterpriseAssetTracker.UsersControlers
 {
-
     public partial class EditingLogin_UC : UserControl
     {
-        DatabaseHelper db = new DatabaseHelper();
-        public int pr = 0;
-        List<string> editItem = new List<string>();
+        DatabaseHelper dbHelper = new DatabaseHelper();
+        bool isSelectEditRecord;
+        List<string> fieldsEditedRecord = new List<string>();
+
         public EditingLogin_UC()
         {
             InitializeComponent();
-            DatabaseHelper db = new DatabaseHelper();
-            DataTable table = new DataTable();
-            MySqlDataAdapter adapter = new MySqlDataAdapter();
-            MySqlCommand command = new MySqlCommand(db.selectAvtorisaciaVse, db.GetConnection());
-            adapter.SelectCommand = command;
-            adapter.Fill(table);
-            bunifuDataGridView1.DataSource = table.DefaultView;
-            bunifuDataGridView1.Columns[0].Visible = false;
-            bunifuDataGridView1.Columns[3].Visible = false;
+
+            RefreshDataInDGV();
         }
 
-        private void bunifuButton1_Click(object sender, EventArgs e) //КНОПКА ПОВЫШЕНИЯ ДО АДМИНИСТРАТОРА
+        private void LoadDataInMainDataGridView(string query)
         {
-            if (pr == 0 || pr == null)
+            using (var connection = dbHelper.GetConnection())
             {
-                MessageBox.Show("Не выбран сотрудник для повышения до администратора!", "Внимание!");
-            }
-            else
-            {
-                if (Convert.ToInt32(editItem[3])==1)
+                connection.Open();
+
+                using (var command = new MySqlCommand(query, connection))
                 {
-                    MessageBox.Show("Сотрудник уже является администратором.", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-                }
-                else
-                {
-                    DatabaseHelper db = new DatabaseHelper();
-                    MySqlCommand command = new MySqlCommand("UPDATE `авторизация` SET `admin` = 1 WHERE `авторизация`.`id_эко` = " + editItem[0] + ";", db.GetConnection());
-                    db.openConnection();
-                    if (command.ExecuteNonQuery() == 1)
+                    using (var adapter = new MySqlDataAdapter(command))
                     {
-                        MessageBox.Show("Сотрудник повышен до администратора.", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-                        pr = 0;
-                        if (bunifuCheckBox1.Checked == true)
-                        {
-                            queri = db.selectAvtorisaciaVse;
-                        }
-                        else if (bunifuCheckBox2.Checked == true)
-                        {
-                            queri = db.selectAvtorisaciaEko;
-                        }
-                        else queri = db.selectAvtorisaciaAdmin;
-                        DataTable table2 = new DataTable();
-                        MySqlDataAdapter adapter2 = new MySqlDataAdapter();
-                        MySqlCommand command2 = new MySqlCommand(queri, db.GetConnection());
-                        adapter2.SelectCommand = command2;
-                        adapter2.Fill(table2);
-                        bunifuDataGridView1.DataSource = table2.DefaultView;
-                        bunifuDataGridView1.Columns[0].Visible = false;
-                        bunifuDataGridView1.Columns[3].Visible = false;
-                        db.closeConnection();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Ошибка! Попробуете ещё раз или перезагрузите программу.", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        pr = 0;
+                        DataTable table = new DataTable();
+                        adapter.Fill(table);
+                        bunifuMainDataGridView.DataSource = table.DefaultView;
+                        bunifuMainDataGridView.Columns[0].Visible = false;
+                        bunifuMainDataGridView.Columns[3].Visible = false;
                     }
                 }
             }
         }
 
-        private void bunifuButton2_Click(object sender, EventArgs e)    //КНОПКА ИЗМЕНЕНИЯ
+        private void RefreshDataInDGV()
         {
-            if (pr == 0 || pr == null)
+            if (bunifuAllUsersCheckBox.Checked == true)
             {
-                MessageBox.Show("Не выбран элемент для изменения!", "Внимание!");
+                LoadDataInMainDataGridView(dbHelper.selectAuthorization);
             }
-            else
+            else if (bunifuEconomistCheckBox.Checked == true)
             {
-                bunifuPages1.SelectedTab = tabPage3;
-                groupBox1.Text = "Операция: Изменение данных";
-                bunifuTextBox1.Focus();
-                string[] mas = editItem[1].Split(' ');
-                bunifuTextBox1.Text = mas[0];
-                bunifuTextBox2.Text = mas[1];
-                bunifuTextBox3.Text = mas[2];
-                bunifuTextBox4.Text = editItem[2].ToString();
+                LoadDataInMainDataGridView($"{dbHelper.selectAuthorization} WHERE `isAdmin` = 0");
             }
-        }
-        private void bunifuButton3_Click(object sender, EventArgs e)  //УДАЛЕНИЕ
-        {
-            if (pr == 0 || pr == null)
-            {
-                MessageBox.Show("Не выбран сотрудник для удаления!", "Внимание!");
-            }
-            else
-            {
-                DialogResult result = MessageBox.Show($"Вы уверены, что хотите удалить сотрудника '"+ editItem[1] + "'?", "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Information); ;
-                if (result.ToString() == "Yes")
-                {
-                    DatabaseHelper db = new DatabaseHelper();
-                    MySqlCommand command = new MySqlCommand("DELETE FROM `авторизация` WHERE `авторизация`.`id_эко` = "+ editItem[0] + ";", db.GetConnection());
-                    db.openConnection();
-                    if (command.ExecuteNonQuery() == 1)
-                    {
-                        MessageBox.Show("Сотрудник удалён.", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-                        pr = 0;
-                        if (bunifuCheckBox1.Checked == true)
-                        {
-                            queri = db.selectAvtorisaciaVse;
-                        }
-                        else if (bunifuCheckBox2.Checked == true)
-                        {
-                            queri = db.selectAvtorisaciaEko;
-                        }
-                        else queri = db.selectAvtorisaciaAdmin;
-                        DataTable table2 = new DataTable();
-                        MySqlDataAdapter adapter2 = new MySqlDataAdapter();
-                        MySqlCommand command2 = new MySqlCommand(queri, db.GetConnection());
-                        adapter2.SelectCommand = command2;
-                        adapter2.Fill(table2);
-                        bunifuDataGridView1.DataSource = table2.DefaultView;
-                        bunifuDataGridView1.Columns[0].Visible = false;
-                        bunifuDataGridView1.Columns[3].Visible = false;
-                        db.closeConnection();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Ошибка удаления! Попробуете ещё раз или перезагрузите программу.", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        pr = 0;
-                    }
-
-                }   
-            }
+            else LoadDataInMainDataGridView($"{dbHelper.selectAuthorization} WHERE `isAdmin` = 1");
         }
 
-        char key;
 
-        private void bunifuDataGridView1_CellClick_1(object sender, DataGridViewCellEventArgs e)
+
+        private void BunifuEditRecordButton_Click(object sender, EventArgs e)
         {
+            BunifuTextbox.BunifuTextBox[] nameTextBoxesArray = {
+                bunifuEditSurnameTextBox,
+                bunifuEditNameTextBox,
+                bunifuEditFather_nameTextBox,
+                bunifuPasswordTextBox
+            };
+
+            if (!CheckValidation(nameTextBoxesArray))
+            {
+                return;
+            }
+
             try
             {
-                pr = 1;
-                editItem.Clear();
-                for (int i = 0; i < bunifuDataGridView1.ColumnCount; i++)
-                {
-                    editItem.Add(bunifuDataGridView1.Rows[e.RowIndex].Cells[i].Value.ToString());
-                }
-            }
-            catch
-            {
-                pr = 0;
-            }
-        }
+                string newEconomistName = $"{nameTextBoxesArray[0].Text} {nameTextBoxesArray[1].Text} {nameTextBoxesArray[2].Text}";
 
-        string queri = "";
-        private void bunifuCheckBox1_CheckedChanged(object sender, Bunifu.UI.WinForms.BunifuCheckBox.CheckedChangedEventArgs e)
-        {
-            if (bunifuCheckBox1.Checked == true)
-            {
-                bunifuCheckBox2.Checked = false; bunifuCheckBox3.Checked = false;
-                queri = db.selectAvtorisaciaVse;
-                DataTable table = new DataTable();
-                MySqlDataAdapter adapter = new MySqlDataAdapter();
-                MySqlCommand command = new MySqlCommand(queri, db.GetConnection());
-                adapter.SelectCommand = command;
-                adapter.Fill(table);
-                bunifuDataGridView1.DataSource = table.DefaultView;
-                bunifuDataGridView1.Columns[0].Visible = false;
-                bunifuDataGridView1.Columns[3].Visible = false;
-            }
-        }
+                dbHelper.openConnection();
 
-        private void bunifuCheckBox2_CheckedChanged(object sender, Bunifu.UI.WinForms.BunifuCheckBox.CheckedChangedEventArgs e)
-        {
-            if (bunifuCheckBox2.Checked == true)
-            {
-                bunifuCheckBox1.Checked = false; bunifuCheckBox3.Checked = false;
-                queri = db.selectAvtorisaciaEko;
-                DataTable table = new DataTable();
-                MySqlDataAdapter adapter = new MySqlDataAdapter();
-                MySqlCommand command = new MySqlCommand(queri, db.GetConnection());
-                adapter.SelectCommand = command;
-                adapter.Fill(table);
-                bunifuDataGridView1.DataSource = table.DefaultView;
-                bunifuDataGridView1.Columns[0].Visible = false;
-                bunifuDataGridView1.Columns[3].Visible = false;
-            }
-        }
-
-        private void bunifuCheckBox3_CheckedChanged(object sender, Bunifu.UI.WinForms.BunifuCheckBox.CheckedChangedEventArgs e)
-        {
-            if (bunifuCheckBox3.Checked == true)
-            {
-                bunifuCheckBox1.Checked = false; bunifuCheckBox2.Checked = false;
-                queri = db.selectAvtorisaciaAdmin;
-                DataTable table = new DataTable();
-                MySqlDataAdapter adapter = new MySqlDataAdapter();
-                MySqlCommand command = new MySqlCommand(queri, db.GetConnection());
-                adapter.SelectCommand = command;
-                adapter.Fill(table);
-                bunifuDataGridView1.DataSource = table.DefaultView;
-                bunifuDataGridView1.Columns[0].Visible = false;
-                bunifuDataGridView1.Columns[3].Visible = false;
-            }
-        }
-
-        private void bunifuButton4_Click(object sender, EventArgs e)
-        {
-            if (bunifuTextBox1.Text == "" || bunifuTextBox2.Text == "" || bunifuTextBox3.Text == "" || bunifuTextBox4.Text == "" || bunifuTextBox1.Text == null || bunifuTextBox2.Text == null || bunifuTextBox3.Text == null || bunifuTextBox4.Text == null)
-            {
-                MessageBox.Show("Пожалуйста, введите все данные.", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                if (bunifuTextBox1.Text == "")
+                using (var connection = dbHelper.GetConnection())
                 {
-                    bunifuTextBox1.Focus();
-                }
-                else if (bunifuTextBox2.Text == "")
-                {
-                    bunifuTextBox2.Focus();
-                }
-                else if (bunifuTextBox3.Text == "")
-                {
-                    bunifuTextBox3.Focus();
-                }
-                else if (bunifuTextBox4.Text == "")
-                {
-                    bunifuTextBox4.Focus();
-                }
-            }
-            else if (bunifuTextBox4.TextLength < 4)
-            {
-                MessageBox.Show("Ваш пароль короче минимального. Пожалуйста, введите минимум 4 символа.", "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                bunifuTextBox4.Focus();
-            }
-            else if (bunifuTextBox4.TextLength > 8)
-            {
-                MessageBox.Show("Ваш пароль длиннее максимального. Пожалуйста, введите максимум 8 символов.", "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                bunifuTextBox4.Focus();
-            }
-            else
-            {
-                string name_sot = bunifuTextBox1.Text + " " + bunifuTextBox2.Text + " " + bunifuTextBox3.Text;
-                string[] array = null;
-                int a = 0;
-                array = getUsers().Select(n => n.ToString()).ToArray();
-                for (int i = 0; i < array.Length; i++)
-                {
-                    if (name_sot == array[i])
+                    using (var command = new MySqlCommand("UPDATE `authorization` SET `name_economist` = @name_economist, `password` = @password WHERE `authorization`.`id_economist` = @id_editRecord;", connection))
                     {
-                        MessageBox.Show("Работник с такими данными уже зарегистрирован.", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        bunifuTextBox1.Text = "";
-                        bunifuTextBox2.Text = "";
-                        bunifuTextBox3.Text = "";
-                        bunifuTextBox1.Focus();
-                        a = 1;
-                        break;
-                    }
-                }
-                if (a != 1)
-                {
-                    try
-                    {
-                        int stat_admin = 0;
-                        DatabaseHelper db = new DatabaseHelper();
-                        MySqlCommand command = new MySqlCommand("UPDATE `авторизация` SET `fio` = '"+ name_sot + "', `password` = '"+bunifuTextBox4.Text+"' WHERE `авторизация`.`id_эко` = "+editItem[0]+";", db.GetConnection());
-                        db.openConnection();
+                        command.Parameters.AddWithValue("@name_economist", newEconomistName);
+                        command.Parameters.AddWithValue("@password", nameTextBoxesArray[3].Text);
+                        command.Parameters.AddWithValue("@id_editRecord", Convert.ToInt32(fieldsEditedRecord[0]));
+
                         if (command.ExecuteNonQuery() == 1)
                         {
-                            MessageBox.Show("Данные изменены.", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-                            bunifuTextBox1.Text = "";
-                            bunifuTextBox2.Text = "";
-                            bunifuTextBox3.Text = "";
-                            bunifuTextBox4.Text = "";
-                            bunifuTextBox1.Focus();
-                            pr = 0;
+                            MessageBox.Show($"Данные об экономисте изменены!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+
+                            dbHelper.closeConnection();
+
+                            isSelectEditRecord = false;
+                            fieldsEditedRecord.Clear();
+
+                            foreach (var textBox in nameTextBoxesArray)
+                            {
+                                textBox.Text = "";
+                            }
+
+                            RefreshDataInDGV();
+                            bunifuPages.SelectedTab = StartPage;
+                            groupBox.Text = "Операция:";
                         }
                         else
                         {
-                            MessageBox.Show("Ошибка регистрации! Попробуете ещё раз или перезагрузите программу.", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            bunifuTextBox1.Text = "";
-                            bunifuTextBox2.Text = "";
-                            bunifuTextBox3.Text = "";
-                            bunifuTextBox4.Text = "";
-                            bunifuTextBox1.Focus();
+                            MessageBox.Show("Ошибка изменения данных о МОЛ! Попробуете ещё раз или перезагрузите программу!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            dbHelper.closeConnection();
                         }
-                        
-                        if (bunifuCheckBox1.Checked == true)
-                        {
-                            queri = db.selectAvtorisaciaVse;
-                        }
-                        else if (bunifuCheckBox2.Checked == true)
-                        {
-                            queri = db.selectAvtorisaciaEko;
-                        }
-                        else queri = db.selectAvtorisaciaAdmin;
-                        DataTable table2 = new DataTable();
-                        MySqlDataAdapter adapter2 = new MySqlDataAdapter();
-                        MySqlCommand command2 = new MySqlCommand(queri, db.GetConnection());
-                        adapter2.SelectCommand = command2;
-                        adapter2.Fill(table2);
-                        bunifuDataGridView1.DataSource = table2.DefaultView;
-                        bunifuDataGridView1.Columns[0].Visible = false;
-                        bunifuDataGridView1.Columns[3].Visible = false;
-                        db.closeConnection();
-                        bunifuPages1.SelectedTab = tabPage0;
-                        groupBox1.Text = "Операция:";
                     }
-                    catch
-                    {
-                        MessageBox.Show("Связь с базой данных не установлена. Пожалуйста, проверьте соединение с интернетом и перезапустите программу.", "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
-            }
-        }
-        public List<string> getUsers()
-        {
-            List<string> opers = new List<string>();
-            try
-            {
-                DatabaseHelper db = new DatabaseHelper();
-                DataTable table = new DataTable();
-                MySqlDataAdapter adapter = new MySqlDataAdapter();
-                MySqlCommand command = new MySqlCommand("SELECT * FROM `авторизация` WHERE `id_эко`!="+ editItem[0]+ ";", db.GetConnection());
-                adapter.SelectCommand = command;
-                adapter.Fill(table);
-                foreach (DataRow item in table.Rows)
-                {
-                    opers.Add(item[1].ToString());
                 }
             }
             catch
             {
-                MessageBox.Show("Связь с базой данных не установлена. Пожалуйста, проверьте соединение с интернетом и перезапустите программу.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Связь с базой данных не установлена! Пожалуйста, проверьте соединение с интернетом и перезапустите программу!", "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                isSelectEditRecord = false;
+                fieldsEditedRecord.Clear();
+                bunifuPages.SelectedTab = StartPage;
+                groupBox.Text = "Операция:";
+                dbHelper.closeConnection();
             }
-            return opers;
         }
-        private void bunifuTextBox1_KeyPress(object sender, KeyPressEventArgs e)
+
+        private bool CheckValidation(BunifuTextbox.BunifuTextBox[] nameTextBoxesArray)
         {
-            key = e.KeyChar;
+            var emptyTextBox = nameTextBoxesArray.FirstOrDefault(textField => string.IsNullOrEmpty(textField.Text));
+            if (emptyTextBox != null)
+            {
+                MessageBox.Show("Пожалуйста, введите все данные!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                emptyTextBox.Focus();
+                return false;
+            }
+
+            if (bunifuPasswordTextBox.TextLength < 4 || bunifuPasswordTextBox.TextLength > 8)
+            {
+                string message = bunifuPasswordTextBox.TextLength < 4
+                    ? "Ваш пароль короче минимального. Пожалуйста, введите минимум 4 символа."
+                    : "Ваш пароль длиннее максимального. Пожалуйста, введите максимум 8 символов.";
+
+                MessageBox.Show(message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                bunifuPasswordTextBox.Focus();
+                return false;
+            }
+
+
+            string WHERE_IfSelectedEdit = $"WHERE `id_economist`!='{fieldsEditedRecord[0]}'";
+
+            string[] userArray = dbHelper.GetUsers_fieldName(WHERE_IfSelectedEdit).Select(n => n.ToString()).ToArray();
+
+            string newUsername = $"{nameTextBoxesArray[0].Text} {nameTextBoxesArray[1].Text} {nameTextBoxesArray[2].Text}";
+
+            if (userArray.Contains(newUsername))
+            {
+                MessageBox.Show("Экономист с таким ФИО уже зарегистрирован!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                nameTextBoxesArray[0].Focus();
+                return false;
+            }
+            
+            return true;
+        }
+
+
+        private void BunifuDeleteRecordButton_Click(object sender, EventArgs e)  
+        {
+            if (!isSelectEditRecord)
+            {
+                MessageBox.Show("Не выбран сотрудник для удаления!", "Внимание!");
+                return;
+            }
+
+            DialogResult result = MessageBox.Show($"Вы уверены, что хотите удалить сотрудника '" + fieldsEditedRecord[1] + "'?", "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Information); ;
+            if (result.ToString() == "No")
+            {
+                return;
+            }
+
+            try
+            {
+                using (var connection = dbHelper.GetConnection())
+                {
+                    connection.Open();
+
+                    using (var command = new MySqlCommand("DELETE FROM `authorization` WHERE `authorization`.`id_economist` = @id_economist;", connection))
+                    {
+                        command.Parameters.AddWithValue("@id_economist", fieldsEditedRecord[0]);
+
+                        if (command.ExecuteNonQuery() == 1)
+                        {
+                            MessageBox.Show("Сотрудник удалён!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk); 
+                            isSelectEditRecord = false;
+                            fieldsEditedRecord.Clear();
+                            dbHelper.closeConnection();
+
+                            RefreshDataInDGV();
+                            bunifuPages.SelectedTab = StartPage;
+                            groupBox.Text = "Операция:";
+                        }
+                        else
+                        {
+                            MessageBox.Show("Ошибка удаления! Попробуете ещё раз или перезагрузите программу!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            dbHelper.closeConnection();
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Связь с базой данных не установлена! Проверьте соединение с сетью и перезапустите программу!", "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                dbHelper.closeConnection();
+            }
+        }
+
+        private void BunifuPromotionToAdminButton_Click(object sender, EventArgs e)
+        {
+            if (!isSelectEditRecord)
+            {
+                MessageBox.Show("Не выбран сотрудник для повышения до администратора!", "Внимание!");
+                return;
+            }
+
+            if (Convert.ToBoolean(fieldsEditedRecord[3]))
+            {
+                MessageBox.Show("Сотрудник уже является администратором!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                return;
+            }
+
+            try
+            {
+                using (var connection = dbHelper.GetConnection())
+                {
+                    connection.Open();
+
+                    using (var command = new MySqlCommand("UPDATE `authorization` SET `isAdmin` = 1 WHERE `authorization`.`id_economist` = @id_economist;", connection))
+                    {
+                        command.Parameters.AddWithValue("@id_economist", fieldsEditedRecord[0]);
+
+                        if (command.ExecuteNonQuery() == 1)
+                        {
+                            MessageBox.Show("Сотрудник повышен до администратора!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                            isSelectEditRecord = false;
+                            fieldsEditedRecord.Clear();
+                            dbHelper.closeConnection();
+
+                            RefreshDataInDGV();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Ошибка! Попробуете ещё раз или перезагрузите программу!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            dbHelper.closeConnection();
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Связь с базой данных не установлена! Проверьте соединение с сетью и перезапустите программу!", "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                dbHelper.closeConnection();
+            }
+        }
+
+        private void BunifuEditCodeButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using (var connection = dbHelper.GetConnection())
+                {
+                    connection.Open();
+                    using (var command = new MySqlCommand("UPDATE `access_code` SET `value` = @accessCode WHERE `id_access_code` = 1;", connection))
+                    {
+                        command.Parameters.AddWithValue("@accessCode", bunifuEditCodeTextBox.Text);
+
+                        if (command.ExecuteNonQuery() == 1)
+                        {
+                            MessageBox.Show("Код доступа успешно изменён!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                            bunifuPages.SelectedTab = StartPage;
+                            bunifuEditCodeTextBox.Text = "";
+                            groupBox.Text = "Операция:";
+                        }
+                        else
+                        {
+                            MessageBox.Show("Ошибка изменения кода доступа! Попробуете ещё раз или перезагрузите программу.", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Связь с базой данных не установлена! Проверьте соединение с сетью и перезапустите программу!", "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally 
+            {
+                dbHelper.closeConnection();
+            }
+        }
+
+
+
+        private void BunifuGoEditRecordPageButton_Click(object sender, EventArgs e)
+        {
+            if (!isSelectEditRecord)
+            {
+                MessageBox.Show("Не выбран элемент для изменения!", "Внимание!");
+                return;
+            }
+
+            bunifuPages.SelectedTab = EditRecordPage;
+            groupBox.Text = "Операция: Изменение данных";
+
+            bunifuEditSurnameTextBox.Focus();
+            string[] mas = fieldsEditedRecord[1].Split(' ');
+
+            (bunifuEditSurnameTextBox.Text, bunifuEditNameTextBox.Text, bunifuEditFather_nameTextBox.Text) = (mas[0], mas[1], mas[2]);
+
+            bunifuPasswordTextBox.Text = fieldsEditedRecord[2].ToString();
+        }
+
+        private void BunifuGoEditCodePageButton_Click(object sender, EventArgs e)
+        {
+            bunifuPages.SelectedTab = EditCodePage;
+            groupBox.Text = "Операция: Изменение кода доступа администратора";
+
+            bunifuEditCodeTextBox.Text = dbHelper.GetAccessСode();
+            bunifuEditCodeTextBox.Focus();
+
+            bunifuEditCodeButton.Enabled = false;
+        }
+
+
+
+        private void BunifuAllUsersCheckBox_CheckedChanged(object sender, Bunifu.UI.WinForms.BunifuCheckBox.CheckedChangedEventArgs e)
+        {
+            if (bunifuAllUsersCheckBox.Checked == true)
+            {
+                bunifuAllUsersCheckBox.Enabled = false;
+                bunifuEconomistCheckBox.Enabled = true;
+                bunifuAdminsCheckBox.Enabled = true;
+
+                bunifuEconomistCheckBox.Checked = false;
+                bunifuAdminsCheckBox.Checked = false;
+
+                LoadDataInMainDataGridView(dbHelper.selectAuthorization);
+
+                isSelectEditRecord = false;
+                fieldsEditedRecord.Clear();
+            }
+        }
+
+        private void BunifuEconomistCheckBox_CheckedChanged(object sender, Bunifu.UI.WinForms.BunifuCheckBox.CheckedChangedEventArgs e)
+        {
+            if (bunifuEconomistCheckBox.Checked == true)
+            {
+                bunifuAllUsersCheckBox.Enabled = true;
+                bunifuEconomistCheckBox.Enabled = false;
+                bunifuAdminsCheckBox.Enabled = true;
+
+                bunifuAllUsersCheckBox.Checked = false;
+                bunifuAdminsCheckBox.Checked = false;
+
+                LoadDataInMainDataGridView($"{dbHelper.selectAuthorization} WHERE `isAdmin` = 0");
+
+                isSelectEditRecord = false;
+                fieldsEditedRecord.Clear();
+            }
+        }
+
+        private void BunifuAdminsCheckBox_CheckedChanged(object sender, Bunifu.UI.WinForms.BunifuCheckBox.CheckedChangedEventArgs e)
+        {
+            if (bunifuAdminsCheckBox.Checked == true)
+            {
+                bunifuAllUsersCheckBox.Enabled = true;
+                bunifuEconomistCheckBox.Enabled = true;
+                bunifuAdminsCheckBox.Enabled = false;
+
+                bunifuAllUsersCheckBox.Checked = false;
+                bunifuEconomistCheckBox.Checked = false;
+
+                LoadDataInMainDataGridView($"{dbHelper.selectAuthorization} WHERE `isAdmin` = 1");
+
+                isSelectEditRecord = false;
+                fieldsEditedRecord.Clear();
+            }
+        }
+
+
+
+        private void BunifuMainDataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                isSelectEditRecord = true;
+                fieldsEditedRecord.Clear();
+
+                for (int i = 0; i < bunifuMainDataGridView.ColumnCount; i++)
+                {
+                    fieldsEditedRecord.Add(bunifuMainDataGridView.Rows[e.RowIndex].Cells[i].Value.ToString());
+                }
+
+                if (bunifuPages.SelectedTab == EditRecordPage)
+                {
+                    bunifuEditSurnameTextBox.Focus();
+                    string[] mas = fieldsEditedRecord[1].Split(' ');
+
+                    (bunifuEditSurnameTextBox.Text, bunifuEditNameTextBox.Text, bunifuEditFather_nameTextBox.Text) = (mas[0], mas[1], mas[2]);
+
+                    bunifuPasswordTextBox.Text = fieldsEditedRecord[2].ToString();
+                }
+            }
+            catch
+            {
+                isSelectEditRecord = false;
+                fieldsEditedRecord.Clear();
+            }
+        }
+
+        private void BunifuNameTextBoxes_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+
+            if (textBox == null)
+            {
+                return;
+            }
+
+            char key = e.KeyChar;
             e.Handled = true;
+
             if (Char.IsLetter(key) || Char.IsControl(key))
             {
-                if (bunifuTextBox1.Text.Length == 0)
+                if (textBox.Text.Length == 0 || textBox.SelectionLength == textBox.Text.Length)
                 {
                     e.KeyChar = char.ToUpper(e.KeyChar);
                 }
@@ -370,97 +441,9 @@ namespace EnterpriseAssetTracker.UsersControlers
             }
         }
 
-        private void bunifuTextBox2_KeyPress(object sender, KeyPressEventArgs e)
+        private void BunifuEditCodeTextBox_TextChange(object sender, EventArgs e)
         {
-            key = e.KeyChar;
-            e.Handled = true;
-            if (Char.IsLetter(key) || Char.IsControl(key))
-            {
-                if (bunifuTextBox2.Text.Length == 0)
-                {
-                    e.KeyChar = char.ToUpper(e.KeyChar);
-                }
-                else
-                {
-                    e.KeyChar = char.ToLower(e.KeyChar);
-                }
-                e.Handled = false;
-            }
-        }
-
-        private void bunifuTextBox3_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            key = e.KeyChar;
-            e.Handled = true;
-            if (Char.IsLetter(key) || Char.IsControl(key))
-            {
-                if (bunifuTextBox3.Text.Length == 0)
-                {
-                    e.KeyChar = char.ToUpper(e.KeyChar);
-                }
-                else
-                {
-                    e.KeyChar = char.ToLower(e.KeyChar);
-                }
-                e.Handled = false;
-            }
-        }
-
-        private void bunifuButton6_Click(object sender, EventArgs e)
-        {
-            bunifuPages1.SelectedTab = tabPage4;
-            groupBox1.Text = "Операция: Изменение кода доступа администратора";
-            bunifuTextBox5.Focus();
-            DatabaseHelper db = new DatabaseHelper();
-            DataTable table = new DataTable();
-            MySqlDataAdapter adapter = new MySqlDataAdapter();
-            MySqlCommand command = new MySqlCommand("SELECT * FROM `коддоступа`;", db.GetConnection());
-            adapter.SelectCommand = command;
-            adapter.Fill(table);
-            foreach (DataRow item in table.Rows)
-            {
-                bunifuTextBox5.Text=item[1].ToString();
-            }
-            bunifuButton5.Enabled = false;
-
-        }
-
-        private void bunifuTextBox5_TextChange(object sender, EventArgs e)
-        {
-            bunifuButton5.Enabled = true;
-        }
-
-        private void bunifuButton5_Click(object sender, EventArgs e)
-        {
-            DatabaseHelper db = new DatabaseHelper();
-            MySqlCommand command = new MySqlCommand("UPDATE `коддоступа` SET `коддоступа` = '" + bunifuTextBox5.Text + "' WHERE `id_коддоступа` = 1;", db.GetConnection());
-            db.openConnection();
-            if (command.ExecuteNonQuery() == 1)
-            {
-                MessageBox.Show("Код доступа изменён.", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-                bunifuPages1.SelectedTab = tabPage0;
-                bunifuTextBox5.Text = "";
-                groupBox1.Text = "Операция:";
-
-            }
-            else
-            {
-                MessageBox.Show("Ошибка изменения кода доступа! Попробуете ещё раз или перезагрузите программу.", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-
+            bunifuEditCodeButton.Enabled = true;
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

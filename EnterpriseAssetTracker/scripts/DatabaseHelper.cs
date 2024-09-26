@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 
 
@@ -33,8 +32,45 @@ namespace EnterpriseAssetTracker.Scripts
             return connection;
         }
 
+        /// <summary>
+        /// Returns the access code that is required to perform Administrator level actions.
+        /// </summary>
+        public string GetAccessСode()
+        {
+            string AccessСode = null;
+            string query = "SELECT value FROM access_code";
+
+            try
+            {
+                using (var connection = this.GetConnection())
+                {
+                    connection.Open();
+                    using (var command = new MySqlCommand(query, connection))
+                    {
+                        using (var reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                AccessСode = reader.GetString(0);
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Связь с базой данных не установлена! Проверьте соединение с сетью и перезапустите программу!", "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            return AccessСode;
+        }
+
+
+
 
         //Start MainDataGridView queries
+
         public string selectEA_on_writeoff =
             "SELECT " +
             "`enterprise_assets`.`id_enterprise_assets`, " +
@@ -93,12 +129,19 @@ namespace EnterpriseAssetTracker.Scripts
             "FROM `asset_custodian` INNER JOIN `positions` on `asset_custodian`.`id_position`=`positions`.`id_position`";
 
 
+
+
+        public string selectAuthorization = 
+            "SELECT" +
+            "`id_economist`, " +
+            "`name_economist` AS `ФИО Экономиста`, " +
+            "`password` AS `Пароль`," +
+            "`isAdmin` " +
+            "FROM `authorization` ";
+
+
+
         //End MainDataGridView queries
-
-
-
-
-
 
 
 
@@ -135,10 +178,6 @@ namespace EnterpriseAssetTracker.Scripts
         public string selectAvtorisaciaAdmin = "SELECT `id_эко`, `fio` AS `ФИО работника`, `password` AS `Пароль`,`admin` FROM `авторизация` WHERE `admin`=1;";
 
 
-        //дальше можно удалить
-        public string selectMOL = "SELECT `id_мол`, `мол`.`id_должности`, `ф` AS `Фамилия`, `и` AS `Имя`, `о` AS `Отчество`, `должности`.`наименование` AS `Должность` FROM `мол` INNER JOIN `должности` on `мол`.`id_должности`=`должности`.`id_должности`;";
-
-
 
 
 
@@ -149,9 +188,9 @@ namespace EnterpriseAssetTracker.Scripts
 
         //Start GetFieldName queries for Directories
 
-        public List<string> GetUsers_fieldName()
+        public List<string> GetUsers_fieldName(string optionalWHERE)
         {
-            return GetDirectories("SELECT name_economist FROM authorization ORDER BY name_economist ASC");
+            return GetDirectories($"SELECT name_economist FROM authorization {optionalWHERE} ORDER BY name_economist ASC");
         }
 
         public List<string> GetTypesEA_fieldName(string optionalWHERE)

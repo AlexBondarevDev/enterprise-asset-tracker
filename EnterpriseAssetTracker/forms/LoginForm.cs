@@ -31,7 +31,7 @@ namespace EnterpriseAssetTracker.Forms
         /// </summary>
         private List<string> GetUsers()
         {
-            List<string> userList = dbHelper.GetUsers_fieldName();
+            List<string> userList = dbHelper.GetUsers_fieldName("");
 
             if (userList == null)
             {

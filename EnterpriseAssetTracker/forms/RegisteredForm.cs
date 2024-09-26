@@ -25,7 +25,7 @@ namespace EnterpriseAssetTracker.Forms
 
         private void BunifuRegisteredButton_Click(object sender, EventArgs e)
         {
-            string AccessСode = GetAccessСode();
+            string AccessСode = dbHelper.GetAccessСode();
             if (AccessСode == null) return;
 
             if (!ValidityСheck(AccessСode)) return;
@@ -72,40 +72,6 @@ namespace EnterpriseAssetTracker.Forms
             bunifuSurnameTextBox.Focus();
         }
 
-        /// <summary>
-        /// Returns the access code that is required to perform Administrator level actions.
-        /// </summary>
-        private string GetAccessСode()
-        {
-            string AccessСode = null;
-            string query = "SELECT value FROM access_code";
-
-            try
-            {
-                using (var connection = dbHelper.GetConnection())
-                {
-                    connection.Open();
-                    using (var command = new MySqlCommand(query, connection))
-                    {
-                        using (var reader = command.ExecuteReader())
-                        {
-                            if (reader.Read())
-                            {
-                                AccessСode = reader.GetString(0);
-                            }
-                        }
-                    }
-                    connection.Close();
-                }
-            }
-            catch
-            {
-                MessageBox.Show("Связь с базой данных не установлена! Проверьте соединение с сетью и перезапустите программу!", "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-
-            return AccessСode;
-        }
-
         private bool ValidityСheck(string AccessCode)
         {
             if (bunifuAccessСodeTextBox.Text != AccessCode)
@@ -142,7 +108,7 @@ namespace EnterpriseAssetTracker.Forms
             }
 
             string newUsername = $"{bunifuSurnameTextBox.Text} {bunifuNameTextBox.Text} {bunifuFatherNameTextBox.Text}";
-            string[] userArray = dbHelper.GetUsers_fieldName().Select(n => n.ToString()).ToArray();
+            string[] userArray = dbHelper.GetUsers_fieldName("").Select(n => n.ToString()).ToArray();
 
             if (userArray.Contains(newUsername))
             {
@@ -203,7 +169,7 @@ namespace EnterpriseAssetTracker.Forms
 
         private void BunifuNameTextBoxes_KeyPress(object sender, KeyPressEventArgs e)
         {
-            var textBox = sender as TextBox;
+            TextBox textBox = sender as TextBox;
 
             if (textBox == null)
             {
@@ -215,7 +181,7 @@ namespace EnterpriseAssetTracker.Forms
 
             if (Char.IsLetter(key) || Char.IsControl(key))
             {
-                if (textBox.Text.Length == 0)
+                if (textBox.Text.Length == 0 || textBox.SelectionLength == textBox.Text.Length)
                 {
                     e.KeyChar = char.ToUpper(e.KeyChar);
                 }
