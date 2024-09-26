@@ -6,6 +6,8 @@ using System.Data;
 using System.Linq;
 using System.Windows.Forms;
 
+
+
 namespace EnterpriseAssetTracker.Forms
 {
     public partial class LoginForm : Form
@@ -27,7 +29,7 @@ namespace EnterpriseAssetTracker.Forms
         /// <summary>
         /// Getting a list of users from the database.
         /// </summary>
-        public List<string> GetUsers()
+        private List<string> GetUsers()
         {
             List<string> userList = dbHelper.GetUsers_fieldName();
 
@@ -41,21 +43,7 @@ namespace EnterpriseAssetTracker.Forms
             return userList;
         }
 
-        private void BunifuCloseButton_Click(object sender, EventArgs e)
-        {
-            DialogResult result = MessageBox.Show("Вы уверены, что хотите выйти?", "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
-            if (result.ToString() == "Yes")
-            {
-                Application.Exit();
-            }
-        }
-
-        private void BunifuRegisteredButton_Click(object sender, EventArgs e)
-        {
-            RegisteredForm registeredForm = new RegisteredForm();
-            registeredForm.Show();
-            this.Close();
-        }
+        
 
         private void BunifuLoginButton_Click(object sender, EventArgs e)
         {
@@ -77,7 +65,7 @@ namespace EnterpriseAssetTracker.Forms
         /// <summary>
         /// Checking the password and going to the User/Admin forms.
         /// </summary>
-        public void PasswordVerification(string username, string password)
+        private void PasswordVerification(string username, string password)
         {
             string query = "SELECT isAdmin FROM authorization WHERE name_economist = @username AND password = @password";
 
@@ -125,6 +113,27 @@ namespace EnterpriseAssetTracker.Forms
                 MessageBox.Show("Связь с базой данных не установлена! Проверьте соединение с сетью и перезапустите программу!", "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+
+
+        private void BunifuRegisteredButton_Click(object sender, EventArgs e)
+        {
+            RegisteredForm registeredForm = new RegisteredForm();
+            registeredForm.Show();
+            this.Close();
+        }
+
+
+        private void BunifuCloseButton_Click(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show("Вы уверены, что хотите выйти?", "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+            if (result.ToString() == "Yes")
+            {
+                Application.Exit();
+            }
+        }
+
+
 
         private void BunifuUserDropdown_SelectedIndexChanged(object sender, EventArgs e)
         {

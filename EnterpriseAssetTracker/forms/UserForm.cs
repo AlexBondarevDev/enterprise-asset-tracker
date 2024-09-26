@@ -2,6 +2,8 @@
 using System.Windows.Forms;
 using EnterpriseAssetTracker.UsersControlers;
 
+
+
 namespace EnterpriseAssetTracker.Forms
 {
     public partial class UserForm : Form
@@ -18,6 +20,8 @@ namespace EnterpriseAssetTracker.Forms
             bunifuCustomLabel1.Text += User;
         }
 
+
+
         private void BunifuCloseButton_Click(object sender, EventArgs e)
         {
             DialogResult result = MessageBox.Show($"{User}, Вы уверены, что хотите закончить работу?", "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Information); ;
@@ -26,6 +30,8 @@ namespace EnterpriseAssetTracker.Forms
                 this.Close();
             }
         }
+
+
 
         /// <summary>
         /// Switch between expanded and collapsed menu positions.
@@ -47,6 +53,8 @@ namespace EnterpriseAssetTracker.Forms
                 panelAnimator1.ShowSync(menuPanel);
             }
         }
+
+
 
         private void BunifuAnalyticButton_Click(object sender, EventArgs e)
         {

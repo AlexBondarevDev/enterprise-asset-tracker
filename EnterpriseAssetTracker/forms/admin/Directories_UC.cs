@@ -6,6 +6,8 @@ using System.Windows.Forms;
 using EnterpriseAssetTracker.Scripts;
 using MySql.Data.MySqlClient;
 
+
+
 namespace EnterpriseAssetTracker.UsersControlers
 {
     public partial class Directories_UC : UserControl
@@ -49,7 +51,6 @@ namespace EnterpriseAssetTracker.UsersControlers
                 }
             }
         }
-
 
 
 
@@ -271,7 +272,6 @@ namespace EnterpriseAssetTracker.UsersControlers
 
 
 
-
         private void BunifuSelectDirectoriesDropdown_SelectedIndexChanged(object sender, EventArgs e)
         {
             switch (bunifuSelectDirectoriesDropdown.Text)
@@ -303,6 +303,8 @@ namespace EnterpriseAssetTracker.UsersControlers
             RefreshData();
         }
 
+
+
         private void BunifuMainDataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             try
@@ -317,6 +319,8 @@ namespace EnterpriseAssetTracker.UsersControlers
                 bunifuSelectRecordTextBox.Text = "";
             }
         }
+
+
 
         private void BunifuSearchTextBox_KeyUp(object sender, KeyEventArgs e)
         {

@@ -1,11 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using EnterpriseAssetTracker.Scripts;
 using MySql.Data.MySqlClient;
+using BunifuTextbox = Bunifu.UI.WinForms.BunifuTextbox;
+
+
 
 namespace EnterpriseAssetTracker.Forms
 {
@@ -19,6 +21,8 @@ namespace EnterpriseAssetTracker.Forms
             bunifuSurnameTextBox.Focus();
         }
 
+
+
         private void BunifuRegisteredButton_Click(object sender, EventArgs e)
         {
             string AccessСode = GetAccessСode();
@@ -28,9 +32,10 @@ namespace EnterpriseAssetTracker.Forms
 
             string username = $"{bunifuSurnameTextBox.Text} {bunifuNameTextBox.Text} {bunifuFatherNameTextBox.Text}";
 
-            dbHelper.openConnection();
             try
             {
+                dbHelper.openConnection();
+
                 using (var connection = dbHelper.GetConnection())
                 {
                     using (var command = new MySqlCommand("INSERT INTO `authorization` (`name_economist`, `password`, `isAdmin`) VALUES (@name_economist, @password, @isAdmin)", connection))
@@ -70,7 +75,7 @@ namespace EnterpriseAssetTracker.Forms
         /// <summary>
         /// Returns the access code that is required to perform Administrator level actions.
         /// </summary>
-        public string GetAccessСode()
+        private string GetAccessСode()
         {
             string AccessСode = null;
             string query = "SELECT value FROM access_code";
@@ -101,62 +106,43 @@ namespace EnterpriseAssetTracker.Forms
             return AccessСode;
         }
 
-        public bool ValidityСheck(string AccessСode)
+        private bool ValidityСheck(string AccessCode)
         {
-            if (bunifuAccessСodeTextBox.Text != AccessСode)
+            if (bunifuAccessСodeTextBox.Text != AccessCode)
             {
                 MessageBox.Show("Неверный код доступа!!!", "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 bunifuAccessСodeTextBox.Focus();
                 return false;
             }
 
-            if (bunifuSurnameTextBox.Text == ""
-                || bunifuNameTextBox.Text == ""
-                || bunifuFatherNameTextBox.Text == ""
-                || bunifuPasswordTextBox.Text == ""
-                || bunifuAccessСodeTextBox.Text == "")
+            BunifuTextbox.BunifuTextBox[] nameTextBoxesArray = {
+                bunifuSurnameTextBox,
+                bunifuNameTextBox,
+                bunifuFatherNameTextBox,
+                bunifuPasswordTextBox
+            };
+
+            var emptyTextBox = nameTextBoxesArray.FirstOrDefault(textField => string.IsNullOrEmpty(textField.Text));
+            if (emptyTextBox != null)
             {
                 MessageBox.Show("Пожалуйста, введите все данные!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                if (bunifuSurnameTextBox.Text == "")
-                {
-                    bunifuSurnameTextBox.Focus();
-                }
-                else if (bunifuNameTextBox.Text == "")
-                {
-                    bunifuNameTextBox.Focus();
-                }
-                else if (bunifuFatherNameTextBox.Text == "")
-                {
-                    bunifuFatherNameTextBox.Focus();
-                }
-                else if (bunifuPasswordTextBox.Text == "")
-                {
-                    bunifuPasswordTextBox.Focus();
-                }
-                else if (bunifuAccessСodeTextBox.Text == "")
-                {
-                    bunifuAccessСodeTextBox.Focus();
-                }
+                emptyTextBox.Focus();
                 return false;
             }
 
-            if (bunifuPasswordTextBox.TextLength < 4)
+            if (bunifuPasswordTextBox.TextLength < 4 || bunifuPasswordTextBox.TextLength > 8)
             {
-                MessageBox.Show("Ваш пароль короче минимального. Пожалуйста, введите минимум 4 символа.", "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string message = bunifuPasswordTextBox.TextLength < 4
+                    ? "Ваш пароль короче минимального. Пожалуйста, введите минимум 4 символа."
+                    : "Ваш пароль длиннее максимального. Пожалуйста, введите максимум 8 символов.";
+
+                MessageBox.Show(message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 bunifuPasswordTextBox.Focus();
                 return false;
             }
-
-            if (bunifuPasswordTextBox.TextLength > 8)
-            {
-                MessageBox.Show("Ваш пароль длиннее максимального. Пожалуйста, введите максимум 8 символов.", "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                bunifuPasswordTextBox.Focus();
-                return false;
-            }
-
 
             string newUsername = $"{bunifuSurnameTextBox.Text} {bunifuNameTextBox.Text} {bunifuFatherNameTextBox.Text}";
-            string[] userArray = GetUsers().Select(n => n.ToString()).ToArray();
+            string[] userArray = dbHelper.GetUsers_fieldName().Select(n => n.ToString()).ToArray();
 
             if (userArray.Contains(newUsername))
             {
@@ -168,12 +154,7 @@ namespace EnterpriseAssetTracker.Forms
             return true;
         }
 
-        public List<string> GetUsers()
-        {
-            List<string> userList = dbHelper.GetUsers_fieldName();
 
-            return userList ?? new List<string>();
-        }
 
         private void BunifuGeneratePassButton_Click(object sender, EventArgs e)
         {
@@ -209,6 +190,8 @@ namespace EnterpriseAssetTracker.Forms
             bunifuRegisteredButton.Focus();
         }
 
+
+
         private void BunifuCloseButton_Click(object sender, EventArgs e)
         {
             LoginForm loginForm = new LoginForm();
@@ -216,49 +199,23 @@ namespace EnterpriseAssetTracker.Forms
             this.Close();
         }
 
-        private void BunifuSurnameTextBox_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            char key = e.KeyChar;
-            e.Handled = true;
-            if (Char.IsLetter(key) || Char.IsControl(key))
-            {
-                if (bunifuSurnameTextBox.Text.Length == 0)
-                {
-                    e.KeyChar = char.ToUpper(e.KeyChar);
-                }
-                else
-                {
-                    e.KeyChar = char.ToLower(e.KeyChar);
-                }
-                e.Handled = false;
-            }
-        }
 
-        private void BunifuNameTextBox_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            char key = e.KeyChar;
-            e.Handled = true;
-            if (Char.IsLetter(key) || Char.IsControl(key))
-            {
-                if (bunifuNameTextBox.Text.Length == 0)
-                {
-                    e.KeyChar = char.ToUpper(e.KeyChar);
-                }
-                else
-                {
-                    e.KeyChar = char.ToLower(e.KeyChar);
-                }
-                e.Handled = false;
-            }
-        }
 
-        private void BunifuFatherNameTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        private void BunifuNameTextBoxes_KeyPress(object sender, KeyPressEventArgs e)
         {
+            var textBox = sender as TextBox;
+
+            if (textBox == null)
+            {
+                return;
+            }
+
             char key = e.KeyChar;
             e.Handled = true;
+
             if (Char.IsLetter(key) || Char.IsControl(key))
             {
-                if (bunifuFatherNameTextBox.Text.Length == 0)
+                if (textBox.Text.Length == 0)
                 {
                     e.KeyChar = char.ToUpper(e.KeyChar);
                 }

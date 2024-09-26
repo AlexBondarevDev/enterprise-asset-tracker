@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
 
+
+
 namespace EnterpriseAssetTracker.Forms
 {
     public partial class LoadingForm : Form
@@ -9,6 +11,7 @@ namespace EnterpriseAssetTracker.Forms
         {
             InitializeComponent();
         }
+
 
         private void Timer1_Tick(object sender, EventArgs e)
         {

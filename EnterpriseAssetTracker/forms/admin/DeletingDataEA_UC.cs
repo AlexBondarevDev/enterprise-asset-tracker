@@ -4,6 +4,8 @@ using System.Windows.Forms;
 using EnterpriseAssetTracker.Scripts;
 using MySql.Data.MySqlClient;
 
+
+
 namespace EnterpriseAssetTracker.UsersControlers
 {
     public partial class DeletingDataEA_UC : UserControl
@@ -53,7 +55,7 @@ namespace EnterpriseAssetTracker.UsersControlers
         }
 
 
-        public void LoadDataInMainDataGridView(string query)
+        private void LoadDataInMainDataGridView(string query)
         {
             using (var connection = dbHelper.GetConnection())
             {
@@ -71,7 +73,7 @@ namespace EnterpriseAssetTracker.UsersControlers
             }
         }
 
-        public void LoadDataInEditRecordDataGridView(string query)
+        private void LoadDataInEditRecordDataGridView(string query)
         {
             using (var connection = dbHelper.GetConnection())
             {

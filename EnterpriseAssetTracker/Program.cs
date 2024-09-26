@@ -2,6 +2,8 @@
 using System.Windows.Forms;
 using EnterpriseAssetTracker.Forms;
 
+
+
 namespace EnterpriseAssetTracker
 {
     static class Program
@@ -14,7 +16,7 @@ namespace EnterpriseAssetTracker
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new LoadingForm());
+            Application.Run(new AdminForm());
         }
     }
 }  
