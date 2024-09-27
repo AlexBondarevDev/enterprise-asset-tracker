@@ -295,6 +295,7 @@
       <DependentUpon>RepairEA_UC.cs</DependentUpon>
     </EmbeddedResource>
     <None Include=".editorconfig" />
+    <None Include="document_templates\Report_EAassignedACustodian.docx" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -422,6 +423,8 @@ if not exist "$(TargetDir)libraries\LiveCharts" mkdir "$(TargetDir)libraries\Liv
 xcopy /d /s /y "$(SolutionDir)packages\LiveCharts.0.9.7\lib\net45\*.*" "$(TargetDir)libraries\LiveCharts"
 xcopy /d /s /y "$(SolutionDir)packages\LiveCharts.WinForms.0.9.7.1\lib\net45\*.*" "$(TargetDir)libraries\LiveCharts"
 xcopy /d /s /y "$(SolutionDir)packages\LiveCharts.Wpf.0.9.7\lib\net45\*.*" "$(TargetDir)libraries\LiveCharts"
-</PostBuildEvent>
+
+if not exist "$(TargetDir)document_templates" mkdir "$(TargetDir)document_templates"
+xcopy /d /s /y "$(SolutionDir)document_templates\*.*" "$(TargetDir)document_templates"</PostBuildEvent>
   </PropertyGroup>
 </Project>

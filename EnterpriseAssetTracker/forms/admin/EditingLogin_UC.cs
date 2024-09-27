@@ -171,8 +171,7 @@ namespace EnterpriseAssetTracker.UsersControlers
                 return;
             }
 
-            DialogResult result = MessageBox.Show($"Вы уверены, что хотите удалить сотрудника '" + fieldsEditedRecord[1] + "'?", "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Information); ;
-            if (result.ToString() == "No")
+            if (MessageBox.Show($"Вы уверены, что хотите удалить сотрудника '{fieldsEditedRecord[1]}'?", "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
             {
                 return;
             }

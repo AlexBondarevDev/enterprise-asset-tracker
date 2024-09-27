@@ -1270,7 +1270,7 @@ namespace EnterpriseAssetTracker.UsersControlers
                         {"$mol$", id_mol},
                     };
                 string path = $@"C:\Users\ALEKS\Desktop\Акт поступления №{editItem[0]}.docx";
-                helper.Proccess(items, path);
+                //helper.Proccess(items, path);
                 pr = 0;
             }
         }

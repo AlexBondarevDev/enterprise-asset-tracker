@@ -271,8 +271,7 @@ namespace EnterpriseAssetTracker.UsersControlers
 
             string fullName_DelAssetCustodian = fieldsEditedRecord[2] + " " + fieldsEditedRecord[3] + " " + fieldsEditedRecord[4];
 
-            DialogResult result = MessageBox.Show($"Вы уверены, что хотите удалить сотрудника '" + fullName_DelAssetCustodian + "'?", "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Information); ;
-            if (result.ToString() == "No")
+            if (MessageBox.Show($"Вы уверены, что хотите удалить сотрудника '" + fullName_DelAssetCustodian + "'?", "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
             {
                 return;
             }

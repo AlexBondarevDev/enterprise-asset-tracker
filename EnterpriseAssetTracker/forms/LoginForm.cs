@@ -126,8 +126,7 @@ namespace EnterpriseAssetTracker.Forms
 
         private void BunifuCloseButton_Click(object sender, EventArgs e)
         {
-            DialogResult result = MessageBox.Show("Вы уверены, что хотите выйти?", "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
-            if (result.ToString() == "Yes")
+            if (MessageBox.Show("Вы уверены, что хотите выйти?", "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 Application.Exit();
             }

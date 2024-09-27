@@ -1,374 +1,283 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Data.OleDb;
-using EnterpriseAssetTracker.Forms;
 using EnterpriseAssetTracker.Scripts;
 using MySql.Data.MySqlClient;
-using Word = Microsoft.Office.Interop.Word;
-using System.Reflection;
+
+
 
 namespace EnterpriseAssetTracker.UsersControlers
 {
     public partial class AssignmentEA_UC : UserControl
     {
-        DatabaseHelper db = new DatabaseHelper();
-        DateTime d = DateTime.Now;
-        public int pr = 0;
-        List<string> editItem = new List<string>();
-        public AssignmentEA_UC()
+        public string userName;
+
+        DatabaseHelper dbHelper = new DatabaseHelper();
+        bool isSelectEditRecord;
+        List<string> fieldsEditedRecord = new List<string>();
+
+        public AssignmentEA_UC(string userName)
         {
             InitializeComponent();
-            DatabaseHelper db = new DatabaseHelper();
-            DataTable table = new DataTable();
-            MySqlDataAdapter adapter = new MySqlDataAdapter();
-            MySqlCommand command = new MySqlCommand(db.selectMOL_Zakrep, db.GetConnection());
-            adapter.SelectCommand = command;
-            adapter.Fill(table);
-            bunifuDataGridView1.DataSource = table.DefaultView;
-            bunifuDataGridView1.Columns[0].Visible = false; bunifuDataGridView1.Columns[1].Visible = false; bunifuDataGridView1.Columns[2].Visible = false;
 
-            string[] arrayMOL = getMOL().Select(n => n.ToString()).ToArray();
-            bunifuDropdown1.Items.AddRange(arrayMOL);
-            bunifuDropdown3.Items.AddRange(arrayMOL);
-            bunifuDropdown5.Items.AddRange(arrayMOL);
+            LoadDataInMainDataGridView(dbHelper.selectAssignmentEA);
 
-            string[] Dol = getDol().Select(n => n.ToString()).ToArray();
-            bunifuDropdown4.Items.AddRange(Dol);
+            LoadDataInDropdowns();
+
+            string[] transformUserName = userName.Split(' ');
+            this.userName = $"{transformUserName[0]} {transformUserName[1][0]}. {transformUserName[2][0]}.";
         }
 
-        public List<string> getMOL()
+        private void LoadDataInMainDataGridView(string query)
         {
-            List<string> opers = new List<string>();
-            DatabaseHelper db = new DatabaseHelper();
-            DataTable table = new DataTable();
-            MySqlDataAdapter adapter = new MySqlDataAdapter();
-            MySqlCommand command = new MySqlCommand("SELECT * FROM `мол`", db.GetConnection());
-            adapter.SelectCommand = command;
-            adapter.Fill(table);
-            foreach (DataRow item in table.Rows)
+            using (var connection = dbHelper.GetConnection())
             {
-                opers.Add(item[2].ToString() + " " + item[3].ToString() + " " + item[4].ToString());
+                connection.Open();
+
+                using (var command = new MySqlCommand(query, connection))
+                {
+                    using (var adapter = new MySqlDataAdapter(command))
+                    {
+                        DataTable table = new DataTable();
+                        adapter.Fill(table);
+                        bunifuMainDataGridView.DataSource = table.DefaultView;
+                        bunifuMainDataGridView.Columns[0].Visible = false;
+                        bunifuMainDataGridView.Columns[1].Visible = false;
+                        bunifuMainDataGridView.Columns[2].Visible = false;
+                    }
+                }
             }
-            return opers;
-        }
-        public List<string> getDol()
-        {
-            List<string> opers = new List<string>();
-            DatabaseHelper db = new DatabaseHelper();
-            DataTable table = new DataTable();
-            MySqlDataAdapter adapter = new MySqlDataAdapter();
-            MySqlCommand command = new MySqlCommand("SELECT * FROM `должности`", db.GetConnection());
-            adapter.SelectCommand = command;
-            adapter.Fill(table);
-            foreach (DataRow item in table.Rows)
-            {
-                opers.Add(item[1].ToString());
-            }
-            return opers;
-        }
-        private void bunifuTextBox15_KeyUp(object sender, KeyEventArgs e)
-        {
-            for (int i = 0; i < bunifuDataGridView1.RowCount; i++)
-            {
-                bunifuDataGridView1.Rows[i].Selected = false;
-                for (int j = 0; j < bunifuDataGridView1.ColumnCount; j++)
-                    if (bunifuDataGridView1.Rows[i].Cells[j].Value != null)
-                        if (bunifuDataGridView1.Rows[i].Cells[j].Value.ToString().ToLower().Contains(bunifuTextBox15.Text.ToLower()))
-                        {
-                            bunifuDataGridView1.Rows[i].Selected = true;
-                            break;
-                        }
-            }
-            if (bunifuTextBox15.Text == "")
-            {
-                bunifuDataGridView1.ClearSelection();
-            }
+            isSelectEditRecord = false;
+            fieldsEditedRecord.Clear();
         }
 
-        private void bunifuButton3_Click(object sender, EventArgs e)
+        private void LoadDataInDropdowns()
         {
-            bunifuPages1.SelectedTab = tabPage2;
-            groupBox1.Text = "Операция: Поиск";
-            bunifuTextBox15.Focus();
+            string[] assetCustodianNamesArray = dbHelper.GetAssetCustodian_fieldName("").Select(n => n.ToString()).ToArray();
+            bunifuEditRecordDropdown.Items.AddRange(assetCustodianNamesArray);
+            bunifuEditRecordDropdown.SelectedIndex = 1;
+
+            bunifuFiltrACustodianDropdown.Items.AddRange(assetCustodianNamesArray);
+            bunifuFiltrACustodianDropdown.SelectedIndex = 1;
+
+            bunifuCreateDocumentDropdown.Items.AddRange(assetCustodianNamesArray);
+            bunifuCreateDocumentDropdown.SelectedIndex = 1;
+
+
+            string[] positionsNamesArray = dbHelper.GetPositions_fieldName("").Select(n => n.ToString()).ToArray();
+            bunifuFiltrPositionDropdown.Items.AddRange(positionsNamesArray);
+            bunifuFiltrPositionDropdown.SelectedIndex = 1;
+
+            bunifuFiltrationDropdown.SelectedIndex = 0;
         }
 
-        private void bunifuDataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+
+
+
+        private void BunifuEditRecordButton_Click(object sender, EventArgs e)
         {
+            string[] selectAC_Name = bunifuEditRecordDropdown.Text.Split(' ');
+
+            int id_NewAssetCustodian = dbHelper.GetIdByName_AssetCustodian((selectAC_Name[0], selectAC_Name[1], selectAC_Name[2]));
+
             try
             {
-                pr = 1;
-                editItem.Clear();
-                for (int i = 0; i < bunifuDataGridView1.ColumnCount; i++)
+                dbHelper.openConnection();
+
+                using (var connection = dbHelper.GetConnection())
                 {
-                    editItem.Add(bunifuDataGridView1.Rows[e.RowIndex].Cells[i].Value.ToString());
+                    using (var command = new MySqlCommand("UPDATE `assignment_ea` SET `id_enterprise_assets` = @id_enterprise_assets, `id_asset_custodian` = @id_asset_custodian WHERE `id_assignment_ea` = @id_assignment_ea;", connection))
+                    {
+                        command.Parameters.AddWithValue("@id_enterprise_assets", fieldsEditedRecord[1]);
+                        command.Parameters.AddWithValue("@id_asset_custodian", id_NewAssetCustodian);
+                        command.Parameters.AddWithValue("@id_assignment_ea", fieldsEditedRecord[0]);
+
+                        if (command.ExecuteNonQuery() == 1)
+                        {
+                            MessageBox.Show("Основное средство успешно закреплено за материально ответственным лицом!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                            dbHelper.closeConnection();
+
+                            LoadDataInMainDataGridView(dbHelper.selectAssignmentEA);
+
+                            isSelectEditRecord = false;
+                            fieldsEditedRecord.Clear();
+                            bunifuOperationPages.SelectedTab = StartPage;
+                            groupBox.Text = "Операция:";
+                        }
+                        else
+                        {
+                            MessageBox.Show("Ошибка закрепления основного средства! Попробуете ещё раз или перезагрузите программу.", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            dbHelper.closeConnection();
+                        }
+                    }
                 }
             }
             catch
             {
-                pr = 0;
+                MessageBox.Show("Связь с базой данных не установлена! Проверьте соединение с сетью и перезапустите программу!", "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                dbHelper.closeConnection();
             }
         }
 
-        private void bunifuButton2_Click(object sender, EventArgs e)
+        private void BunifuSearchTextBox_KeyUp(object sender, KeyEventArgs e)
         {
-            if (pr == 0 || pr == null)
+            for (int i = 0; i < bunifuMainDataGridView.RowCount; i++)
+            {
+                bunifuMainDataGridView.Rows[i].Selected = false;
+                for (int j = 0; j < bunifuMainDataGridView.ColumnCount; j++)
+                    if (bunifuMainDataGridView.Rows[i].Cells[j].Value != null)
+                        if (bunifuMainDataGridView.Rows[i].Cells[j].Value.ToString().ToLower().Contains(bunifuSearchTextBox.Text.ToLower()))
+                        {
+                            bunifuMainDataGridView.Rows[i].Selected = true;
+                            break;
+                        }
+            }
+            if (bunifuSearchTextBox.Text == "")
+            {
+                bunifuMainDataGridView.ClearSelection();
+            }
+        }
+
+        private void BunifuFiltrationButton_Click(object sender, EventArgs e)
+        {
+            string queri = "";
+
+            if (bunifuFiltrationDropdown.Text == "материально ответственному лицу")
+            {
+                string[] selectAC_Name = bunifuFiltrACustodianDropdown.Text.Split(' ');
+
+                queri = $"WHERE `asset_custodian`.`surname` = '{selectAC_Name[0]}' and `asset_custodian`.`name` = '{selectAC_Name[1]}' and `asset_custodian`.`father_name` = '{selectAC_Name[2]}';";
+            }
+            else
+            {
+                queri = "WHERE `positions`.`name` = '" + bunifuFiltrPositionDropdown.Text + "';";
+            }
+
+            LoadDataInMainDataGridView($"{dbHelper.selectAssignmentEA} {queri}");
+        }
+
+        private void BunifuCreateReportButton_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show($"Подтвердите формирование списка ОС, закреплённых за сотрудником {bunifuCreateDocumentDropdown.Text}!", "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.No)
+            {
+                return;
+            }
+
+            MessageBox.Show("Начало процесса формирования документа!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            bunifuCreateReportButton.Enabled = false;
+
+            DateTime currentDateTime = DateTime.Now;
+            string[] selectAC_Name = bunifuCreateDocumentDropdown.Text.Split(' ');
+
+            int id_AssetCustodian_ForCreateDoc = dbHelper.GetIdByName_AssetCustodian((selectAC_Name[0], selectAC_Name[1], selectAC_Name[2]));
+            DataTable reportTable = dbHelper.GetReport_EAassignedACustodian(id_AssetCustodian_ForCreateDoc);
+
+            string newFileName = $@"{Environment.GetFolderPath(Environment.SpecialFolder.Desktop)}\Список ОС на МОЛ {bunifuCreateDocumentDropdown.Text}.docx";
+
+            WordHelper wordHelper = new WordHelper(Application.StartupPath + @"\\document_templates\Report_EAassignedACustodian.docx");
+
+            var items = new Dictionary<string, string>
+            {
+                {"$docNumber$", $"№{currentDateTime.Day}-{id_AssetCustodian_ForCreateDoc}"},
+                {"$createDate$", $"{currentDateTime:dd.MM.yyyy}"},
+                {"$assetCustodian$", bunifuCreateDocumentDropdown.Text},
+                {"$economistName$", userName},
+            };
+
+            if (wordHelper.Process(items, newFileName))
+            {
+                wordHelper.InsertTable(reportTable, 2);
+
+                if (MessageBox.Show("Отчёт сформирован! Открыть сформированный документ?", "Открыть документ?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    System.Diagnostics.Process.Start(newFileName);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Произошла ошибка при создании отчёта! Повторите попытку или перезагрузите программу!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            wordHelper.SaveAndClose(newFileName);
+
+            bunifuCreateReportButton.Enabled = true;
+        }
+
+
+
+        private void BunifuEditRecordDropdown_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            bunifuEditRecordButton.Enabled = true;
+        }
+
+        private void BunifuFiltrationDropdown_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch (bunifuFiltrationDropdown.Text)
+            {
+                case "материально ответственному лицу": { bunifuFiltrationPages.SelectedTab = FiltrAssetCustodianPage; break; }
+                case "должности": { bunifuFiltrationPages.SelectedTab = FiltrPositionPage; break; }
+            }
+        }
+
+
+
+
+        private void BunifuGoEditPageButton_Click(object sender, EventArgs e)
+        {
+            if (!isSelectEditRecord)
             {
                 MessageBox.Show("Не выбран элемент для изменения!", "Внимание!");
+                return;
             }
-            else
-            {
-                bunifuPages1.SelectedTab = tabPage1;
-                groupBox1.Text = "Операция: Изменение данных";
-                bunifuTextBox1.Text = editItem[3].ToString();
-                bunifuLabel1.Text = editItem[4].ToString();
-                bunifuDropdown1.Text = editItem[5].ToString();
-            }
+
+            bunifuOperationPages.SelectedTab = EditPage;
+            groupBox.Text = "Операция: Изменение данных";
+            bunifuNameEATextBox.Text = fieldsEditedRecord[3].ToString();
+            bunifuAssetTagLabel.Text = fieldsEditedRecord[4].ToString();
+            bunifuEditRecordDropdown.Text = fieldsEditedRecord[5].ToString();
         }
 
-        private void bunifuDropdown1_SelectedIndexChanged(object sender, EventArgs e)
+        private void BunifuGoSearchPageButton_Click(object sender, EventArgs e)
         {
-            bunifuButton8.Enabled = true;
+            bunifuOperationPages.SelectedTab = SearchPage;
+            groupBox.Text = "Операция: Поиск";
+            bunifuSearchTextBox.Focus();
         }
 
-        private void bunifuButton8_Click(object sender, EventArgs e)
+        private void BunifuGoFiltrPageButton_Click(object sender, EventArgs e)
         {
-            DatabaseHelper db1 = new DatabaseHelper();
-            DataTable table1 = new DataTable();
-            MySqlDataAdapter adapter1 = new MySqlDataAdapter();
-            MySqlCommand command1 = new MySqlCommand("SELECT * FROM `мол`", db1.GetConnection());
-            adapter1.SelectCommand = command1;
-            adapter1.Fill(table1);
-            string[] fio = new string[1];
-            int id_mol = 0;
-            foreach (DataRow item in table1.Rows)
+            bunifuOperationPages.SelectedTab = FiltrationPage;
+            groupBox.Text = "Операция: Фильтрация";
+        }
+
+        private void BunifuGoCreateDocPageButton_Click(object sender, EventArgs e)
+        {
+            bunifuOperationPages.SelectedTab = CreateDocPage;
+            groupBox.Text = "Операция: Отчёт на МОЛ";
+        }
+
+
+
+        private void BunifuMainDataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            try
             {
-                fio[0] = $"{item[2].ToString()} {item[3].ToString()} {item[4].ToString()}";
-                if (bunifuDropdown1.Text == fio[0])
+                isSelectEditRecord = true;
+                fieldsEditedRecord.Clear();
+
+                for (int i = 0; i < bunifuMainDataGridView.ColumnCount; i++)
                 {
-                    id_mol = Convert.ToInt32(item[0]);
-                    break;
+                    fieldsEditedRecord.Add(bunifuMainDataGridView.Rows[e.RowIndex].Cells[i].Value.ToString());
                 }
             }
-            MySqlCommand command4 = new MySqlCommand("UPDATE `закрепление` SET `id_ос` = '" + editItem[1] + "', `id_мол` = '" + id_mol + "' WHERE `закрепление`.`id_закреп` = " + editItem[0] + ";", db.GetConnection());
-            db.openConnection();
-            if (command4.ExecuteNonQuery() == 1)
+            catch
             {
-                MessageBox.Show("Основное средство закреплено за материально ответственным лицом.", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                DatabaseHelper db = new DatabaseHelper();
-                DataTable table = new DataTable();
-                MySqlDataAdapter adapter = new MySqlDataAdapter();
-                MySqlCommand command = new MySqlCommand(db.selectMOL_Zakrep, db.GetConnection());
-                adapter.SelectCommand = command;
-                adapter.Fill(table);
-                bunifuDataGridView1.DataSource = table.DefaultView;
-                bunifuDataGridView1.Columns[0].Visible = false; bunifuDataGridView1.Columns[1].Visible = false; bunifuDataGridView1.Columns[2].Visible = false;
-                bunifuPages1.SelectedTab = tabPage0;
-                groupBox1.Text = "Операция:";
-            }
-            else
-            {
-                MessageBox.Show("Ошибка закрепления основного средства! Попробуете ещё раз или перезагрузите программу.", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void bunifuButton6_Click(object sender, EventArgs e)
-        {
-            bunifuPages1.SelectedTab = tabPage3;
-            groupBox1.Text = "Операция: Фильтрация";
-        }
-
-        private void bunifuButton10_Click(object sender, EventArgs e) // КНОПКА ВЫПОЛНЕНИЯ ФИЛЬТРАЦИИ
-        {
-            int id_vid_os = 0;
-            if (bunifuDropdown2.Text == "" || bunifuDropdown2.Text == null)
-            {
-                MessageBox.Show("Пожалуйста, выберите критерий фильтрации.", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            else if (bunifuDropdown2.Text == "материально ответственному лицу" && (bunifuDropdown3.Text == "" || bunifuDropdown3.Text == null))
-            {
-                MessageBox.Show("Пожалуйста, выберите материально ответственное лицо.", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            else if (bunifuDropdown2.Text == "должности" && (bunifuDropdown4.Text == "" || bunifuDropdown4.Text == null))
-            {
-                MessageBox.Show("Пожалуйста, выберите должность материально ответственного лица.", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            else
-            {
-                string queri = "";
-                DatabaseHelper db3 = new DatabaseHelper();
-                db3.openConnection();
-                DataTable table3 = new DataTable();
-                MySqlDataAdapter adapter3 = new MySqlDataAdapter();
-                if (bunifuDropdown2.Text == "материально ответственному лицу")
-                {
-                    string[] st = bunifuDropdown3.Text.Split(' ');
-                    queri = "SELECT `id_закреп`, `ос`.`id_ос`, `мол`.`id_мол`, `ос`.`наименование` AS `Наименование ОС`, `ин` AS `Инвентарный номер`, CONCAT(`мол`.`ф`,' ',`мол`.`и`,' ',`мол`.`о`) AS `Материально ответственное лицо`, `должности`.`наименование` AS `Должность` FROM `ос` INNER JOIN (`закрепление` INNER JOIN (`мол` INNER JOIN `должности` ON `мол`.`id_должности`=`должности`.`id_должности`) ON `закрепление`.`id_мол`=`мол`.`id_мол` ) ON `ос`.`id_ос`=`закрепление`.`id_ос` WHERE `ф`='"+st[0]+"' and `и`='"+st[1]+"' and `о`='"+st[2]+"';";
-                }
-                else
-                {
-                    queri = "SELECT `id_закреп`, `ос`.`id_ос`, `мол`.`id_мол`, `ос`.`наименование` AS `Наименование ОС`, `ин` AS `Инвентарный номер`, CONCAT(`мол`.`ф`,' ',`мол`.`и`,' ',`мол`.`о`) AS `Материально ответственное лицо`, `должности`.`наименование` AS `Должность` FROM `ос` INNER JOIN (`закрепление` INNER JOIN (`мол` INNER JOIN `должности` ON `мол`.`id_должности`=`должности`.`id_должности`) ON `закрепление`.`id_мол`=`мол`.`id_мол` ) ON `ос`.`id_ос`=`закрепление`.`id_ос` WHERE `должности`.`наименование`='"+bunifuDropdown4.Text+"';";
-                }
-                try
-                {
-                    MySqlCommand command3 = new MySqlCommand(queri, db3.GetConnection());
-                    adapter3.SelectCommand = command3;
-                    adapter3.Fill(table3);
-                    bunifuDataGridView1.DataSource = table3.DefaultView;
-                    bunifuDataGridView1.Columns[0].Visible = false; bunifuDataGridView1.Columns[1].Visible = false; bunifuDataGridView1.Columns[2].Visible = false;
-                    db3.closeConnection();
-                }
-                catch
-                {
-                    MessageBox.Show("Запрос не обработан.", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-            }
-        }
-
-        private void bunifuDropdown2_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            switch (bunifuDropdown2.Text)
-            {
-                case "материально ответственному лицу": { bunifuPages2.SelectedTab = tabPage6; break; }
-                case "должности": { bunifuPages2.SelectedTab = tabPage7; break; }
-            }
-        }
-
-        private void bunifuButton7_Click(object sender, EventArgs e)
-        {
-            bunifuPages1.SelectedTab = tabPage4;
-            groupBox1.Text = "Операция: Отчёт на МОЛ";
-        }
-        int id_mol = 0;
-        private void bunifuDropdown5_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            //try
-            //{
-            
-            string[] st = bunifuDropdown5.Text.Split(' ');
-            DatabaseHelper db3 = new DatabaseHelper();
-            db3.openConnection();
-            DataTable table3 = new DataTable();
-            MySqlDataAdapter adapter3 = new MySqlDataAdapter();
-            MySqlCommand command3 = new MySqlCommand("SELECT `мол`.`id_мол` FROM `мол` WHERE `ф`='" + st[0] + "' and `и`='" + st[1] + "' and `о`='" + st[2] + "';", db3.GetConnection());
-            adapter3.SelectCommand = command3;
-            adapter3.Fill(table3);
-            foreach (DataRow item in table3.Rows)
-            {
-                id_mol = Convert.ToInt32(item[0]);
-            }
-            DatabaseHelper db = new DatabaseHelper();
-            DataTable table = new DataTable();
-            MySqlDataAdapter adapter = new MySqlDataAdapter();
-            MySqlCommand command = new MySqlCommand("SELECT `ос`.`наименование` AS `Наименование ОС`, `ин` AS `Инвентарный номер`, `ос`.`дата_принятия` AS `Дата принятия` FROM `ос` INNER JOIN (`закрепление` INNER JOIN `мол` ON `закрепление`.`id_мол`=`мол`.`id_мол` ) ON `ос`.`id_ос`=`закрепление`.`id_ос` WHERE `мол`.`id_мол`="+id_mol+";", db.GetConnection());
-            adapter.SelectCommand = command;
-            adapter.Fill(table);
-            bunifuDataGridView2.DataSource = table.DefaultView;
-
-            db3.closeConnection();
-        }
-
-
-
-        List<string> name = new List<string>();
-        List<string> in_n = new List<string>();
-        List<string> d_p = new List<string>();
-
-
-        private void getMark()
-        {
-            DatabaseHelper db = new DatabaseHelper();
-            DataTable table = new DataTable();
-            MySqlDataAdapter adapter = new MySqlDataAdapter();
-            MySqlCommand command = new MySqlCommand("SELECT `ос`.`наименование` AS `Наименование ОС`, `ин` AS `Инвентарный номер`, `ос`.`дата_принятия` AS `Дата принятия` FROM `ос` INNER JOIN (`закрепление` INNER JOIN `мол` ON `закрепление`.`id_мол`=`мол`.`id_мол` ) ON `ос`.`id_ос`=`закрепление`.`id_ос` WHERE `мол`.`id_мол`=" + id_mol + ";", db.GetConnection());
-            adapter.SelectCommand = command;
-            adapter.Fill(table);
-            foreach (DataRow item in table.Rows)
-            {
-                name.Add(item[0].ToString());
-                in_n.Add(item[1].ToString());
-                DateTime d1 = Convert.ToDateTime(item[2]);
-                string d_s = $"{d1.Day}-{d1.Month}-{d1.Year}";
-                d_p.Add(d_s);
-            }
-
-        }
-
-        private void bunifuButton5_Click(object sender, EventArgs e)
-        {
-            if (bunifuDropdown5.Text=="" || bunifuDropdown5.Text == null)
-            {
-                MessageBox.Show("Пожалуйста, выберите материально ответственное лицо.", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            else
-            {
-                MessageBox.Show("Начало процесса формирования документа!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                getMark();
-                DateTime d1 = d;
-                string d_s = $"{d1.Day}-{d1.Month}-{d1.Year}";
-                string id = id_mol.ToString();
-
-                string path = $@"C:\Users\ALEKS\Desktop\Список ОС на МОЛ №{id}.docx";
-                Object newFileName = path;
-                var newpathdoc = newFileName;
-
-                    //TODO
-                    var wordAPP = new Word.Application();
-                    wordAPP.Visible = false;
-
-                    var worddocument = wordAPP.Documents.Open(Application.StartupPath + @"\\Word\OSnaMOL.docx");
-
-                    //ПЕРЕДАЧА ЗНАЧЕНИЙ
-                    Object missing = Type.Missing;
-                    var items = new Dictionary<string, string>
-                    {
-                        {"$n_d$", id},
-                        {"$d_s$", d_s},
-                        {"$mol$", bunifuDropdown5.Text},
-                    };
-                    foreach (var item in items)
-                    {
-                        Word.Find find = wordAPP.Selection.Find;
-                        find.Text = item.Key;
-                        find.Replacement.Text = item.Value;
-
-                        Object wrap = Word.WdFindWrap.wdFindContinue;
-                        Object replace = Word.WdReplace.wdReplaceAll;
-
-                        find.Execute(
-                        FindText: Type.Missing,
-                        MatchCase: false,
-                        MatchWholeWord: false,
-                        MatchWildcards: false,
-                        MatchSoundsLike: missing,
-                        MatchAllWordForms: false,
-                        Forward: true,
-                        Wrap: wrap,
-                        Format: false,
-                        ReplaceWith: missing, Replace: replace);
-                    }
-
-                    //Таблица 1
-                    var n = 0;
-
-                    Word.Table tab = worddocument.Tables[2];
-                    for (int i = 1; i <= name.Count; i++)
-                    {
-                        tab.Rows.Add(Missing.Value);
-                        tab.Cell(i, 1).Range.Text = name[n];
-                        tab.Cell(i, 2).Range.Text = in_n[n];
-                        tab.Cell(i, 3).Range.Text = d_p[n];
-                        n++;
-                    }
-                MessageBox.Show("Отчёт сформирован!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                worddocument.SaveAs(newpathdoc);
-                wordAPP.Visible = true;
+                isSelectEditRecord = false;
+                fieldsEditedRecord.Clear();
             }
         }
     }

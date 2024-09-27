@@ -102,9 +102,10 @@ namespace EnterpriseAssetTracker.UsersControlers
                 return;
             }
 
-            DialogResult result = MessageBox.Show($"Вы уверены, что хотите удалить запись?", "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Information); ;
-            if (result.ToString() == "No") return;
-            
+            if (MessageBox.Show($"Вы уверены, что хотите удалить запись?", "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+            {
+                return;
+            }
 
             if (bunifu_EA_on_writeoff_CheckBox.Checked == true)
             {

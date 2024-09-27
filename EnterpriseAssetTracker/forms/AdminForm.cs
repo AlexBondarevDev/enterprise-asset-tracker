@@ -24,14 +24,11 @@ namespace EnterpriseAssetTracker.Forms
 
         private void BunifuCloseButton_Click(object sender, EventArgs e)
         {
-            DialogResult result = MessageBox.Show($"{User}, Вы уверены, что хотите закончить работу?", "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Information); ;
-            if (result.ToString() == "Yes")
+            if (MessageBox.Show($"{User}, Вы уверены, что хотите закончить работу?", "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 this.Close();
             }
         }
-
-
 
         /// <summary>
         /// Switch between expanded and collapsed menu positions.
