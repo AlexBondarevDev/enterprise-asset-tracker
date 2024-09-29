@@ -188,7 +188,6 @@ namespace EnterpriseAssetTracker.Scripts
 
 
 
-        public string selectREM_OS = "SELECT `id_р`, `ремонт`.`id_ос`, `ремонт`.`id_вида_р`, `ос`.`наименование` AS `Наименование ОС`, `ин` AS `Инвентарный номер`, `вид_р`.`наименование` AS `Вид ремонта`, `дата_начала` AS `Дата начала ремонта`, `дата_окончания` AS `Дата окончания ремонта`, `сум_затрат` AS `Сумма затрат на ремонт: руб.` FROM `ремонт` INNER JOIN `ос` ON `ремонт`.`id_ос`=`ос`.`id_ос` INNER JOIN `вид_р` ON `ремонт`.`id_вида_р`=`вид_р`.`id_вида_р`";
 
         public string selectSPIS_OS = "SELECT `id_спис`, `ос`.`id_ос`, `причины`.`id_причины`, `ос`.`наименование` AS `Наименование ОС`, `ин` AS `Инвентарный номер`, `причины`.`наименование` AS `Причина списания`, `дата_списания` AS `Дата списания` FROM `списание` INNER JOIN `ос` ON `списание`.`id_ос`=`ос`.`id_ос` INNER JOIN `причины` ON `списание`.`id_причины`=`причины`.`id_причины`;";
 
@@ -281,6 +280,13 @@ namespace EnterpriseAssetTracker.Scripts
         //End GetFieldName queries for Directories
 
 
+
+
+
+
+
+
+
         //Start GetIdByName queries for operation INSERT and UPDATE
 
 
@@ -294,7 +300,10 @@ namespace EnterpriseAssetTracker.Scripts
             return GetIdByName_ForAssetCustodian($"SELECT `id_asset_custodian` FROM `asset_custodian` WHERE `surname` = @searchedSurname AND `name` = @searchedName AND `father_name` = @searchedFather_name;", searchedName);
         }
 
-
+        public int GetIdByName_TypeRepair(string searchedName)
+        {
+            return GetIdByName($"SELECT `id_type_repair` FROM `types_repair` WHERE `name` = @searchedName;", searchedName);
+        }
 
 
 
@@ -369,6 +378,10 @@ namespace EnterpriseAssetTracker.Scripts
 
 
         //End GetIdByName queries for operation INSERT and UPDATE
+
+
+
+
 
 
         //Start queries for documents and reports

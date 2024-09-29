@@ -1,758 +1,831 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Data.OleDb;
-using EnterpriseAssetTracker.Forms;
 using EnterpriseAssetTracker.Scripts;
 using MySql.Data.MySqlClient;
-using Word = Microsoft.Office.Interop.Word;
-using System.IO;
-using System.Reflection;
+using Bunifu.UI.WinForms;
+
+
 
 namespace EnterpriseAssetTracker.UsersControlers
 {
     public partial class RepairEA_UC : UserControl
     {
-        DatabaseHelper db = new DatabaseHelper();
-        List<string> editItem = new List<string>();
-        public int pr = 0, pr1 = 0;
-        DateTime d = DateTime.Now;
+        DatabaseHelper dbHelper = new DatabaseHelper();
+        List<string> fieldsEditedRecord = new List<string>();
+        bool isSelectEditRecord = false;
+
         public RepairEA_UC()
         {
             InitializeComponent();
-            DatabaseHelper db = new DatabaseHelper();
-            DataTable table = new DataTable();
-            MySqlDataAdapter adapter = new MySqlDataAdapter();
-            MySqlCommand command = new MySqlCommand(db.selectREM_OS, db.GetConnection());
-            adapter.SelectCommand = command;
-            adapter.Fill(table);
-            bunifuDataGridView1.DataSource = table.DefaultView;
-            bunifuDataGridView1.Columns[0].Visible = false; bunifuDataGridView1.Columns[1].Visible = false; bunifuDataGridView1.Columns[2].Visible = false;
 
-            bunifuDatePicker1.Value = d;
-            bunifuDatePicker1.MaxDate = d;
-            bunifuDatePicker2.Value = d;
-            bunifuDatePicker2.MaxDate = d;
-            bunifuDatePicker3.Value = d;
-            bunifuDatePicker3.MaxDate = d;
-            bunifuDatePicker4.Value = d;
-            bunifuDatePicker4.MaxDate = d;
-            bunifuDatePicker5.Value = d;
-            bunifuDatePicker5.MaxDate = d;
-            bunifuDatePicker6.Value = d;
-            bunifuDatePicker6.MaxDate = d;
-            bunifuDatePicker7.Value = d;
-            bunifuDatePicker7.MaxDate = d;
-            bunifuDatePicker8.Value = d;
-            bunifuDatePicker8.MaxDate = d;
-            bunifuDatePicker9.Value = d;
-            bunifuDatePicker9.MaxDate = d;
+            RefreshData("");
 
-            string[] arrayVid_Rem = getVid_Rem().Select(n => n.ToString()).ToArray();
-            bunifuDropdown1.Items.AddRange(arrayVid_Rem);
-            bunifuDropdown2.Items.AddRange(arrayVid_Rem);
-            bunifuDropdown4.Items.AddRange(arrayVid_Rem);
-        }
-
-        private List<string> getVid_Rem()
-        {
-            List<string> opers = new List<string>();
-            DatabaseHelper db = new DatabaseHelper();
-            DataTable table = new DataTable();
-            MySqlDataAdapter adapter = new MySqlDataAdapter();
-            MySqlCommand command = new MySqlCommand("SELECT * FROM `вид_р`", db.GetConnection());
-            adapter.SelectCommand = command;
-            adapter.Fill(table);
-            foreach (DataRow item in table.Rows)
+            foreach (DataGridViewColumn col in bunifuMainDataGridView.Columns)
             {
-                opers.Add(item[1].ToString());
+                bunifuCreateDocDataGridView.Columns.Add((DataGridViewColumn)col.Clone());
             }
-            return opers;
+
+            LoadDataInDropdowns();
+
+            SetValueInDatePickers();
         }
 
-        private void bunifuCheckBox1_CheckedChanged(object sender, Bunifu.UI.WinForms.BunifuCheckBox.CheckedChangedEventArgs e)
+
+        private void RefreshData(string addFilteringConditions)
         {
-            if (bunifuCheckBox1.Checked == true)
+            string query = "";
+            if (bunifuAllEA_CheckBox.Checked == true)
             {
-                bunifuCheckBox2.Checked = false; bunifuCheckBox3.Checked = false;
-                DatabaseHelper db = new DatabaseHelper();
-                DataTable table = new DataTable();
-                MySqlDataAdapter adapter = new MySqlDataAdapter();
-                MySqlCommand command = new MySqlCommand(db.selectREM_OS, db.GetConnection());
-                adapter.SelectCommand = command;
-                adapter.Fill(table);
-                bunifuDataGridView1.DataSource = table.DefaultView;
-                bunifuDataGridView1.Columns[0].Visible = false; bunifuDataGridView1.Columns[1].Visible = false; bunifuDataGridView1.Columns[2].Visible = false;
+                if (addFilteringConditions == "")
+                {
+                    query = dbHelper.selectRepairEA;
+                }
+                else
+                {
+                    query = $"{dbHelper.selectRepairEA} WHERE {addFilteringConditions}";
+                }
+
             }
+            else if (bunifuAssignmentEA_CheckBox.Checked == true)
+            {
+                if (addFilteringConditions == "")
+                {
+                    query = $"{dbHelper.selectRepairEA} WHERE `status` = 1";
+                }
+                else
+                {
+                    query = $"{dbHelper.selectRepairEA} WHERE `status` = 1  AND {addFilteringConditions}";
+                }
+            }
+            else
+            {
+                if (addFilteringConditions == "")
+                {
+                    query = $"{dbHelper.selectRepairEA} WHERE `status` = 0";
+                }
+                else
+                {
+                    query = $"{dbHelper.selectRepairEA} WHERE `status` = 0  AND {addFilteringConditions}";
+                }
+            }
+
+            LoadDataInDGV(bunifuMainDataGridView, query);
+
+            bunifuMainDataGridView.Columns[0].Visible = false;
+            bunifuMainDataGridView.Columns[1].Visible = false;
+            bunifuMainDataGridView.Columns[2].Visible = false;
+
+            isSelectEditRecord = false;
+            fieldsEditedRecord.Clear();
         }
 
-        private void bunifuCheckBox2_CheckedChanged(object sender, Bunifu.UI.WinForms.BunifuCheckBox.CheckedChangedEventArgs e)
+        private void LoadDataInDGV(BunifuDataGridView operarionDGV, string query)
         {
-            if (bunifuCheckBox2.Checked == true)
+            using (var connection = dbHelper.GetConnection())
             {
-                bunifuCheckBox1.Checked = false; bunifuCheckBox3.Checked = false;
-                DatabaseHelper db = new DatabaseHelper();
-                DataTable table = new DataTable();
-                MySqlDataAdapter adapter = new MySqlDataAdapter();
-                MySqlCommand command = new MySqlCommand(db.selectRemU, db.GetConnection());
-                adapter.SelectCommand = command;
-                adapter.Fill(table);
-                bunifuDataGridView1.DataSource = table.DefaultView;
-                bunifuDataGridView1.Columns[0].Visible = false; bunifuDataGridView1.Columns[1].Visible = false; bunifuDataGridView1.Columns[2].Visible = false;
+                connection.Open();
+
+                using (var command = new MySqlCommand(query, connection))
+                {
+                    using (var adapter = new MySqlDataAdapter(command))
+                    {
+                        DataTable table = new DataTable();
+                        adapter.Fill(table);
+                        operarionDGV.DataSource = table.DefaultView;
+                    }
+                }
             }
         }
 
-        private void bunifuCheckBox3_CheckedChanged(object sender, Bunifu.UI.WinForms.BunifuCheckBox.CheckedChangedEventArgs e)
+        private void LoadDataInDropdowns()
         {
-            if (bunifuCheckBox3.Checked == true)
+            string[] typeRepairArray = dbHelper.GetTypesRepair_fieldName("").Select(n => n.ToString()).ToArray();
+
+            bunifuAddRecordDropdown.Items.AddRange(typeRepairArray);
+            bunifuAddRecordDropdown.SelectedIndex = 1;
+
+            bunifuEditRecordDropdown.Items.AddRange(typeRepairArray);
+            bunifuEditRecordDropdown.SelectedIndex = 1;
+
+            bunifuFiltrTypeRepairDropdown.Items.AddRange(typeRepairArray);
+            bunifuFiltrTypeRepairDropdown.SelectedIndex = 1;
+
+            bunifuFiltrationDropdown.SelectedIndex = 1;
+        }
+
+        private void SetValueInDatePickers()
+        {
+            BunifuDatePicker[] datePickers = {
+                bunifuAddRecordDatePicker,
+                bunifuCompleteR_StartDateDatePicker,
+                bunifuEditR_StartDateDatePicker,
+                bunifuFiltrStartDate_DatePicker,
+                bunifuFiltrEndDate_DatePicker
+            };
+
+            DateTime currentDateTime = DateTime.Now;
+
+            foreach (var datePicker in datePickers)
             {
-                bunifuCheckBox1.Checked = false; bunifuCheckBox2.Checked = false;
-                DatabaseHelper db = new DatabaseHelper();
-                DataTable table = new DataTable();
-                MySqlDataAdapter adapter = new MySqlDataAdapter();
-                MySqlCommand command = new MySqlCommand(db.selectRemS, db.GetConnection());
-                adapter.SelectCommand = command;
-                adapter.Fill(table);
-                bunifuDataGridView1.DataSource = table.DefaultView;
-                bunifuDataGridView1.Columns[0].Visible = false; bunifuDataGridView1.Columns[1].Visible = false; bunifuDataGridView1.Columns[2].Visible = false;
+                datePicker.Value = currentDateTime;
+                datePicker.MaxDate = currentDateTime;
+            }
+
+        }
+
+
+        private void BunifuMainDataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                isSelectEditRecord = true;
+                fieldsEditedRecord.Clear();
+
+                for (int i = 0; i < bunifuMainDataGridView.ColumnCount; i++)
+                {
+                    fieldsEditedRecord.Add(bunifuMainDataGridView.Rows[e.RowIndex].Cells[i].Value.ToString());
+                }
+
+                if (bunifuOperationPages.SelectedTab == CompleteRPage)
+                {
+                    RefreshDataInComponentForCompleteRepair();
+                }
+                else if (bunifuOperationPages.SelectedTab == EditRecordPage)
+                {
+
+                    RefreshDataInComponentForEditRepair();
+                }
+                else if (bunifuOperationPages.SelectedTab == CreateDocPage)
+                {
+                    LoadDateInCreateDocDGV(e);
+                }
+            }
+            catch
+            {
+                isSelectEditRecord = false;
+                fieldsEditedRecord.Clear();
             }
         }
 
-        private void bunifuButton3_Click(object sender, EventArgs e)
+
+
+
+        private void BunifuGoAddRPageButtonButton_Click(object sender, EventArgs e)
         {
-            bunifuPages1.SelectedTab = tabPage2;
-            groupBox1.Text = "Операция: Поиск";
-            bunifuTextBox15.Focus();
+            bunifuOperationPages.SelectedTab = AddRecordPage;
+            groupBox.Text = "Операция: Новый ремонт";
+
+            LoadDataInDGV(bunifuAddRecordDataGridView, "SELECT `id_enterprise_assets`, `name` as `Наименование ОС`, `asset_tag` AS `Инвентарный номер`, `receipt_date` FROM `enterprise_assets` WHERE `status` = 1");
+
+            bunifuAddRecordDataGridView.Columns[0].Visible = false;
+            bunifuAddRecordDataGridView.Columns[3].Visible = false;
         }
 
-        private void bunifuTextBox15_KeyUp(object sender, KeyEventArgs e)
+        bool isSelectAddRecord = false;
+        List<string> fieldsAddRecord = new List<string>();
+
+        private void BunifuAddRecordDataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            for (int i = 0; i < bunifuDataGridView1.RowCount; i++)
+            try
             {
-                bunifuDataGridView1.Rows[i].Selected = false;
-                for (int j = 0; j < bunifuDataGridView1.ColumnCount; j++)
-                    if (bunifuDataGridView1.Rows[i].Cells[j].Value != null)
-                        if (bunifuDataGridView1.Rows[i].Cells[j].Value.ToString().ToLower().Contains(bunifuTextBox15.Text.ToLower()))
+                isSelectAddRecord = true;
+                fieldsAddRecord.Clear();
+
+                for (int i = 0; i < bunifuAddRecordDataGridView.ColumnCount; i++)
+                {
+                    fieldsAddRecord.Add(bunifuAddRecordDataGridView.Rows[e.RowIndex].Cells[i].Value.ToString());
+                }
+
+                bunifuAddRecord_EANameTextBox.Text = fieldsAddRecord[1];
+                bunifuAddRecord_AssetTagLabel.Text = fieldsAddRecord[2].ToString();
+                bunifuAddRecordDatePicker.MinDate = Convert.ToDateTime(fieldsAddRecord[3]);
+            }
+            catch
+            {
+                isSelectAddRecord = false;
+                fieldsAddRecord.Clear();
+
+                bunifuAddRecord_EANameTextBox.Text = "";
+                bunifuAddRecord_AssetTagLabel.Text = "";
+            }
+        }
+
+        private void BunifuAddRecordButton_Click(object sender, EventArgs e)
+        {
+            if (!isSelectAddRecord)
+            {
+                MessageBox.Show("Не выбрано ОС для ремонта!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                bunifuAddRecord_EANameTextBox.Focus();
+                return;
+            }
+
+
+            try
+            {
+                int id_type_repair = dbHelper.GetIdByName_TypeRepair(bunifuAddRecordDropdown.Text);
+
+                using (MySqlCommand command = new MySqlCommand("SELECT * FROM `repair` WHERE `id_enterprise_assets` = @id_enterprise_assets AND `end_date` IS null;", dbHelper.GetConnection()))
+                {
+                    command.Parameters.AddWithValue("@id_enterprise_assets", fieldsAddRecord[0]);
+
+                    dbHelper.openConnection();
+
+                    if (Convert.ToInt32(command.ExecuteScalar()) > 0)
+                    {
+                        MessageBox.Show("Основное средство на данный момент уже подвергнуто ремонту!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        dbHelper.closeConnection();
+                        return;
+                    }
+                }
+
+
+                using (MySqlCommand command = new MySqlCommand("INSERT INTO `repair` (`id_enterprise_assets`, `id_type_repair`, `start_date`, `end_date`, `amount_costs`) VALUES (@id_enterprise_assets, @id_type_repair, @start_date, NULL, NULL);", dbHelper.GetConnection()))
+                {
+                    command.Parameters.AddWithValue("@id_enterprise_assets", fieldsAddRecord[0]);
+                    command.Parameters.AddWithValue("@id_type_repair", id_type_repair);
+                    command.Parameters.AddWithValue("@start_date", $"{bunifuAddRecordDatePicker.Value:yyyy.MM.dd}");
+
+                    if (command.ExecuteNonQuery() == 1)
+                    {
+                        MessageBox.Show("Основное средство поступило на ремонт!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        dbHelper.closeConnection();
+
+                        RefreshData("");
+
+                        bunifuAddRecord_EANameTextBox.Text = "";
+                        bunifuAddRecord_AssetTagLabel.Text = "";
+
+                        isSelectAddRecord = false;
+                        fieldsAddRecord.Clear();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Ошибка поступления ОС на ремонт! Попробуете ещё раз или перезагрузите программу!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        dbHelper.closeConnection();
+                    }
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Связь с базой данных не установлена! Проверьте соединение с сетью и перезапустите программу!", "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                dbHelper.closeConnection();
+            }
+        }
+
+
+
+
+        private void BunifuGoCompleteRPageButton_Click(object sender, EventArgs e)
+        {
+            if (!isSelectEditRecord)
+            {
+                MessageBox.Show("Не выбрана запись для окончания ремонта!", "Внимание!");
+                return;
+            }
+
+            if (fieldsEditedRecord[8] != "")
+            {
+                MessageBox.Show("Данный ремонт уже окончен!", "Внимание!");
+                return;
+            }
+
+            bunifuOperationPages.SelectedTab = CompleteRPage;
+            groupBox.Text = "Операция: Окончание ремонта";
+
+            bunifuCompleteR_EANameTextBox.Text = fieldsEditedRecord[3];
+            bunifuCompleteR_TypeRTextBox.Text = fieldsEditedRecord[5];
+            bunifuCompleteR_EATagLabel.Text = fieldsEditedRecord[4];
+            bunifuCompleteR_StartDateDatePicker.Value = Convert.ToDateTime(fieldsEditedRecord[6]);
+            bunifuCompleteR_EndDateDatePicker.MinDate = bunifuCompleteR_StartDateDatePicker.Value;
+        }
+
+        private void ValidatePriceTextBox(object sender, KeyPressEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            char key = e.KeyChar;
+
+            e.Handled = true;
+
+            if (Char.IsDigit(key) || Char.IsControl(key) || key == ',')
+            {
+                if (textBox.Text.Length == 0 && (key == '0' || key == ','))
+                {
+                    e.Handled = true;
+                }
+                else if (key == ',' && textBox.Text.Contains(','))
+                {
+                    e.Handled = true;
+                }
+                else if (Char.IsControl(key))
+                {
+                    e.Handled = false;
+                }
+                else if (textBox.Text.Contains(',') && textBox.Text.Split(',')[1].Length >= 2)
+                {
+                    e.Handled = true;
+                }
+                else
+                {
+                    e.Handled = false;
+                }
+            }
+        }
+
+        private void BunifuCompleteRepairButton_Click(object sender, EventArgs e)
+        {
+            string amount_costs = "";
+
+            try
+            {
+                if (string.IsNullOrWhiteSpace(bunifuCompleteR_AmountCostsTextBox.Text))
+                {
+                    MessageBox.Show("Введите сумму затрат на ремонт!", "Внимание!");
+                    bunifuCompleteR_AmountCostsTextBox.Focus();
+                    return;
+                }
+
+                double parsedAmount = Convert.ToDouble(bunifuCompleteR_AmountCostsTextBox.Text);
+                amount_costs = Math.Round(parsedAmount, 2).ToString(System.Globalization.CultureInfo.InvariantCulture);
+            }
+            catch
+            {
+                MessageBox.Show("Проверьте корректность введённой суммы!", "Внимание!");
+                bunifuCompleteR_AmountCostsTextBox.Focus();
+                return;
+            }
+
+            try
+            {
+                using (MySqlCommand command = new MySqlCommand("UPDATE `repair` SET `end_date` = @end_date, `amount_costs` = @amount_costs WHERE `id_repair` = @id_repair;", dbHelper.GetConnection()))
+                {
+                    command.Parameters.AddWithValue("@end_date", $"{bunifuCompleteR_EndDateDatePicker.Value:yyyy.MM.dd}");
+                    command.Parameters.AddWithValue("@amount_costs", amount_costs);
+                    command.Parameters.AddWithValue("@id_repair", fieldsEditedRecord[0]);
+
+                    dbHelper.openConnection();
+
+                    if (command.ExecuteNonQuery() == 1)
+                    {
+                        MessageBox.Show("Ремонт выбранного ОС окончен!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        dbHelper.closeConnection();
+
+                        RefreshData("");
+
+                        bunifuCompleteR_AmountCostsTextBox.Text = "";
+                        bunifuOperationPages.SelectedTab = StartPage;
+                        groupBox.Text = "Операция:";
+
+                        isSelectEditRecord = false;
+                        fieldsEditedRecord.Clear();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Ошибка поступления ОС на ремонт! Попробуете ещё раз или перезагрузите программу!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        dbHelper.closeConnection();
+                    }
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Связь с базой данных не установлена! Проверьте соединение с сетью и перезапустите программу!", "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                dbHelper.closeConnection();
+            }
+        }
+
+        private void RefreshDataInComponentForCompleteRepair()
+        {
+            if (fieldsEditedRecord[8] != "")
+            {
+                MessageBox.Show("Данный ремонт уже окончен!", "Внимание!");
+
+                isSelectEditRecord = false;
+                fieldsEditedRecord.Clear();
+
+                bunifuCompleteR_EANameTextBox.Text = "";
+                bunifuCompleteR_TypeRTextBox.Text = "";
+                bunifuCompleteR_EATagLabel.Text = "";
+
+                return;
+            }
+
+            bunifuCompleteR_EANameTextBox.Text = fieldsEditedRecord[3];
+            bunifuCompleteR_TypeRTextBox.Text = fieldsEditedRecord[5];
+            bunifuCompleteR_EATagLabel.Text = fieldsEditedRecord[4];
+            bunifuCompleteR_StartDateDatePicker.Value = Convert.ToDateTime(fieldsEditedRecord[6]);
+            bunifuCompleteR_EndDateDatePicker.MinDate = bunifuCompleteR_StartDateDatePicker.Value;
+        }
+
+
+
+
+        private void RefreshDataInComponentForEditRepair()
+        {
+            if (fieldsEditedRecord[8] == "")
+            {
+                MessageBox.Show("Данный ремонт ещё не окончен! Изменение данных доступно только после окончания ремонта!", "Внимание!");
+
+                isSelectEditRecord = false;
+                fieldsEditedRecord.Clear();
+
+                bunifuEditRecord_EANameTextBox.Text = "";
+                bunifuEditRecordDropdown.Text = "";
+                bunifuEditR_EATagLabel.Text = "";
+
+                bunifuEditR_AmountCostsTextBox.Text = "";
+
+                return;
+            }
+
+            bunifuEditRecord_EANameTextBox.Text = fieldsEditedRecord[3];
+            bunifuEditRecordDropdown.Text = fieldsEditedRecord[5];
+            bunifuEditR_EATagLabel.Text = fieldsEditedRecord[4].ToString();
+
+            bunifuEditR_StartDateDatePicker.MaxDate = Convert.ToDateTime("01.01.2090");
+            bunifuEditR_EndDateDatePicker.MinDate = Convert.ToDateTime("01.01.1990");
+
+            bunifuEditR_StartDateDatePicker.Value = Convert.ToDateTime(fieldsEditedRecord[6]);
+            bunifuEditR_EndDateDatePicker.Value = Convert.ToDateTime(fieldsEditedRecord[7]);
+            bunifuEditR_StartDateDatePicker.MaxDate = bunifuEditR_EndDateDatePicker.Value;
+            bunifuEditR_EndDateDatePicker.MinDate = bunifuEditR_StartDateDatePicker.Value;
+
+            bunifuEditR_AmountCostsTextBox.Text = fieldsEditedRecord[8];
+        }
+
+        private void BunifuGoEditRPageButtonButton_Click(object sender, EventArgs e)
+        {
+            if (!isSelectEditRecord)
+            {
+                MessageBox.Show("Не выбрана запись для изменения!", "Внимание!");
+                return;
+            }
+            if (fieldsEditedRecord[8] == "")
+            {
+                MessageBox.Show("Данный ремонт ещё не окончен! Изменение данных доступно только после окончания ремонта!", "Внимание!");
+                return;
+            }
+
+            bunifuOperationPages.SelectedTab = EditRecordPage;
+            groupBox.Text = "Операция: Изменение данных";
+
+            bunifuEditRecord_EANameTextBox.Text = fieldsEditedRecord[3];
+            bunifuEditRecordDropdown.Text = fieldsEditedRecord[5];
+            bunifuEditR_EATagLabel.Text = fieldsEditedRecord[4].ToString();
+
+
+            bunifuEditR_StartDateDatePicker.MaxDate = Convert.ToDateTime("01.01.2090");
+            bunifuEditR_EndDateDatePicker.MinDate = Convert.ToDateTime("01.01.1990");
+
+            bunifuEditR_StartDateDatePicker.Value = Convert.ToDateTime(fieldsEditedRecord[6]);
+            bunifuEditR_EndDateDatePicker.Value = Convert.ToDateTime(fieldsEditedRecord[7]);
+            bunifuEditR_StartDateDatePicker.MaxDate = bunifuEditR_EndDateDatePicker.Value;
+            bunifuEditR_EndDateDatePicker.MinDate = bunifuEditR_StartDateDatePicker.Value;
+
+            bunifuEditR_AmountCostsTextBox.Text = fieldsEditedRecord[8];
+        }
+
+        private void BunifuEditR_StartDateDatePicker_ValueChanged(object sender, EventArgs e)
+        {
+            bunifuEditR_EndDateDatePicker.MinDate = bunifuEditR_StartDateDatePicker.Value;
+        }
+
+        private void BunifuEditR_EndDateDatePicker_ValueChanged(object sender, EventArgs e)
+        {
+            bunifuEditR_StartDateDatePicker.MaxDate = bunifuEditR_EndDateDatePicker.Value;
+        }
+
+        private void BunifuEditRecordButton_Click(object sender, EventArgs e)
+        {
+            string amount_costs = "";
+
+            try
+            {
+                if (string.IsNullOrWhiteSpace(bunifuEditR_AmountCostsTextBox.Text))
+                {
+                    MessageBox.Show("Введите сумму затрат на ремонт!", "Внимание!");
+                    bunifuEditR_AmountCostsTextBox.Focus();
+                    return;
+                }
+
+                double parsedAmount = Convert.ToDouble(bunifuEditR_AmountCostsTextBox.Text);
+                amount_costs = Math.Round(parsedAmount, 2).ToString(System.Globalization.CultureInfo.InvariantCulture);
+            }
+            catch
+            {
+                MessageBox.Show("Проверьте корректность введённой суммы!", "Внимание!");
+                bunifuEditR_AmountCostsTextBox.Focus();
+                return;
+            }
+
+            try
+            {
+                using (MySqlCommand command = new MySqlCommand("UPDATE `repair` SET `id_repair` = @id_repair, `start_date` = @start_date, `end_date` = @end_date, `amount_costs` = @amount_costs WHERE `id_repair` = @id_repair;", dbHelper.GetConnection()))
+                {
+                    command.Parameters.AddWithValue("@id_type_repair", dbHelper.GetIdByName_TypeRepair(bunifuEditRecordDropdown.Text));
+                    command.Parameters.AddWithValue("@start_date", $"{bunifuEditR_StartDateDatePicker.Value:yyyy.MM.dd}");
+                    command.Parameters.AddWithValue("@end_date", $"{bunifuEditR_EndDateDatePicker.Value:yyyy.MM.dd}");
+                    command.Parameters.AddWithValue("@amount_costs", amount_costs);
+                    command.Parameters.AddWithValue("@id_repair", fieldsEditedRecord[0]);
+
+                    dbHelper.openConnection();
+
+                    if (command.ExecuteNonQuery() == 1)
+                    {
+                        MessageBox.Show("Ремонт выбранного ОС окончен!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        dbHelper.closeConnection();
+
+                        RefreshData("");
+
+                        bunifuCompleteR_AmountCostsTextBox.Text = "";
+                        bunifuOperationPages.SelectedTab = StartPage;
+                        groupBox.Text = "Операция:";
+
+                        isSelectEditRecord = false;
+                        fieldsEditedRecord.Clear();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Ошибка изменения данных! Попробуете ещё раз или перезагрузите программу!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        dbHelper.closeConnection();
+                    }
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Связь с базой данных не установлена! Проверьте соединение с сетью и перезапустите программу!", "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                dbHelper.closeConnection();
+            }
+        }
+
+
+
+
+        private void BunifuFiltrationDropdown_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch (bunifuFiltrationDropdown.Text)
+            {
+                case "основному средству":
+                    {
+                        bunifuFiltrationPages.SelectedTab = FiltrEAPage;
+
+                        LoadDataInDGV(bunifuFiltrDataGridView, "SELECT `id_enterprise_assets`, `name` as `Наименование ОС`, `asset_tag` AS `Инвентарный номер`, `receipt_date` AS `Дата принятия` FROM `enterprise_assets`");
+
+                        bunifuFiltrDataGridView.Columns[0].Visible = false;
+                        break;
+                    }
+                case "виду ремонта": { bunifuFiltrationPages.SelectedTab = FiltrTypeRepairPage; break; }
+                case "дате начала ремонта": { bunifuFiltrationPages.SelectedTab = FiltrDatePage; break; }
+                case "дате окончания ремонта": { bunifuFiltrationPages.SelectedTab = FiltrDatePage; break; }
+            }
+
+            isSelectFiltrRecord = false;
+            fieldsEditedRecord.Clear();
+        }
+
+        private void BunifuFiltrationButton_Click(object sender, EventArgs e)
+        {
+            if (bunifuFiltrationDropdown.Text == "основному средству" && !isSelectFiltrRecord)
+            {
+                MessageBox.Show("Пожалуйста, выберите ОС для фильтрации!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            string queri = "";
+
+            if (bunifuFiltrationDropdown.Text == "основному средству")
+            {
+                queri = $"`repair`.`id_enterprise_assets` = {fieldsEditedRecord[0]};";
+            }
+            if (bunifuFiltrationDropdown.Text == "виду ремонта")
+            {
+                queri = $"`types_repair`.`name` = '{bunifuFiltrTypeRepairDropdown.Text}';";
+            }
+            if (bunifuFiltrationDropdown.Text == "дате начала ремонта")
+            {
+                queri = $"`start_date` BETWEEN '{bunifuFiltrStartDate_DatePicker.Value:yyyy.MM.dd}' and '{bunifuFiltrEndDate_DatePicker.Value:yyyy.MM.dd}';";
+            }
+            if (bunifuFiltrationDropdown.Text == "дате окончания ремонта")
+            {
+                queri = $"`end_date` BETWEEN '{bunifuFiltrStartDate_DatePicker.Value:yyyy.MM.dd}' and '{bunifuFiltrEndDate_DatePicker.Value:yyyy.MM.dd}';";
+            }
+
+            RefreshData(queri);
+
+
+            try
+            {
+
+                isSelectFiltrRecord = false;
+                fieldsEditedRecord.Clear();
+            }
+            catch
+            {
+                MessageBox.Show("Запрос не обработан.", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void BunifuFiltrStartDate_DatePicker_ValueChanged(object sender, EventArgs e)
+        {
+            bunifuFiltrEndDate_DatePicker.MinDate = bunifuFiltrStartDate_DatePicker.Value;
+        }
+
+        private void BunifuFiltrEndDate_DatePicker_ValueChanged(object sender, EventArgs e)
+        {
+            bunifuFiltrStartDate_DatePicker.MaxDate = bunifuFiltrEndDate_DatePicker.Value;
+        }
+
+        bool isSelectFiltrRecord = false;
+        private void BunifuFiltrDataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                isSelectFiltrRecord = true;
+                fieldsEditedRecord.Clear();
+
+                fieldsEditedRecord.Add(bunifuFiltrDataGridView.Rows[e.RowIndex].Cells[0].Value.ToString());
+            }
+            catch
+            {
+                isSelectFiltrRecord = false;
+                fieldsEditedRecord.Clear();
+            }
+        }
+
+
+
+
+
+        private void LoadDateInCreateDocDGV(DataGridViewCellEventArgs e)
+        {
+            DataGridViewRow selectedRow = bunifuMainDataGridView.Rows[e.RowIndex];
+
+            object[] rowData = new object[selectedRow.Cells.Count];
+
+
+            bunifuCreateDocDataGridView.Rows.Clear();
+
+            for (int i = 0; i < selectedRow.Cells.Count; i++)
+            {
+                rowData[i] = selectedRow.Cells[i].Value;
+            }
+
+            bunifuCreateDocDataGridView.Rows.Add(rowData);
+        }
+
+        private void BunifuCreateRepairEAActButton_Click(object sender, EventArgs e)
+        {
+            if (!isSelectEditRecord)
+            {
+                MessageBox.Show("Не выбрана запись для формирования документа!", "Внимание!");
+                return;
+            }
+
+            if (fieldsEditedRecord[8] == "")
+            {
+                MessageBox.Show("Акт ремонта составляется по завершении процесса ремонта!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            MessageBox.Show("Начало процесса формирования документа!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            bunifuCreateRepairEAActButton.Enabled = false;
+
+            string newFileName = $@"{Environment.GetFolderPath(Environment.SpecialFolder.Desktop)}\Акт ремонта ОС №{fieldsEditedRecord[4]}.docx";
+
+            WordHelper wordHelper = new WordHelper(Application.StartupPath + @"\\document_templates\Act_RepairEA.docx");
+
+            var items = new Dictionary<string, string>
+            {
+                {"$docNumber$", $"№{DateTime.Now.Day}-{fieldsEditedRecord[2]}"},
+                {"$createDate$", $"{DateTime.Now:dd.MM.yyyy}"},
+                {"$startDate$", $"{Convert.ToDateTime(fieldsEditedRecord[6]):dd.MM.yyyy}"},
+                {"$endDate$", $"{Convert.ToDateTime(fieldsEditedRecord[7]):dd.MM.yyyy}"},
+                {"$eaName$", fieldsEditedRecord[3]},
+                {"$assetTag$", fieldsEditedRecord[4]},
+                {"$repairType$", fieldsEditedRecord[5]},
+                {"$amountCosts$", fieldsEditedRecord[8]},
+            };
+
+            if (wordHelper.Process(items, newFileName))
+            {
+                if (MessageBox.Show("Акт сформирован! Открыть сформированный акт?", "Открыть документ?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    System.Diagnostics.Process.Start(newFileName);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Произошла ошибка при формировании акта! Повторите попытку или перезагрузите программу!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            wordHelper.SaveAndClose(newFileName);
+
+            bunifuCreateRepairEAActButton.Enabled = true;
+
+            isSelectEditRecord = false;
+            fieldsEditedRecord.Clear();
+            bunifuCreateDocDataGridView.Rows.Clear();
+        }
+
+
+
+        private void BunifuGoSearchPageButtonButton_Click(object sender, EventArgs e)
+        {
+            bunifuOperationPages.SelectedTab = SearchPage;
+            groupBox.Text = "Операция: Поиск";
+            bunifuSearchTextBox.Focus();
+        }
+
+        private void BunifuGoFiltrPageButton_Click(object sender, EventArgs e)
+        {
+            bunifuOperationPages.SelectedTab = FiltrPage;
+            groupBox.Text = "Операция: Фильтрация";
+        }
+
+        private void BunifuGoCreateDocPageButton_Click(object sender, EventArgs e)
+        {
+            bunifuOperationPages.SelectedTab = CreateDocPage;
+            groupBox.Text = "Операция: Акт ремонта";
+        }
+
+
+
+        private void BunifuAllEA_CheckBox_CheckedChanged(object sender, Bunifu.UI.WinForms.BunifuCheckBox.CheckedChangedEventArgs e)
+        {
+            if (bunifuAllEA_CheckBox.Checked == true)
+            {
+                bunifuAllEA_CheckBox.Enabled = false;
+                bunifuAssignmentEA_CheckBox.Enabled = true;
+                bunifuWriteOffEA_CheckBox.Enabled = true;
+
+                bunifuAssignmentEA_CheckBox.Checked = false;
+                bunifuWriteOffEA_CheckBox.Checked = false;
+
+                RefreshData("");
+
+                isSelectEditRecord = false;
+                fieldsEditedRecord.Clear();
+            }
+        }
+
+        private void BunifuAssignmentEA_CheckBox_CheckedChanged(object sender, Bunifu.UI.WinForms.BunifuCheckBox.CheckedChangedEventArgs e)
+        {
+            if (bunifuAssignmentEA_CheckBox.Checked == true)
+            {
+                bunifuAllEA_CheckBox.Enabled = true;
+                bunifuAssignmentEA_CheckBox.Enabled = false;
+                bunifuWriteOffEA_CheckBox.Enabled = true;
+
+                bunifuAllEA_CheckBox.Checked = false;
+                bunifuWriteOffEA_CheckBox.Checked = false;
+
+                RefreshData("");
+
+                isSelectEditRecord = false;
+                fieldsEditedRecord.Clear();
+            }
+        }
+
+        private void BunifuWriteOffEA_CheckBox_CheckedChanged(object sender, Bunifu.UI.WinForms.BunifuCheckBox.CheckedChangedEventArgs e)
+        {
+            if (bunifuWriteOffEA_CheckBox.Checked == true)
+            {
+                bunifuAllEA_CheckBox.Enabled = true;
+                bunifuAssignmentEA_CheckBox.Enabled = true;
+                bunifuWriteOffEA_CheckBox.Enabled = false;
+
+                bunifuAllEA_CheckBox.Checked = false;
+                bunifuAssignmentEA_CheckBox.Checked = false;
+
+                RefreshData("");
+
+                isSelectEditRecord = false;
+                fieldsEditedRecord.Clear();
+            }
+        }
+
+        private void BunifuSearchTextBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            for (int i = 0; i < bunifuMainDataGridView.RowCount; i++)
+            {
+                bunifuMainDataGridView.Rows[i].Selected = false;
+                for (int j = 0; j < bunifuMainDataGridView.ColumnCount; j++)
+                    if (bunifuMainDataGridView.Rows[i].Cells[j].Value != null)
+                        if (bunifuMainDataGridView.Rows[i].Cells[j].Value.ToString().ToLower().Contains(bunifuSearchTextBox.Text.ToLower()))
                         {
-                            bunifuDataGridView1.Rows[i].Selected = true;
+                            bunifuMainDataGridView.Rows[i].Selected = true;
                             break;
                         }
             }
-            if (bunifuTextBox15.Text == "")
+            if (bunifuSearchTextBox.Text == "")
             {
-                bunifuDataGridView1.ClearSelection();
-            }
-        }
-
-        private void bunifuDataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            try
-            {
-                pr = 1;
-                editItem.Clear();
-                for (int i = 0; i < bunifuDataGridView1.ColumnCount; i++)
-                {
-                    editItem.Add(bunifuDataGridView1.Rows[e.RowIndex].Cells[i].Value.ToString());
-                }
-                if (bunifuPages1.SelectedTab == tabPage4)
-                {
-                    DatabaseHelper db = new DatabaseHelper();
-                    DataTable table = new DataTable();
-                    MySqlDataAdapter adapter = new MySqlDataAdapter();
-                    MySqlCommand command = new MySqlCommand("SELECT `id_р`, `ремонт`.`id_ос`, `ремонт`.`id_вида_р`, `ос`.`наименование` AS `Наименование ОС`, `ин` AS `Инвентарный номер`, `вид_р`.`наименование` AS `Вид ремонта`, `дата_начала` AS `Дата начала ремонта`, `дата_окончания` AS `Дата окончания ремонта`, `сум_затрат` AS `Сумма затрат на ремонт: руб.` FROM `ремонт` INNER JOIN `ос` ON `ремонт`.`id_ос`=`ос`.`id_ос` INNER JOIN `вид_р` ON `ремонт`.`id_вида_р`=`вид_р`.`id_вида_р` WHERE `ремонт`.`id_р`=" + editItem[0] + ";", db.GetConnection());
-                    adapter.SelectCommand = command;
-                    adapter.Fill(table);
-                    bunifuDataGridView3.DataSource = table.DefaultView;
-                    bunifuDataGridView3.Columns[0].Visible = false; bunifuDataGridView3.Columns[1].Visible = false; bunifuDataGridView3.Columns[2].Visible = false;
-                }
-            }
-            catch
-            {
-                pr = 0;
-            }
-        }
-
-        private void bunifuButton7_Click(object sender, EventArgs e)
-        {
-            bunifuPages1.SelectedTab = tabPage4;
-            groupBox1.Text = "Операция: Акт ремонта";
-        }
-
-        private void bunifuButton4_Click(object sender, EventArgs e)
-        {
-            bunifuPages1.SelectedTab = tabPage1;
-            groupBox1.Text = "Операция: Новый ремонт";
-            DatabaseHelper db = new DatabaseHelper();
-            DataTable table = new DataTable();
-            MySqlDataAdapter adapter = new MySqlDataAdapter();
-            MySqlCommand command = new MySqlCommand("SELECT `id_ос`, `наименование` as `Наименование ОС`, `ин` AS `Инвентарный номер`, `дата_принятия` FROM `ос` WHERE `статус`=1", db.GetConnection());
-            adapter.SelectCommand = command;
-            adapter.Fill(table);
-            bunifuDataGridView2.DataSource = table.DefaultView;
-            bunifuDataGridView2.Columns[0].Visible = false; bunifuDataGridView2.Columns[3].Visible = false;
-
-        }
-
-        private void bunifuDataGridView2_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            try
-            {
-                pr = 1;
-                editItem.Clear();
-                for (int i = 0; i < bunifuDataGridView2.ColumnCount; i++)
-                {
-                    editItem.Add(bunifuDataGridView2.Rows[e.RowIndex].Cells[i].Value.ToString());
-                }
-                bunifuTextBox1.Text = editItem[1];
-                bunifuLabel1.Text = editItem[2].ToString();
-                bunifuDatePicker1.MinDate = Convert.ToDateTime(editItem[3]);
-            }
-            catch
-            {
-                pr = 0;
-            }
-        }
-
-        private void bunifuButton8_Click(object sender, EventArgs e)
-        {
-            if (bunifuTextBox1.Text == "" || bunifuTextBox1.Text == null)
-            {
-                MessageBox.Show("Не выбрано основное средство для ремонта!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                bunifuTextBox1.Focus();
-            }
-            else if (bunifuDropdown1.Text == "" || bunifuDropdown1.Text == null)
-            {
-                MessageBox.Show("Не выбран вид ремонта!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            else
-            {
-                DatabaseHelper db1 = new DatabaseHelper();
-                DataTable table1 = new DataTable();
-                MySqlDataAdapter adapter1 = new MySqlDataAdapter();
-                MySqlCommand command1 = new MySqlCommand("SELECT * FROM `вид_р`", db1.GetConnection());
-                adapter1.SelectCommand = command1;
-                adapter1.Fill(table1);
-                string[] vid = new string[1];
-                int id_vid = 0;
-                foreach (DataRow item in table1.Rows)
-                {
-                    vid[0] = item[1].ToString();
-                    if (bunifuDropdown1.Text == vid[0])
-                    {
-                        id_vid = Convert.ToInt32(item[0]);
-                        break;
-                    }
-                }
-                DateTime d = bunifuDatePicker1.Value;
-                string dat = $"{d.Year}-{d.Month}-{d.Day}";
-                MySqlCommand command5 = new MySqlCommand("SELECT * FROM `ремонт` WHERE `id_ос`=" + editItem[0] + " AND `дата_окончания` IS null;", db.GetConnection());
-                db.openConnection();
-                if (Convert.ToInt32(command5.ExecuteScalar()) > 0)
-                {
-                    MessageBox.Show("Основное средство на данный момент уже подвергнуто ремонту.", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    bunifuTextBox1.Text = ""; bunifuLabel1.Text = ""; bunifuDatePicker1.Value = d; bunifuDropdown1.Text = "";
-                }
-                else
-                {
-                    MySqlCommand command4 = new MySqlCommand("INSERT INTO `ремонт` (`id_ос`, `id_вида_р`, `дата_начала`, `дата_окончания`, `сум_затрат`) VALUES ('" + editItem[0] + "', '" + id_vid + "', '" + dat + "', NULL, NULL);", db.GetConnection());
-                    db.openConnection();
-                    if (command4.ExecuteNonQuery() == 1)
-                    {
-                        MessageBox.Show("Основное средство поступило на ремонт.", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        string queri = "";
-                        if (bunifuCheckBox1.Checked == true)
-                        {
-                            queri = db.selectREM_OS;
-                        }
-                        else if (bunifuCheckBox2.Checked == true)
-                        {
-                            queri = db.selectRemU;
-                        }
-                        else
-                        {
-                            queri = db.selectRemS;
-                        }
-                        DatabaseHelper db3 = new DatabaseHelper();
-                        DataTable table3 = new DataTable();
-                        MySqlDataAdapter adapter3 = new MySqlDataAdapter();
-                        MySqlCommand command3 = new MySqlCommand(queri, db3.GetConnection());
-                        adapter3.SelectCommand = command3;
-                        adapter3.Fill(table3);
-                        bunifuDataGridView1.DataSource = table3.DefaultView;
-                        bunifuDataGridView1.Columns[0].Visible = false; bunifuDataGridView1.Columns[1].Visible = false; bunifuDataGridView1.Columns[2].Visible = false;
-                        db.closeConnection();
-                        bunifuTextBox1.Text = ""; bunifuLabel1.Text = ""; bunifuDatePicker1.Value = d; bunifuDropdown1.Text = "";
-                        bunifuPages1.SelectedTab = tabPage0;
-                        groupBox1.Text = "Операция:";
-                        pr = 0;
-                    }
-                    else
-                    {
-                        MessageBox.Show("Ошибка поступления ОС на ремонт! Попробуете ещё раз или перезагрузите программу.", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
-            }
-        }
-
-        private void bunifuButton1_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (pr == 0 || pr == null)
-                {
-                    MessageBox.Show("Не выбрана запись для окончания ремонта!", "Внимание!");
-                }
-                else if (editItem[8] != "")
-                {
-                    MessageBox.Show("Данный ремонт уже окончен!", "Внимание!");
-                }
-                else
-                {
-                    bunifuPages1.SelectedTab = tabPage9;
-                    groupBox1.Text = "Операция: Окончание ремонта";
-                    bunifuTextBox2.Text = editItem[3];
-                    bunifuTextBox6.Text = editItem[5];
-                    bunifuLabel7.Text = editItem[4].ToString();
-                    bunifuDatePicker2.Value = Convert.ToDateTime(editItem[6]);
-                    bunifuDatePicker3.MinDate = bunifuDatePicker2.Value;
-                }
-            }
-            catch { int a = 0; }//тупо что-то для работы
-
-        }
-
-        private void bunifuTextBox4_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            char key = e.KeyChar;
-            e.Handled = true;
-            if (Char.IsDigit(key) || Char.IsControl(key) || key == ',')
-            {
-                if (bunifuTextBox4.Text.Length == 0 && (key == '0' || key == ','))
-                {
-                    e.Handled = true;
-                }
-                else if (key == ',' && bunifuTextBox4.Text[bunifuTextBox4.Text.Length - 1] == ',')
-                {
-                    e.Handled = true;
-                }
-                else if (Char.IsControl(key))
-                {
-                    e.Handled = false;
-                }
-                else if (bunifuTextBox4.Text.Contains(',') && key == ',')
-                {
-                    e.Handled = false;
-                }
-                else if (bunifuTextBox4.Text.Length >= 4 && bunifuTextBox4.Text[bunifuTextBox4.Text.Length - 3] == ',')
-                {
-                    e.Handled = true;
-                }
-                else e.Handled = false;
-            }
-        }
-        string sum_zat = "";
-        private void bunifuButton5_Click(object sender, EventArgs e)
-        {
-            if (bunifuTextBox4.Text == "" || bunifuTextBox4.Text == null)
-            {
-                MessageBox.Show("Введите сумму затрат на ремонт.", "Внимание!");
-                bunifuTextBox4.Focus();
-            }
-            else
-            {
-                try
-                {
-                    sum_zat = Convert.ToString(Math.Round(Convert.ToDouble(bunifuTextBox4.Text), 2)); sum_zat = sum_zat.Replace(',', '.');
-                }
-                catch { MessageBox.Show("Проверьте корректность введённой суммы.", "Внимание!"); bunifuTextBox4.Focus(); }
-                DateTime d = bunifuDatePicker3.Value;
-                string dat = $"{d.Year}-{d.Month}-{d.Day}";
-                MySqlCommand command4 = new MySqlCommand("UPDATE `ремонт` SET `дата_окончания` = '" + dat + "', `сум_затрат` = '" + sum_zat + "' WHERE `ремонт`.`id_р` = " + editItem[0] + ";", db.GetConnection());
-                db.openConnection();
-                if (command4.ExecuteNonQuery() == 1)
-                {
-                    MessageBox.Show("Ремонт окончен.", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    string queri = "";
-                    if (bunifuCheckBox1.Checked == true)
-                    {
-                        queri = db.selectREM_OS;
-                    }
-                    else if (bunifuCheckBox2.Checked == true)
-                    {
-                        queri = db.selectRemU;
-                    }
-                    else
-                    {
-                        queri = db.selectRemS;
-                    }
-                    DatabaseHelper db3 = new DatabaseHelper();
-                    DataTable table3 = new DataTable();
-                    MySqlDataAdapter adapter3 = new MySqlDataAdapter();
-                    MySqlCommand command3 = new MySqlCommand(queri, db3.GetConnection());
-                    adapter3.SelectCommand = command3;
-                    adapter3.Fill(table3);
-                    bunifuDataGridView1.DataSource = table3.DefaultView;
-                    bunifuDataGridView1.Columns[0].Visible = false; bunifuDataGridView1.Columns[1].Visible = false; bunifuDataGridView1.Columns[2].Visible = false;
-                    db.closeConnection();
-                    bunifuTextBox4.Text = ""; bunifuDatePicker3.Value = d;
-                    bunifuPages1.SelectedTab = tabPage0;
-                    groupBox1.Text = "Операция:";
-                }
-                else
-                {
-                    MessageBox.Show("Ошибка поступления ОС на ремонт! Попробуете ещё раз или перезагрузите программу.", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-        }
-
-        private void bunifuButton2_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (pr == 0 || pr == null)
-                {
-                    MessageBox.Show("Не выбрана запись для изменения!", "Внимание!");
-                }
-                else if (editItem[8] == "")
-                {
-                    MessageBox.Show("Данный ремонт ещё не окончен! Изменение данных доступно только после окончания ремонта.", "Внимание!");
-                }
-                else
-                {
-                    bunifuPages1.SelectedTab = tabPage10;
-                    groupBox1.Text = "Операция: Изменение данных";
-                    bunifuTextBox5.Text = editItem[3];
-                    bunifuDropdown2.Text = editItem[5];
-                    bunifuLabel18.Text = editItem[4].ToString();
-                    bunifuDatePicker4.Value = Convert.ToDateTime(editItem[6]);
-                    bunifuDatePicker5.Value = Convert.ToDateTime(editItem[7]);
-                    bunifuDatePicker4.MaxDate = bunifuDatePicker5.Value;
-                    bunifuDatePicker5.MinDate = bunifuDatePicker4.Value;
-                    bunifuTextBox3.Text = editItem[8];
-                    DatabaseHelper db = new DatabaseHelper();
-                    DataTable table = new DataTable();
-                    MySqlDataAdapter adapter = new MySqlDataAdapter();
-                    MySqlCommand command = new MySqlCommand("SELECT `дата_принятия` FROM `ос` WHERE `id_ос` = " + editItem[1] + ";", db.GetConnection());
-                    adapter.SelectCommand = command;
-                    adapter.Fill(table);
-                    foreach (DataRow item in table.Rows)
-                    {
-                        bunifuDatePicker4.MinDate = Convert.ToDateTime(item[0]);
-                    }
-                }
-            }
-            catch { int a = 0; }//тупо что-то для работы
-        }
-
-        private void bunifuTextBox3_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            char key = e.KeyChar;
-            e.Handled = true;
-            if (Char.IsDigit(key) || Char.IsControl(key) || key == ',')
-            {
-                if (bunifuTextBox3.Text.Length == 0 && (key == '0' || key == ','))
-                {
-                    e.Handled = true;
-                }
-                else if (key == ',' && bunifuTextBox3.Text[bunifuTextBox3.Text.Length - 1] == ',')
-                {
-                    e.Handled = true;
-                }
-                else if (Char.IsControl(key))
-                {
-                    e.Handled = false;
-                }
-                else if (bunifuTextBox3.Text.Contains(',') && key == ',')
-                {
-                    e.Handled = false;
-                }
-                else if (bunifuTextBox3.Text.Length >= 4 && bunifuTextBox3.Text[bunifuTextBox3.Text.Length - 3] == ',')
-                {
-                    e.Handled = true;
-                }
-                else e.Handled = false;
-            }
-        }
-
-        private void bunifuButton9_Click(object sender, EventArgs e)
-        {
-            if (bunifuTextBox3.Text == "" || bunifuTextBox3.Text == null)
-            {
-                MessageBox.Show("Введите сумму затрат на ремонт.", "Внимание!");
-                bunifuTextBox3.Focus();
-            }
-            else
-            {
-                string querie = $"SELECT `id_вида_р` FROM `вид_р` WHERE `наименование`='{bunifuDropdown2.Text}';";
-                DatabaseHelper db = new DatabaseHelper();
-                DataTable table = new DataTable();
-                MySqlDataAdapter adapter = new MySqlDataAdapter();
-                MySqlCommand command = new MySqlCommand(querie, db.GetConnection());
-                adapter.SelectCommand = command;
-                adapter.Fill(table);
-                int ID_Vid = 0;
-                foreach (DataRow item in table.Rows)
-                {
-                    ID_Vid = Convert.ToInt32(item[0]);
-                }
-                try
-                {
-                    sum_zat = Convert.ToString(Math.Round(Convert.ToDouble(bunifuTextBox3.Text), 2)); sum_zat = sum_zat.Replace(',', '.');
-                }
-                catch { MessageBox.Show("Проверьте корректность введённой суммы.", "Внимание!"); bunifuTextBox4.Focus(); }
-                DateTime d = bunifuDatePicker4.Value;
-                string dat1 = $"{d.Year}-{d.Month}-{d.Day}";
-                d = bunifuDatePicker5.Value;
-                string dat2 = $"{d.Year}-{d.Month}-{d.Day}";
-                MySqlCommand command4 = new MySqlCommand("UPDATE `ремонт` SET `id_вида_р` = '" + ID_Vid + "', `дата_начала` = '" + dat1 + "', `дата_окончания` = '" + dat2 + "', `сум_затрат` = '" + sum_zat + "' WHERE `ремонт`.`id_р` = " + editItem[0] + ";", db.GetConnection());
-                db.openConnection();
-                if (command4.ExecuteNonQuery() == 1)
-                {
-                    MessageBox.Show("Данные изменены.", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    string queri = "";
-                    if (bunifuCheckBox1.Checked == true)
-                    {
-                        queri = db.selectREM_OS;
-                    }
-                    else if (bunifuCheckBox2.Checked == true)
-                    {
-                        queri = db.selectRemU;
-                    }
-                    else
-                    {
-                        queri = db.selectRemS;
-                    }
-                    DatabaseHelper db3 = new DatabaseHelper();
-                    DataTable table3 = new DataTable();
-                    MySqlDataAdapter adapter3 = new MySqlDataAdapter();
-                    MySqlCommand command3 = new MySqlCommand(queri, db3.GetConnection());
-                    adapter3.SelectCommand = command3;
-                    adapter3.Fill(table3);
-                    bunifuDataGridView1.DataSource = table3.DefaultView;
-                    bunifuDataGridView1.Columns[0].Visible = false; bunifuDataGridView1.Columns[1].Visible = false; bunifuDataGridView1.Columns[2].Visible = false;
-                    db.closeConnection();
-                    bunifuTextBox4.Text = ""; bunifuDatePicker3.Value = d;
-                    bunifuPages1.SelectedTab = tabPage0;
-                    groupBox1.Text = "Операция:";
-                    pr = 0;
-                }
-                else
-                {
-                    MessageBox.Show("Ошибка изменения данных! Попробуете ещё раз или перезагрузите программу.", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-        }
-
-        private void bunifuButton6_Click(object sender, EventArgs e)
-        {
-            bunifuPages1.SelectedTab = tabPage3;
-            groupBox1.Text = "Операция: Фильтрация";
-        }
-
-        private void bunifuDropdown12_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            switch (bunifuDropdown12.Text)
-            {
-                case "основному средству": {
-                        bunifuPages2.SelectedTab = tabPage6;
-                        DatabaseHelper db = new DatabaseHelper();
-                        DataTable table = new DataTable();
-                        MySqlDataAdapter adapter = new MySqlDataAdapter();
-                        MySqlCommand command = new MySqlCommand("SELECT `id_ос`, `наименование` as `Наименование ОС`, `ин` AS `Инвентарный номер`, `дата_принятия` AS `Дата принятия` FROM `ос`", db.GetConnection());
-                        adapter.SelectCommand = command;
-                        adapter.Fill(table);
-                        bunifuDataGridView4.DataSource = table.DefaultView;
-                        bunifuDataGridView4.Columns[0].Visible = false;
-                        break; }
-                case "виду ремонта": { bunifuPages2.SelectedTab = tabPage7; break; }
-                case "дате начала ремонта": { bunifuPages2.SelectedTab = tabPage8; break; }
-                case "дате окончания ремонта": { bunifuPages2.SelectedTab = tabPage11; break; }
-            }
-        }
-
-        private void bunifuButton10_Click(object sender, EventArgs e)
-        {
-            int id_vid_os = 0;
-            if (bunifuDropdown12.Text == "" || bunifuDropdown12.Text == null)
-            {
-                MessageBox.Show("Пожалуйста, выберите критерий фильтрации.", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            else if (bunifuDropdown12.Text == "основному средству" && pr1 == 0)
-            {
-                MessageBox.Show("Пожалуйста, выберите основное средство.", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            else if (bunifuDropdown12.Text == "виду ремонта" && (bunifuDropdown4.Text == "" || bunifuDropdown4.Text == null))
-            {
-                MessageBox.Show("Пожалуйста, выберите вид ремонта.", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-
-            else
-            {
-                try
-                {
-                    int ID_OS = Convert.ToInt32(editItem[0]);
-                }
-                catch { int a = 0; }
-
-                DateTime d = bunifuDatePicker6.Value;
-                string dat_start1 = $"{d.Year}-{d.Month}-{d.Day}";
-                d = bunifuDatePicker7.Value;
-                string dat_end1 = $"{d.Year}-{d.Month}-{d.Day}";
-                d = bunifuDatePicker8.Value;
-                string dat_start2 = $"{d.Year}-{d.Month}-{d.Day}";
-                d = bunifuDatePicker9.Value;
-                string dat_end2 = $"{d.Year}-{d.Month}-{d.Day}";
-                string queri = "";
-                DatabaseHelper db3 = new DatabaseHelper();
-                DataTable table3 = new DataTable();
-                MySqlDataAdapter adapter3 = new MySqlDataAdapter();
-                if (bunifuCheckBox1.Checked == true)
-                {
-                    if (bunifuDropdown12.Text == "основному средству")
-                    {
-                        queri = "SELECT `id_р`, `ремонт`.`id_ос`, `ремонт`.`id_вида_р`, `ос`.`наименование` AS `Наименование ОС`, `ин` AS `Инвентарный номер`, `вид_р`.`наименование` AS `Вид ремонта`, `дата_начала` AS `Дата начала ремонта`, `дата_окончания` AS `Дата окончания ремонта`, `сум_затрат` AS `Сумма затрат на ремонт: руб.` FROM `ремонт` INNER JOIN `ос` ON `ремонт`.`id_ос`=`ос`.`id_ос` INNER JOIN `вид_р` ON `ремонт`.`id_вида_р`=`вид_р`.`id_вида_р` WHERE `ремонт`.`id_ос`=" + editItem[0] + ";";
-                    }
-                    if (bunifuDropdown12.Text == "виду ремонта")
-                    {
-                        queri = "SELECT `id_р`, `ремонт`.`id_ос`, `ремонт`.`id_вида_р`, `ос`.`наименование` AS `Наименование ОС`, `ин` AS `Инвентарный номер`, `вид_р`.`наименование` AS `Вид ремонта`, `дата_начала` AS `Дата начала ремонта`, `дата_окончания` AS `Дата окончания ремонта`, `сум_затрат` AS `Сумма затрат на ремонт: руб.` FROM `ремонт` INNER JOIN `ос` ON `ремонт`.`id_ос`=`ос`.`id_ос` INNER JOIN `вид_р` ON `ремонт`.`id_вида_р`=`вид_р`.`id_вида_р` WHERE `вид_р`.`наименование`='" + bunifuDropdown4.Text + "';";
-                    }
-                    if (bunifuDropdown12.Text == "дате начала ремонта")
-                    {
-                        queri = "SELECT `id_р`, `ремонт`.`id_ос`, `ремонт`.`id_вида_р`, `ос`.`наименование` AS `Наименование ОС`, `ин` AS `Инвентарный номер`, `вид_р`.`наименование` AS `Вид ремонта`, `дата_начала` AS `Дата начала ремонта`, `дата_окончания` AS `Дата окончания ремонта`, `сум_затрат` AS `Сумма затрат на ремонт: руб.` FROM `ремонт` INNER JOIN `ос` ON `ремонт`.`id_ос`=`ос`.`id_ос` INNER JOIN `вид_р` ON `ремонт`.`id_вида_р`=`вид_р`.`id_вида_р` WHERE `дата_начала` BETWEEN '" + dat_start1 + "' and '" + dat_end1 + "';";
-                    }
-                    if (bunifuDropdown12.Text == "дате окончания ремонта")
-                    {
-                        queri = "SELECT `id_р`, `ремонт`.`id_ос`, `ремонт`.`id_вида_р`, `ос`.`наименование` AS `Наименование ОС`, `ин` AS `Инвентарный номер`, `вид_р`.`наименование` AS `Вид ремонта`, `дата_начала` AS `Дата начала ремонта`, `дата_окончания` AS `Дата окончания ремонта`, `сум_затрат` AS `Сумма затрат на ремонт: руб.` FROM `ремонт` INNER JOIN `ос` ON `ремонт`.`id_ос`=`ос`.`id_ос` INNER JOIN `вид_р` ON `ремонт`.`id_вида_р`=`вид_р`.`id_вида_р` WHERE `дата_окончания` BETWEEN '" + dat_start2 + "' and '" + dat_end2 + "';";
-                    }
-                }
-                else if (bunifuCheckBox2.Checked == true)
-                {
-                    if (bunifuDropdown12.Text == "основному средству")
-                    {
-                        queri = "SELECT `id_р`, `ремонт`.`id_ос`, `ремонт`.`id_вида_р`, `ос`.`наименование` AS `Наименование ОС`, `ин` AS `Инвентарный номер`, `вид_р`.`наименование` AS `Вид ремонта`, `дата_начала` AS `Дата начала ремонта`, `дата_окончания` AS `Дата окончания ремонта`, `сум_затрат` AS `Сумма затрат на ремонт: руб.` FROM `ремонт` INNER JOIN `ос` ON `ремонт`.`id_ос`=`ос`.`id_ос` INNER JOIN `вид_р` ON `ремонт`.`id_вида_р`=`вид_р`.`id_вида_р` WHERE `ос`.`статус`=1 AND `ремонт`.`id_ос`=" + editItem[0] + ";";
-                    }
-                    if (bunifuDropdown12.Text == "виду ремонта")
-                    {
-                        queri = "SELECT `id_р`, `ремонт`.`id_ос`, `ремонт`.`id_вида_р`, `ос`.`наименование` AS `Наименование ОС`, `ин` AS `Инвентарный номер`, `вид_р`.`наименование` AS `Вид ремонта`, `дата_начала` AS `Дата начала ремонта`, `дата_окончания` AS `Дата окончания ремонта`, `сум_затрат` AS `Сумма затрат на ремонт: руб.` FROM `ремонт` INNER JOIN `ос` ON `ремонт`.`id_ос`=`ос`.`id_ос` INNER JOIN `вид_р` ON `ремонт`.`id_вида_р`=`вид_р`.`id_вида_р` WHERE `ос`.`статус`=1 AND `вид_р`.`наименование`='" + bunifuDropdown4.Text + "';";
-                    }
-                    if (bunifuDropdown12.Text == "дате начала ремонта")
-                    {
-                        queri = "SELECT `id_р`, `ремонт`.`id_ос`, `ремонт`.`id_вида_р`, `ос`.`наименование` AS `Наименование ОС`, `ин` AS `Инвентарный номер`, `вид_р`.`наименование` AS `Вид ремонта`, `дата_начала` AS `Дата начала ремонта`, `дата_окончания` AS `Дата окончания ремонта`, `сум_затрат` AS `Сумма затрат на ремонт: руб.` FROM `ремонт` INNER JOIN `ос` ON `ремонт`.`id_ос`=`ос`.`id_ос` INNER JOIN `вид_р` ON `ремонт`.`id_вида_р`=`вид_р`.`id_вида_р` WHERE `ос`.`статус`=1 and `дата_начала` BETWEEN '" + dat_start1 + "' and '" + dat_end1 + "';";
-                    }
-                    if (bunifuDropdown12.Text == "дате окончания ремонта")
-                    {
-                        queri = "SELECT `id_р`, `ремонт`.`id_ос`, `ремонт`.`id_вида_р`, `ос`.`наименование` AS `Наименование ОС`, `ин` AS `Инвентарный номер`, `вид_р`.`наименование` AS `Вид ремонта`, `дата_начала` AS `Дата начала ремонта`, `дата_окончания` AS `Дата окончания ремонта`, `сум_затрат` AS `Сумма затрат на ремонт: руб.` FROM `ремонт` INNER JOIN `ос` ON `ремонт`.`id_ос`=`ос`.`id_ос` INNER JOIN `вид_р` ON `ремонт`.`id_вида_р`=`вид_р`.`id_вида_р` WHERE `ос`.`статус`=1 and `дата_окончания` BETWEEN '" + dat_start2 + "' and '" + dat_end2 + "';";
-                    }
-                }
-                else
-                {
-                    if (bunifuDropdown12.Text == "основному средству")
-                    {
-                        queri = "SELECT `id_р`, `ремонт`.`id_ос`, `ремонт`.`id_вида_р`, `ос`.`наименование` AS `Наименование ОС`, `ин` AS `Инвентарный номер`, `вид_р`.`наименование` AS `Вид ремонта`, `дата_начала` AS `Дата начала ремонта`, `дата_окончания` AS `Дата окончания ремонта`, `сум_затрат` AS `Сумма затрат на ремонт: руб.` FROM `ремонт` INNER JOIN `ос` ON `ремонт`.`id_ос`=`ос`.`id_ос` INNER JOIN `вид_р` ON `ремонт`.`id_вида_р`=`вид_р`.`id_вида_р` WHERE `ос`.`статус`=0 AND `ремонт`.`id_ос`=" + editItem[0] + ";";
-                    }
-                    if (bunifuDropdown12.Text == "виду ремонта")
-                    {
-                        queri = "SELECT `id_р`, `ремонт`.`id_ос`, `ремонт`.`id_вида_р`, `ос`.`наименование` AS `Наименование ОС`, `ин` AS `Инвентарный номер`, `вид_р`.`наименование` AS `Вид ремонта`, `дата_начала` AS `Дата начала ремонта`, `дата_окончания` AS `Дата окончания ремонта`, `сум_затрат` AS `Сумма затрат на ремонт: руб.` FROM `ремонт` INNER JOIN `ос` ON `ремонт`.`id_ос`=`ос`.`id_ос` INNER JOIN `вид_р` ON `ремонт`.`id_вида_р`=`вид_р`.`id_вида_р` WHERE `ос`.`статус`=0 AND `вид_р`.`наименование`='" + bunifuDropdown4.Text + "';";
-                    }
-                    if (bunifuDropdown12.Text == "дате начала ремонта")
-                    {
-                        queri = "SELECT `id_р`, `ремонт`.`id_ос`, `ремонт`.`id_вида_р`, `ос`.`наименование` AS `Наименование ОС`, `ин` AS `Инвентарный номер`, `вид_р`.`наименование` AS `Вид ремонта`, `дата_начала` AS `Дата начала ремонта`, `дата_окончания` AS `Дата окончания ремонта`, `сум_затрат` AS `Сумма затрат на ремонт: руб.` FROM `ремонт` INNER JOIN `ос` ON `ремонт`.`id_ос`=`ос`.`id_ос` INNER JOIN `вид_р` ON `ремонт`.`id_вида_р`=`вид_р`.`id_вида_р` WHERE `ос`.`статус`=0 and `дата_начала` BETWEEN '" + dat_start1 + "' and '" + dat_end1 + "';";
-                    }
-                    if (bunifuDropdown12.Text == "дате окончания ремонта")
-                    {
-                        queri = "SELECT `id_р`, `ремонт`.`id_ос`, `ремонт`.`id_вида_р`, `ос`.`наименование` AS `Наименование ОС`, `ин` AS `Инвентарный номер`, `вид_р`.`наименование` AS `Вид ремонта`, `дата_начала` AS `Дата начала ремонта`, `дата_окончания` AS `Дата окончания ремонта`, `сум_затрат` AS `Сумма затрат на ремонт: руб.` FROM `ремонт` INNER JOIN `ос` ON `ремонт`.`id_ос`=`ос`.`id_ос` INNER JOIN `вид_р` ON `ремонт`.`id_вида_р`=`вид_р`.`id_вида_р` WHERE `ос`.`статус`=0 and `дата_окончания` BETWEEN '" + dat_start2 + "' and '" + dat_end2 + "';";
-                    }
-                }
-                try
-                {
-                    MySqlCommand command3 = new MySqlCommand(queri, db3.GetConnection());
-                    adapter3.SelectCommand = command3;
-                    adapter3.Fill(table3);
-                    bunifuDataGridView1.DataSource = table3.DefaultView;
-                    bunifuDataGridView1.Columns[0].Visible = false; bunifuDataGridView1.Columns[1].Visible = false; bunifuDataGridView1.Columns[2].Visible = false;
-                    db.closeConnection();
-                    bunifuTextBox1.Text = ""; bunifuLabel1.Text = ""; bunifuDatePicker1.Value = d; bunifuDropdown1.Text = "";
-                }
-                catch
-                {
-                    MessageBox.Show("Запрос не обработан.", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-
-            }
-        }
-
-        private void bunifuDatePicker6_ValueChanged(object sender, EventArgs e)
-        {
-            bunifuDatePicker7.Enabled = true;
-            bunifuDatePicker7.MinDate = bunifuDatePicker6.Value;
-        }
-
-        private void bunifuDataGridView4_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            try
-            {
-                pr1 = 1;
-                editItem.Clear();
-                for (int i = 0; i < bunifuDataGridView4.ColumnCount; i++)
-                {
-                    editItem.Add(bunifuDataGridView4.Rows[e.RowIndex].Cells[i].Value.ToString());
-                }
-            }
-            catch
-            {
-                pr1 = 0;
-            }
-        }
-
-        private void bunifuDatePicker8_ValueChanged(object sender, EventArgs e)
-        {
-            bunifuDatePicker9.Enabled = true;
-            bunifuDatePicker9.MinDate = bunifuDatePicker8.Value;
-        }
-
-        private void bunifuButton11_Click(object sender, EventArgs e)
-        {
-            if (pr == 0 || pr == null)
-            {
-                MessageBox.Show("Не выбрана запись для формирования документа!", "Внимание!");
-            }
-            else if (editItem[8]=="")
-            {
-                MessageBox.Show("Акт ремонта составляется по завершении процесса ремонта!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-            else
-            {
-                MessageBox.Show("Начало процесса формирования документа!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                var helper = new WordHelper(Application.StartupPath + @"\\Word\AktRemont.docx");
-                DateTime d1 = d;
-                string d_s = $"{d1.Day}-{d1.Month}-{d1.Year}";
-                d1 = Convert.ToDateTime(editItem[6]);
-                string dat1 = $"{d1.Day}-{d1.Month}-{d1.Year}";
-                d1 = Convert.ToDateTime(editItem[7]);
-                string dat2 = $"{d1.Day}-{d1.Month}-{d1.Year}";
-                var items = new Dictionary<string, string>
-                    {
-                        {"$n_d$", editItem[0]},
-                        {"$d_s$", d_s},
-                        {"$dat1$", dat1},
-                        {"$dat2$", dat2},
-                        {"$name$", editItem[3]},
-                        {"$in_n$", editItem[4]},
-                        {"$vid_r$", editItem[5]},
-                        {"$fin_st$", editItem[8]},
-                    };
-                string path = $@"C:\Users\ALEKS\Desktop\Акт ремонта №{editItem[0]}.docx";
-                //helper.Proccess(items, path);
-                pr = 0;
+                bunifuMainDataGridView.ClearSelection();
             }
         }
     }
 }
-
-
