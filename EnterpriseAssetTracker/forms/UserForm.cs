@@ -75,7 +75,7 @@ namespace EnterpriseAssetTracker.Forms
 
         private void BunifuWriteOffEAButton_Click(object sender, EventArgs e)
         {
-            WriteOffEA_UC writeOffEA_UC = new WriteOffEA_UC();
+            WriteOffEA_UC writeOffEA_UC = new WriteOffEA_UC(User);
             AddControll(writeOffEA_UC);
         }
 

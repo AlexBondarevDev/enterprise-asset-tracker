@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="bunifuButton4.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="bunifuGoEditRecordPageButton.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAJIAAAAqCAYAAABY4gKWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
         YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADvSURBVHhe7dy7cQJBGAThDYVQFAEuHNgHwWHjKhQlIIsI
@@ -128,7 +128,7 @@
         LFd077j/GvPuFx9KrzyOaN6ulysy+2tj3AA3IUc8Yx6FAQAAAABJRU5ErkJggg==
 </value>
   </data>
-  <data name="bunifuButton3.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="bunifuGoSearchPageButton.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAJIAAAAqCAYAAABY4gKWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
         YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADvSURBVHhe7dy7cQJBGAThDYVQFAEuHNgHwWHjKhQlIIsI
@@ -138,7 +138,7 @@
         LFd077j/GvPuFx9KrzyOaN6ulysy+2tj3AA3IUc8Yx6FAQAAAABJRU5ErkJggg==
 </value>
   </data>
-  <data name="bunifuButton6.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="bunifuGoFiltrPageButton.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAJIAAAAqCAYAAABY4gKWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
         YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADvSURBVHhe7dy7cQJBGAThDYVQFAEuHNgHwWHjKhQlIIsI
@@ -148,7 +148,7 @@
         LFd077j/GvPuFx9KrzyOaN6ulysy+2tj3AA3IUc8Yx6FAQAAAABJRU5ErkJggg==
 </value>
   </data>
-  <data name="bunifuButton7.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="bunifuGoWriteoffActPageButton.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAJIAAAAqCAYAAABY4gKWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
         YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADvSURBVHhe7dy7cQJBGAThDYVQFAEuHNgHwWHjKhQlIIsI
@@ -158,7 +158,7 @@
         LFd077j/GvPuFx9KrzyOaN6ulysy+2tj3AA3IUc8Yx6FAQAAAABJRU5ErkJggg==
 </value>
   </data>
-  <data name="bunifuButton2.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="bunifuGoAddRecordButton.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAJIAAAAqCAYAAABY4gKWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
         YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADvSURBVHhe7dy7cQJBGAThDYVQFAEuHNgHwWHjKhQlIIsI
@@ -174,7 +174,7 @@
   <data name="bunifuLabel20.BaseStylesheet" xml:space="preserve">
     <value>#bunifu-label { padding: 1.2px; margin: auto; padding-top: 0px;font-family: 'Century Gothic'; font-size: 13pt; width: 100%; height: 100%; font-style: normal; font-weight: normal; text-decoration: none; color: #DCF0F9; text-align: left; }</value>
   </data>
-  <data name="bunifuDatePicker1.Icon" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="bunifuAddRecordDatePicker.Icon" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
         YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGCSURBVFhH7ZZNTsMwEIWDuAGNkLgAS5asOQCH4QZwAtQ2
@@ -190,13 +190,13 @@
   <data name="bunifuLabel3.BaseStylesheet" xml:space="preserve">
     <value>#bunifu-label { padding: 1.2px; margin: auto; padding-top: 1px;font-family: 'Century Gothic'; font-size: 13pt; width: 100%; height: 100%; font-style: normal; font-weight: normal; text-decoration: none; color: #DCF0F9; text-align: left; }</value>
   </data>
-  <data name="bunifuLabel1.BaseStylesheet" xml:space="preserve">
+  <data name="bunifuAddRecord_EAtagLabel.BaseStylesheet" xml:space="preserve">
     <value>#bunifu-label { padding: 1.2px; font-family: 'Century Gothic'; font-size: 14pt; width: 100%; height: 100%; font-style: normal; font-weight: normal; text-decoration: none; color: #DCF0F9; text-align: left; }</value>
   </data>
   <data name="bunifuLabel8.BaseStylesheet" xml:space="preserve">
     <value>#bunifu-label { padding: 1.2px; margin: auto; padding-top: 1px;font-family: 'Century Gothic'; font-size: 13pt; width: 100%; height: 100%; font-style: normal; font-weight: normal; text-decoration: none; color: #DCF0F9; text-align: left; }</value>
   </data>
-  <data name="bunifuButton8.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="bunifuAddRecordButton.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAATEAAAArCAYAAAAQX78hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
         YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAEPSURBVHhe7dSxTVwBFETRX4pLcQWk5kO8S3GOSV3KNkDk
@@ -210,20 +210,20 @@
   <data name="bunifuLabel5.BaseStylesheet" xml:space="preserve">
     <value>#bunifu-label { padding: 1.2px; margin: auto; padding-top: 0px;font-family: 'Century Gothic'; font-size: 13pt; width: 100%; height: 100%; font-style: normal; font-weight: normal; text-decoration: none; color: #DCF0F9; text-align: left; }</value>
   </data>
-  <data name="bunifuTextBox1.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="bunifuAddRecord_EANameTextBox.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
-        iVBORw0KGgoAAAANSUhEUgAAAW8AAAAjCAYAAABb0Yu3AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADCSURBVHhe7dTBCQJBAATBDde4xJh8qCEICgri62RhP2Zw
-        DTVQnwmgh5mZRXe+v6+353cDYN9mr1e6x5jH4XQEYOdmr1e6xRugQrwBgsQbIEi8AYLEGyBIvAGCxBsg
-        SLwBgsQbIEi8AYLEGyBIvAGCxBsgSLwBgsQbIEi8AYLEGyBIvAGCxBsgSLwBgsQbIEi8AYLEGyBIvAGC
-        xBsgSLwBgsQbIEi8AYLEGyBIvAGC/uJ9eXxe8wBg32avV7rNzKy1MX7/Z0v5NanDcAAAAABJRU5ErkJg
-        gg==
+        iVBORw0KGgoAAAANSUhEUgAAAZkAAAAjCAYAAABGg3dpAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADHSURBVHhe7dWxCQJBAAXRLde6xJoM1BIEBQUxOlm4xHwn
+        ex9e8huYYWZmlu58f19vz+8GACvMruyJGWMeh9MRAJaYXdkTIzIArCUyAGREBoCMyACQERkAMiIDQEZk
+        AMiIDAAZkQEgIzIAZEQGgIzIAJARGQAyIgNARmQAyIgMABmRASAjMgBkRAaAjMgAkBEZADIiA0BGZADI
+        iAwAGZEBICMyAGREBoCMyACQERkAMiIDQOYvMpfH5zUPAFhhdmVPjJmZWbExfjBXJQiOiqjeAAAAAElF
+        TkSuQmCC
 </value>
   </data>
   <data name="bunifuLabel4.BaseStylesheet" xml:space="preserve">
     <value>#bunifu-label { padding: 1.2px; margin: auto; padding-top: 0px;font-family: 'Century Gothic'; font-size: 13pt; width: 100%; height: 100%; font-style: normal; font-weight: normal; text-decoration: none; color: #DCF0F9; text-align: left; }</value>
   </data>
-  <data name="bunifuDatePicker2.Icon" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="bunifuEditRecordDatePicker.Icon" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
         YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGCSURBVFhH7ZZNTsMwEIWDuAGNkLgAS5asOQCH4QZwAtQ2
@@ -239,13 +239,13 @@
   <data name="bunifuLabel7.BaseStylesheet" xml:space="preserve">
     <value>#bunifu-label { padding: 1.2px; margin: auto; padding-top: 1px;font-family: 'Century Gothic'; font-size: 13pt; width: 100%; height: 100%; font-style: normal; font-weight: normal; text-decoration: none; color: #DCF0F9; text-align: left; }</value>
   </data>
-  <data name="bunifuLabel9.BaseStylesheet" xml:space="preserve">
+  <data name="bunifuEditRecord_EAtagLabel.BaseStylesheet" xml:space="preserve">
     <value>#bunifu-label { padding: 1.2px; margin: auto; padding-top: 3px;font-family: 'Century Gothic'; font-size: 16pt; width: 100%; height: 100%; font-style: normal; font-weight: normal; text-decoration: none; color: #DCF0F9; text-align: left; }</value>
   </data>
   <data name="bunifuLabel10.BaseStylesheet" xml:space="preserve">
     <value>#bunifu-label { padding: 1.2px; margin: auto; padding-top: 1px;font-family: 'Century Gothic'; font-size: 13pt; width: 100%; height: 100%; font-style: normal; font-weight: normal; text-decoration: none; color: #DCF0F9; text-align: left; }</value>
   </data>
-  <data name="bunifuButton5.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="bunifuEditRecordButton.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAATEAAAArCAYAAAAQX78hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
         YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAEPSURBVHhe7dSxTVwBFETRX4pLcQWk5kO8S3GOSV3KNkDk
@@ -259,7 +259,7 @@
   <data name="bunifuLabel11.BaseStylesheet" xml:space="preserve">
     <value>#bunifu-label { padding: 1.2px; margin: auto; padding-top: 0px;font-family: 'Century Gothic'; font-size: 13pt; width: 100%; height: 100%; font-style: normal; font-weight: normal; text-decoration: none; color: #DCF0F9; text-align: left; }</value>
   </data>
-  <data name="bunifuTextBox2.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="bunifuEditRecord_EANameTextBox.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAW8AAAAjCAYAAABb0Yu3AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
         YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADCSURBVHhe7dTBCQJBAATBDde4xJh8qCEICgri62RhP2Zw
@@ -269,7 +269,7 @@
         gg==
 </value>
   </data>
-  <data name="bunifuTextBox15.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="bunifuSearchTextBox.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAmwAAAAjCAYAAAApBFa1AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
         YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADrSURBVHhe7dbBCQJBAATBDde4xJh8qCEIJyiIL4+F/ZhB
@@ -291,7 +291,7 @@
   <data name="bunifuLabel34.BaseStylesheet" xml:space="preserve">
     <value>#bunifu-label { padding: 1.2px; margin: auto; padding-top: 5px;font-family: 'Century Gothic'; font-size: 18pt; width: 100%; height: 100%; font-style: normal; font-weight: normal; text-decoration: none; color: #DCF0F9; text-align: center; }</value>
   </data>
-  <data name="bunifuDatePicker6.Icon" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="bunifuFiltrStartDatePicker.Icon" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
         YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGCSURBVFhH7ZZNTsMwEIWDuAGNkLgAS5asOQCH4QZwAtQ2
@@ -304,7 +304,7 @@
         RAAAAABJRU5ErkJggg==
 </value>
   </data>
-  <data name="bunifuDatePicker7.Icon" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="bunifuFiltrEndDatePicker.Icon" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
         YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGCSURBVFhH7ZZNTsMwEIWDuAGNkLgAS5asOQCH4QZwAtQ2
@@ -352,7 +352,7 @@
         d2luZy5Qb2ludEYCAAAAAXgBeQAACwsCAAAAAAAAAAAAgD8L
 </value>
   </data>
-  <data name="bunifuButton10.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="bunifuFiltrationButton.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAANYAAAAjCAYAAADovPSEAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
         YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADgSURBVHhe7d2xTUNBFETRLYVSqIAUvom/XRwxKaXQABEV
@@ -368,7 +368,7 @@
   <data name="bunifuLabel29.BaseStylesheet" xml:space="preserve">
     <value>#bunifu-label { padding: 1.2px; margin: auto; padding-top: 5px;font-family: 'Century Gothic'; font-size: 18pt; width: 100%; height: 100%; font-style: normal; font-weight: normal; text-decoration: none; color: #DCF0F9; text-align: center; }</value>
   </data>
-  <data name="bunifuButton11.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="bunifuCreateDocButton.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAUAAAAAtCAYAAADfjbKaAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
         YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAEWSURBVHhe7dSxUVsBFETRX4pLoQJS8yGWVJxjUkqhASJX

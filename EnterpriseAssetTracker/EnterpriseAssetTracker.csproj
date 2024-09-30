@@ -296,6 +296,7 @@
     </EmbeddedResource>
     <None Include=".editorconfig" />
     <None Include="document_templates\Act_RepairEA.docx" />
+    <None Include="document_templates\Act_WriteOffEA.docx" />
     <None Include="document_templates\Report_EAassignedACustodian.docx" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

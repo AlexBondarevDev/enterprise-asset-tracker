@@ -305,6 +305,11 @@ namespace EnterpriseAssetTracker.Scripts
             return GetIdByName($"SELECT `id_type_repair` FROM `types_repair` WHERE `name` = @searchedName;", searchedName);
         }
 
+        public int GetIdByName_ReasonsWriteoff(string searchedName)
+        {
+            return GetIdByName($"SELECT `id_reason_writeoff` FROM `reasons_writeoff` WHERE `name` = @searchedName;", searchedName);
+        }
+
 
 
 
