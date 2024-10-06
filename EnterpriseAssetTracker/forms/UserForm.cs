@@ -63,7 +63,7 @@ namespace EnterpriseAssetTracker.Forms
 
         private void BunifuReceiptEAButton_Click(object sender, EventArgs e)
         {
-            ReceiptEA_UC receiptEA_UC = new ReceiptEA_UC();
+            ReceiptEA_UC receiptEA_UC = new ReceiptEA_UC(User);
             AddControll(receiptEA_UC);
         }
 

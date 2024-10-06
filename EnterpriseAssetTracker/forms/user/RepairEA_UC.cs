@@ -671,6 +671,16 @@ namespace EnterpriseAssetTracker.UsersControlers
 
             for (int i = 0; i < selectedRow.Cells.Count; i++)
             {
+                if (i == 6 || i == 7)
+                {
+                    if (i == 7 && selectedRow.Cells[i].Value.ToString() == "")
+                    {
+                        rowData[i] = "";
+                        continue;
+                    }
+                    rowData[i] = $"{Convert.ToDateTime(selectedRow.Cells[i].Value):dd.MM.yyyy}";
+                    continue;
+                }
                 rowData[i] = selectedRow.Cells[i].Value;
             }
 

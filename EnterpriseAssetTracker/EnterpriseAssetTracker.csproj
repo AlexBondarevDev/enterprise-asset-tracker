@@ -295,9 +295,11 @@
       <DependentUpon>RepairEA_UC.cs</DependentUpon>
     </EmbeddedResource>
     <None Include=".editorconfig" />
+    <None Include="document_templates\Act_ReceiptEA.docx" />
     <None Include="document_templates\Act_RepairEA.docx" />
     <None Include="document_templates\Act_WriteOffEA.docx" />
     <None Include="document_templates\Report_EAassignedACustodian.docx" />
+    <None Include="document_templates\Report_InventoryCardEA.docx" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
