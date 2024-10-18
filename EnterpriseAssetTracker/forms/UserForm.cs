@@ -57,7 +57,7 @@ namespace EnterpriseAssetTracker.Forms
 
         private void BunifuAnalyticButton_Click(object sender, EventArgs e)
         {
-            AnalyticForm analyticForm = new AnalyticForm();
+            AnalyticForm analyticForm = new AnalyticForm(User);
             analyticForm.Show();
         }
 

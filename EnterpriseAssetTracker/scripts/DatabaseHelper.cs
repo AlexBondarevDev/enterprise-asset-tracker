@@ -151,7 +151,6 @@ namespace EnterpriseAssetTracker.Scripts
             "`isAdmin` " +
             "FROM `authorization` ";
 
-
         //End MainDataGridView queries
 
 
@@ -204,6 +203,8 @@ namespace EnterpriseAssetTracker.Scripts
             return GetDirectories($"SELECT `asset_tag` FROM `enterprise_assets` {optionalWHERE}");
         }
 
+
+
         private List<string> GetDirectories(string query)
         {
             List<string> recordList = new List<string>();
@@ -246,7 +247,6 @@ namespace EnterpriseAssetTracker.Scripts
 
 
         //Start GetIdByName queries for operation INSERT and UPDATE
-
 
         public int GetIdByName_Positions(string searchedName)
         {
@@ -308,7 +308,7 @@ namespace EnterpriseAssetTracker.Scripts
             return serchedId;
         }
 
-        private int GetIdByName_ForAssetCustodian(string query, (string,string, string) searchedName)
+        private int GetIdByName_ForAssetCustodian(string query, (string, string, string) searchedName)
         {
             int serchedId = 0;
 
@@ -343,7 +343,6 @@ namespace EnterpriseAssetTracker.Scripts
             return serchedId;
         }
 
-
         //End GetIdByName queries for operation INSERT and UPDATE
 
 
@@ -352,8 +351,6 @@ namespace EnterpriseAssetTracker.Scripts
 
 
         //Start queries for documents and reports
-
-
 
         public DataTable GetReport_InventoryCardEA_repairEAInfo(int idEnterpriseAssets)
         {
@@ -391,6 +388,138 @@ namespace EnterpriseAssetTracker.Scripts
             return GetDataForReport(reportCommand);
         }
 
+        public DataTable GetReport_RWEAList_ReceiptEA(DateTime startDate, DateTime endDate)
+        {
+            string reports_selectReceiptEA =
+            "SELECT " +
+            "`enterprise_assets`.`name`, " +
+            "`asset_tag`, " +
+            "DATE_FORMAT(`receipt_date`, '%d.%m.%Y') " +
+            "FROM `types_ea` INNER JOIN `enterprise_assets` ON `types_ea`.`id_type_ea` = `enterprise_assets`.`id_type_ea` " +
+            "WHERE `receipt_date` BETWEEN @startDate AND @endDate " +
+            "ORDER BY `receipt_date` ASC";
+
+            MySqlCommand reportCommand = new MySqlCommand(reports_selectReceiptEA, GetConnection());
+
+            reportCommand.Parameters.AddWithValue("@startDate", $"{startDate:yyyy.MM.dd}");
+            reportCommand.Parameters.AddWithValue("@endDate", $"{endDate:yyyy.MM.dd}");
+
+            return GetDataForReport(reportCommand);
+        }
+
+        public DataTable GetReport_RWEAList_WriteoffEA(DateTime startDate, DateTime endDate)
+        {
+            string reports_selectReceiptEA =
+            "SELECT" +
+            "`enterprise_assets`.`name`, " +
+            "`asset_tag`, " +
+            "DATE_FORMAT(`writeoff_date`, '%d.%m.%Y') " +
+            "FROM `writeoff_ea` INNER JOIN `enterprise_assets` ON `writeoff_ea`.`id_enterprise_assets`=`enterprise_assets`.`id_enterprise_assets` INNER JOIN `reasons_writeoff` ON `writeoff_ea`.`id_reason_writeoff` = `reasons_writeoff`.`id_reason_writeoff` " +
+            "WHERE `writeoff_date` BETWEEN @startDate AND @endDate " +
+            "ORDER BY `writeoff_date` ASC";
+
+            MySqlCommand reportCommand = new MySqlCommand(reports_selectReceiptEA, GetConnection());
+
+            reportCommand.Parameters.AddWithValue("@startDate", $"{startDate:yyyy.MM.dd}");
+            reportCommand.Parameters.AddWithValue("@endDate", $"{endDate:yyyy.MM.dd}");
+
+            return GetDataForReport(reportCommand);
+        }
+
+        public DataTable GetReport_YearSaldo(int reportYear)
+        {
+            MySqlCommand reportCommand = new MySqlCommand("CALL `GetData_YearSaldoReport`(@reportYear);", GetConnection());
+
+            reportCommand.Parameters.AddWithValue("@reportYear", reportYear);
+
+            return GetDataForReport(reportCommand);
+        }
+
+        public DataTable GetReport_ResponsibilityRelationshipAC()
+        {
+            string reports_selectEAassignedACustodian =
+            "SELECT " +
+            "CONCAT(`asset_custodian`.`surname`, ' ', `asset_custodian`.`name`, ' ', `asset_custodian`.`father_name`) AS `Материально ответственное лицо`, " +
+            "COUNT(`assignment_ea`.`id_asset_custodian`) AS `Кол-во объектов ОС`, " +
+            "ROUND((COUNT(`assignment_ea`.`id_asset_custodian`) / `total_count`.`RowsCount` * 100), 2) AS `%` " +
+            "FROM `asset_custodian` LEFT JOIN `assignment_ea` ON `asset_custodian`.`id_asset_custodian` = `assignment_ea`.`id_asset_custodian` CROSS JOIN (SELECT COUNT(*) AS `RowsCount` FROM `assignment_ea`) AS `total_count` " +
+            "GROUP BY `Материально ответственное лицо`, `total_count`.`RowsCount` ORDER BY `Кол-во объектов ОС` DESC;";
+
+            MySqlCommand reportCommand = new MySqlCommand(reports_selectEAassignedACustodian, GetConnection());
+
+            return GetDataForReport(reportCommand);
+        }
+
+        public DataTable GetReport_AnnualDynamicsReceiptEA(DateTime startDate, DateTime endDate)
+        {
+            string reports_selectReceiptEA =
+            "SELECT " +
+            "YEAR(`receipt_date`) AS `reportYear`, " +
+            "SUM(`total_cost`) " +
+            "FROM `enterprise_assets` " +
+            "WHERE YEAR(`receipt_date`) BETWEEN YEAR(@startDate) AND YEAR(@endDate)" +
+            "GROUP BY `reportYear` " +
+            "ORDER BY `reportYear` ASC";
+
+            MySqlCommand reportCommand = new MySqlCommand(reports_selectReceiptEA, GetConnection());
+
+            reportCommand.Parameters.AddWithValue("@startDate", $"{startDate:yyyy.MM.dd}");
+            reportCommand.Parameters.AddWithValue("@endDate", $"{endDate:yyyy.MM.dd}");
+
+            return GetDataForReport(reportCommand);
+        }
+
+        public DataTable GetReport_AnnualDynamicsWriteoffEA(DateTime startDate, DateTime endDate)
+        {
+            string reports_selectReceiptEA =
+            "SELECT " +
+            "YEAR(`writeoff_date`) AS `reportYear`, " +
+            "SUM(`total_cost`) " +
+            "FROM `enterprise_assets` INNER JOIN `writeoff_ea` ON `enterprise_assets`.`id_enterprise_assets` = `writeoff_ea`.`id_enterprise_assets` " +
+            "WHERE YEAR(`writeoff_date`) BETWEEN YEAR(@startDate) AND YEAR(@endDate) " +
+            "GROUP BY `reportYear` " +
+            "ORDER BY `reportYear` ASC";
+
+            MySqlCommand reportCommand = new MySqlCommand(reports_selectReceiptEA, GetConnection());
+
+            reportCommand.Parameters.AddWithValue("@startDate", $"{startDate:yyyy.MM.dd}");
+            reportCommand.Parameters.AddWithValue("@endDate", $"{endDate:yyyy.MM.dd}");
+
+            return GetDataForReport(reportCommand);
+        }
+
+        public DataTable GetReport_AnnualDynamicsRepairEA(DateTime startDate, DateTime endDate)
+        {
+            string reports_selectReceiptEA =
+            "SELECT " +
+            "YEAR(`end_date`) AS `reportYear`, " +
+            "SUM(`amount_costs`) " +
+            "FROM `enterprise_assets` INNER JOIN `repair` ON `enterprise_assets`.`id_enterprise_assets` = `repair`.`id_enterprise_assets` " +
+            "WHERE YEAR(`end_date`) BETWEEN YEAR(@startDate) AND YEAR(@endDate) " +
+            "GROUP BY `reportYear` " +
+            "ORDER BY `reportYear` ASC";
+
+            MySqlCommand reportCommand = new MySqlCommand(reports_selectReceiptEA, GetConnection());
+
+            reportCommand.Parameters.AddWithValue("@startDate", $"{startDate:yyyy.MM.dd}");
+            reportCommand.Parameters.AddWithValue("@endDate", $"{endDate:yyyy.MM.dd}");
+
+            return GetDataForReport(reportCommand);
+        }
+
+        public DataTable GetReport_AnnualDynamicsCapital(DateTime startDate, DateTime endDate)
+        {
+            string reports_selectReceiptEA = "CALL `GetData_AnnualDynamicsCapitalReport`(@startYear, @endYear);";
+
+            MySqlCommand reportCommand = new MySqlCommand(reports_selectReceiptEA, GetConnection());
+
+            reportCommand.Parameters.AddWithValue("@startYear", $"{startDate.Year}");
+            reportCommand.Parameters.AddWithValue("@endYear", $"{endDate.Year}");
+
+            return GetDataForReport(reportCommand);
+        }
+
+
 
         private DataTable GetDataForReport(MySqlCommand reportCommand)
         {
@@ -413,8 +542,6 @@ namespace EnterpriseAssetTracker.Scripts
                 return new DataTable();
             }
         }
-
-
 
         //End queries for documents and reports
     }

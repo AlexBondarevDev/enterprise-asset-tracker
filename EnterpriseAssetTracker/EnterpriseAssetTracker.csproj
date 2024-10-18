@@ -300,6 +300,8 @@
     <None Include="document_templates\Act_WriteOffEA.docx" />
     <None Include="document_templates\Report_EAassignedACustodian.docx" />
     <None Include="document_templates\Report_InventoryCardEA.docx" />
+    <None Include="document_templates\Report_ReceiptWriteoffEAList.docx" />
+    <None Include="document_templates\Report_YearSaldo.xlsx" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

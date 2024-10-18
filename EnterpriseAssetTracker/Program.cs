@@ -16,7 +16,7 @@ namespace EnterpriseAssetTracker
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new LoadingForm());
+            Application.Run(new AnalyticForm("Петренко Михаил Артёмовна"));
         }
     }
 }  
