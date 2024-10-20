@@ -1,0 +1,436 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{1C70877B-6C19-430C-B5C6-20F5B5BD8BAC}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>EnterpriseAssetTracker</RootNamespace>
+    <AssemblyName>EnterpriseAssetTracker</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Bunifu.Core, Version=1.11.5.21, Culture=neutral, PublicKeyToken=e8e24ccd28363fe9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>libraries\BunifuUI\Bunifu.Core.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Bunifu.UI.WinForms.BunifuButton">
+      <HintPath>libraries\BunifuUI\Bunifu.UI.WinForms.BunifuButton.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Bunifu.UI.WinForms.BunifuCheckBox, Version=1.11.5.21, Culture=neutral, PublicKeyToken=e8e24ccd28363fe9">
+      <HintPath>libraries\BunifuUI\Bunifu.UI.WinForms.BunifuCheckBox.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Bunifu.UI.WinForms.BunifuCircleProgress">
+      <HintPath>libraries\BunifuUI\Bunifu.UI.WinForms.BunifuCircleProgress.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Bunifu.UI.WinForms.BunifuDataGridView">
+      <HintPath>libraries\BunifuUI\Bunifu.UI.WinForms.BunifuDataGridView.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Bunifu.UI.WinForms.BunifuDatePicker">
+      <HintPath>libraries\BunifuUI\Bunifu.UI.WinForms.BunifuDatePicker.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Bunifu.UI.WinForms.BunifuDropdown, Version=1.11.5.21, Culture=neutral, PublicKeyToken=e8e24ccd28363fe9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>libraries\BunifuUI\Bunifu.UI.WinForms.BunifuDropdown.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Bunifu.UI.WinForms.BunifuImageButton">
+      <HintPath>libraries\BunifuUI\Bunifu.UI.WinForms.BunifuImageButton.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Bunifu.UI.WinForms.BunifuLabel">
+      <HintPath>libraries\BunifuUI\Bunifu.UI.WinForms.BunifuLabel.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Bunifu.UI.WinForms.BunifuPages">
+      <HintPath>libraries\BunifuUI\Bunifu.UI.WinForms.BunifuPages.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Bunifu.UI.WinForms.BunifuPictureBox">
+      <HintPath>libraries\BunifuUI\Bunifu.UI.WinForms.BunifuPictureBox.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Bunifu.UI.WinForms.BunifuRadioButton, Version=1.11.5.21, Culture=neutral, PublicKeyToken=e8e24ccd28363fe9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>libraries\BunifuUI\Bunifu.UI.WinForms.BunifuRadioButton.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Bunifu.UI.WinForms.BunifuScrollBar">
+      <HintPath>libraries\BunifuUI\Bunifu.UI.WinForms.BunifuScrollBar.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Bunifu.UI.WinForms.BunifuTextbox">
+      <HintPath>libraries\BunifuUI\Bunifu.UI.WinForms.BunifuTextbox.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Bunifu.UI.WinForms.BunifuUserControl">
+      <HintPath>libraries\BunifuUI\Bunifu.UI.WinForms.BunifuUserControl.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Bunifu_UI_v1.5.3">
+      <HintPath>libraries\BunifuUI\Bunifu_UI_v1.5.3.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="LiveCharts, Version=0.9.7.0, Culture=neutral, PublicKeyToken=0bc1f845d1ebb8df, processorArchitecture=MSIL">
+      <HintPath>packages\LiveCharts.0.9.7\lib\net45\LiveCharts.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="LiveCharts.WinForms, Version=0.9.7.1, Culture=neutral, PublicKeyToken=0bc1f845d1ebb8df, processorArchitecture=MSIL">
+      <HintPath>packages\LiveCharts.WinForms.0.9.7.1\lib\net45\LiveCharts.WinForms.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="LiveCharts.Wpf, Version=0.9.7.0, Culture=neutral, PublicKeyToken=0bc1f845d1ebb8df, processorArchitecture=MSIL">
+      <HintPath>packages\LiveCharts.Wpf.0.9.7\lib\net45\LiveCharts.Wpf.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="MySql.Data, Version=8.0.25.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>libraries\MySql.Data\MySql.Data.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing.Design" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="WindowsFormsIntegration" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="forms\UserForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="forms\UserForm.Designer.cs">
+      <DependentUpon>UserForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="forms\AdminForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="forms\AdminForm.Designer.cs">
+      <DependentUpon>AdminForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="forms\AnalyticForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="forms\AnalyticForm.Designer.cs">
+      <DependentUpon>AnalyticForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="forms\LoadingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="forms\LoadingForm.Designer.cs">
+      <DependentUpon>LoadingForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="forms\LoginForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="forms\LoginForm.Designer.cs">
+      <DependentUpon>LoginForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="forms\RegistrationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="forms\RegistrationForm.Designer.cs">
+      <DependentUpon>RegistrationForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="scripts\DatabaseHelper.cs" />
+    <Compile Include="scripts\WordHelper.cs" />
+    <Compile Include="forms\admin\EditingLogin_UC.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="forms\admin\EditingLogin_UC.Designer.cs">
+      <DependentUpon>EditingLogin_UC.cs</DependentUpon>
+    </Compile>
+    <Compile Include="forms\admin\AssetCustodian_UC.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="forms\admin\AssetCustodian_UC.Designer.cs">
+      <DependentUpon>AssetCustodian_UC.cs</DependentUpon>
+    </Compile>
+    <Compile Include="forms\admin\Directories_UC.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="forms\admin\Directories_UC.Designer.cs">
+      <DependentUpon>Directories_UC.cs</DependentUpon>
+    </Compile>
+    <Compile Include="forms\admin\DeletingDataEA_UC.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="forms\admin\DeletingDataEA_UC.Designer.cs">
+      <DependentUpon>DeletingDataEA_UC.cs</DependentUpon>
+    </Compile>
+    <Compile Include="forms\user\AssignmentEA_UC.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="forms\user\AssignmentEA_UC.Designer.cs">
+      <DependentUpon>AssignmentEA_UC.cs</DependentUpon>
+    </Compile>
+    <Compile Include="forms\user\ReceiptEA_UC.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="forms\user\ReceiptEA_UC.Designer.cs">
+      <DependentUpon>ReceiptEA_UC.cs</DependentUpon>
+    </Compile>
+    <Compile Include="forms\user\RepairEA_UC.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="forms\user\RepairEA_UC.Designer.cs">
+      <DependentUpon>RepairEA_UC.cs</DependentUpon>
+    </Compile>
+    <Compile Include="forms\user\WriteOffEA_UC.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="forms\user\WriteOffEA_UC.Designer.cs">
+      <DependentUpon>WriteOffEA_UC.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="forms\UserForm.resx">
+      <DependentUpon>UserForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\AdminForm.resx">
+      <DependentUpon>AdminForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\AnalyticForm.resx">
+      <DependentUpon>AnalyticForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\LoadingForm.resx">
+      <DependentUpon>LoadingForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\LoginForm.resx">
+      <DependentUpon>LoginForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\RegistrationForm.resx">
+      <DependentUpon>RegistrationForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="forms\admin\EditingLogin_UC.resx">
+      <DependentUpon>EditingLogin_UC.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\admin\AssetCustodian_UC.resx">
+      <DependentUpon>AssetCustodian_UC.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\admin\Directories_UC.resx">
+      <DependentUpon>Directories_UC.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\admin\DeletingDataEA_UC.resx">
+      <DependentUpon>DeletingDataEA_UC.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\user\AssignmentEA_UC.resx">
+      <DependentUpon>AssignmentEA_UC.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\user\WriteOffEA_UC.resx">
+      <DependentUpon>WriteOffEA_UC.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\user\ReceiptEA_UC.resx">
+      <DependentUpon>ReceiptEA_UC.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\user\RepairEA_UC.resx">
+      <DependentUpon>RepairEA_UC.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include=".editorconfig" />
+    <None Include="document_templates\Act_ReceiptEA.docx" />
+    <None Include="document_templates\Act_RepairEA.docx" />
+    <None Include="document_templates\Act_WriteOffEA.docx" />
+    <None Include="document_templates\Report_EAassignedACustodian.docx" />
+    <None Include="document_templates\Report_InventoryCardEA.docx" />
+    <None Include="document_templates\Report_ReceiptWriteoffEAList.docx" />
+    <None Include="document_templates\Report_YearSaldo.xlsx" />
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="Microsoft.Office.Core">
+      <Guid>{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>8</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="Microsoft.Office.Interop.Excel">
+      <Guid>{00020813-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>9</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="Microsoft.Office.Interop.Word">
+      <Guid>{00020905-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>8</VersionMajor>
+      <VersionMinor>7</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="VBIDE">
+      <Guid>{0002E157-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>5</VersionMajor>
+      <VersionMinor>3</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.7.2 %28x86 и x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="libraries\BunifuUI\Bunifu.Core.dll" />
+    <Content Include="libraries\BunifuUI\Bunifu.UI.WinForm.BunifuShadowPanel.dll" />
+    <Content Include="libraries\BunifuUI\Bunifu.UI.WinForm.BunifuShadowPanel.xml" />
+    <Content Include="libraries\BunifuUI\Bunifu.UI.WinForms.BunifuButton.dll" />
+    <Content Include="libraries\BunifuUI\Bunifu.UI.WinForms.BunifuButton.xml" />
+    <Content Include="libraries\BunifuUI\Bunifu.UI.WinForms.BunifuCheckBox.dll" />
+    <Content Include="libraries\BunifuUI\Bunifu.UI.WinForms.BunifuCheckBox.xml" />
+    <Content Include="libraries\BunifuUI\Bunifu.UI.WinForms.BunifuCircleProgress.dll" />
+    <Content Include="libraries\BunifuUI\Bunifu.UI.WinForms.BunifuCircleProgress.xml" />
+    <Content Include="libraries\BunifuUI\Bunifu.UI.WinForms.BunifuColorTransition.dll" />
+    <Content Include="libraries\BunifuUI\Bunifu.UI.WinForms.BunifuColorTransition.xml" />
+    <Content Include="libraries\BunifuUI\Bunifu.UI.WinForms.BunifuDataGridView.dll" />
+    <Content Include="libraries\BunifuUI\Bunifu.UI.WinForms.BunifuDataGridView.xml" />
+    <Content Include="libraries\BunifuUI\Bunifu.UI.WinForms.BunifuDatePicker.dll" />
+    <Content Include="libraries\BunifuUI\Bunifu.UI.WinForms.BunifuDatePicker.xml" />
+    <Content Include="libraries\BunifuUI\Bunifu.UI.WinForms.BunifuDropdown.dll" />
+    <Content Include="libraries\BunifuUI\Bunifu.UI.WinForms.BunifuDropdown.xml" />
+    <Content Include="libraries\BunifuUI\Bunifu.UI.WinForms.BunifuFormDock.dll" />
+    <Content Include="libraries\BunifuUI\Bunifu.UI.WinForms.BunifuFormDock.xml" />
+    <Content Include="libraries\BunifuUI\Bunifu.UI.WinForms.BunifuGauge.dll" />
+    <Content Include="libraries\BunifuUI\Bunifu.UI.WinForms.BunifuGauge.xml" />
+    <Content Include="libraries\BunifuUI\Bunifu.UI.WinForms.BunifuImageButton.dll" />
+    <Content Include="libraries\BunifuUI\Bunifu.UI.WinForms.BunifuImageButton.xml" />
+    <Content Include="libraries\BunifuUI\Bunifu.UI.WinForms.BunifuLabel.dll" />
+    <Content Include="libraries\BunifuUI\Bunifu.UI.WinForms.BunifuLabel.xml" />
+    <Content Include="libraries\BunifuUI\Bunifu.UI.WinForms.BunifuPages.dll" />
+    <Content Include="libraries\BunifuUI\Bunifu.UI.WinForms.BunifuPages.xml" />
+    <Content Include="libraries\BunifuUI\Bunifu.UI.WinForms.BunifuPictureBox.dll" />
+    <Content Include="libraries\BunifuUI\Bunifu.UI.WinForms.BunifuPictureBox.xml" />
+    <Content Include="libraries\BunifuUI\Bunifu.UI.WinForms.BunifuProgressBar.dll" />
+    <Content Include="libraries\BunifuUI\Bunifu.UI.WinForms.BunifuProgressBar.xml" />
+    <Content Include="libraries\BunifuUI\Bunifu.UI.WinForms.BunifuRadioButton.dll" />
+    <Content Include="libraries\BunifuUI\Bunifu.UI.WinForms.BunifuRadioButton.xml" />
+    <Content Include="libraries\BunifuUI\Bunifu.UI.WinForms.BunifuScrollBar.dll" />
+    <Content Include="libraries\BunifuUI\Bunifu.UI.WinForms.BunifuScrollBar.xml" />
+    <Content Include="libraries\BunifuUI\Bunifu.UI.WinForms.BunifuSlider.dll" />
+    <Content Include="libraries\BunifuUI\Bunifu.UI.WinForms.BunifuSlider.xml" />
+    <Content Include="libraries\BunifuUI\Bunifu.UI.WinForms.BunifuTextbox.dll" />
+    <Content Include="libraries\BunifuUI\Bunifu.UI.WinForms.BunifuTextbox.xml" />
+    <Content Include="libraries\BunifuUI\Bunifu.UI.WinForms.BunifuToolTip.dll" />
+    <Content Include="libraries\BunifuUI\Bunifu.UI.WinForms.BunifuToolTip.xml" />
+    <Content Include="libraries\BunifuUI\Bunifu.UI.WinForms.BunifuTransition.dll" />
+    <Content Include="libraries\BunifuUI\Bunifu.UI.WinForms.BunifuTransition.xml" />
+    <Content Include="libraries\BunifuUI\Bunifu.UI.WinForms.BunifuUserControl.dll" />
+    <Content Include="libraries\BunifuUI\Bunifu.UI.WinForms.BunifuUserControl.xml" />
+    <Content Include="libraries\BunifuUI\Bunifu.UI.WinForms.ToggleSwitch.dll" />
+    <Content Include="libraries\BunifuUI\Bunifu.UI.WinForms.ToggleSwitch.xml" />
+    <Content Include="libraries\BunifuUI\Bunifu_UI_v1.5.3.dll" />
+    <Content Include="libraries\BunifuUI\Bunifu_UI_v1.5.3.xml" />
+    <Content Include="libraries\MySql.Data\MySql.Data.dll" />
+    <Content Include="libraries\MySql.Data\MySql.Data.xml" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>if not exist "$(TargetDir)libraries" mkdir "$(TargetDir)libraries"
+xcopy /d /s /y "$(SolutionDir)libraries\*.*" "$(TargetDir)libraries"
+
+if not exist "$(TargetDir)libraries\LiveCharts" mkdir "$(TargetDir)libraries\LiveCharts"
+xcopy /d /s /y "$(SolutionDir)packages\LiveCharts.0.9.7\lib\net45\*.*" "$(TargetDir)libraries\LiveCharts"
+xcopy /d /s /y "$(SolutionDir)packages\LiveCharts.WinForms.0.9.7.1\lib\net45\*.*" "$(TargetDir)libraries\LiveCharts"
+xcopy /d /s /y "$(SolutionDir)packages\LiveCharts.Wpf.0.9.7\lib\net45\*.*" "$(TargetDir)libraries\LiveCharts"
+
+if not exist "$(TargetDir)document_templates" mkdir "$(TargetDir)document_templates"
+xcopy /d /s /y "$(SolutionDir)document_templates\*.*" "$(TargetDir)document_templates"</PostBuildEvent>
+  </PropertyGroup>
+</Project>
