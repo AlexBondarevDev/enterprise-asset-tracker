@@ -135,7 +135,7 @@
         E90AAAAASUVORK5CYII=
 </value>
   </data>
-  <data name="bunifuRegisteredButton.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="bunifuGoRegistrationFormButton.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAMUAAAApCAYAAACFvu0JAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
         YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADvSURBVHhe7d2rUURRFETRFwqhEAEWZtADwaGxhEICKCLg
@@ -155,7 +155,7 @@
         SUVORK5CYII=
 </value>
   </data>
-  <data name="bunifuCloseButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="bunifuFormCloseButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAABGdBTUEAALGPC/xhBQAAAUNJREFUWEft
         mF1OhDAUhdmc+uTP6+hWNLo8gSVIcQdCX2bUmDhcPCfGhjCF9lYe+iVNgAvnfqHht8hkMispO/NUd+0V

@@ -11,8 +11,13 @@ using BunifuTextbox = Bunifu.UI.WinForms.BunifuTextbox;
 
 namespace EnterpriseAssetTracker.UsersControlers
 {
+    /// <summary>
+    /// Realization user account management and access level control.
+    /// </summary>
     public partial class EditingLogin_UC : UserControl
     {
+        #region Component initialization.
+
         DatabaseHelper dbHelper = new DatabaseHelper();
         bool isSelectEditRecord;
         List<string> fieldsEditedRecord = new List<string>();
@@ -57,7 +62,11 @@ namespace EnterpriseAssetTracker.UsersControlers
             else LoadDataInMainDataGridView($"{dbHelper.selectAuthorization} WHERE `isAdmin` = 1");
         }
 
+        #endregion Component initialization.
 
+
+
+        #region Realization of data modification functionality.
 
         private void BunifuEditRecordButton_Click(object sender, EventArgs e)
         {
@@ -162,6 +171,11 @@ namespace EnterpriseAssetTracker.UsersControlers
             return true;
         }
 
+        #endregion Realization of data modification functionality.
+
+
+
+        #region Realization of the functionality for data deletion.
 
         private void BunifuDeleteRecordButton_Click(object sender, EventArgs e)  
         {
@@ -295,7 +309,11 @@ namespace EnterpriseAssetTracker.UsersControlers
             }
         }
 
+        #endregion Realization of the functionality for data deletion.
 
+
+
+        #region Realization of data modification functionality.
 
         private void BunifuGoEditRecordPageButton_Click(object sender, EventArgs e)
         {
@@ -327,7 +345,11 @@ namespace EnterpriseAssetTracker.UsersControlers
             bunifuEditCodeButton.Enabled = false;
         }
 
+        #endregion Realization of data modification functionality.
 
+
+
+        #region Realization of auxiliary functionality.
 
         private void BunifuAllUsersCheckBox_CheckedChanged(object sender, Bunifu.UI.WinForms.BunifuCheckBox.CheckedChangedEventArgs e)
         {
@@ -444,5 +466,7 @@ namespace EnterpriseAssetTracker.UsersControlers
         {
             bunifuEditCodeButton.Enabled = true;
         }
+
+        #endregion Realization of auxiliary functionality.
     }
 }

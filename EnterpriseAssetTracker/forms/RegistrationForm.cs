@@ -11,19 +11,26 @@ using BunifuTextbox = Bunifu.UI.WinForms.BunifuTextbox;
 
 namespace EnterpriseAssetTracker.Forms
 {
-    public partial class RegisteredForm : Form
+    /// <summary>
+    /// Serves for registering new users in the system.
+    /// </summary>
+    public partial class RegistrationForm : Form
     {
+        #region Component initialization.
+
         DatabaseHelper dbHelper = new DatabaseHelper();
 
-        public RegisteredForm()
+        public RegistrationForm()
         {
             InitializeComponent();
             bunifuSurnameTextBox.Focus();
         }
 
+        #endregion Component initialization.
 
 
-        private void BunifuRegisteredButton_Click(object sender, EventArgs e)
+
+        private void BunifuRegistrationButton_Click(object sender, EventArgs e)
         {
             string AccessСode = dbHelper.GetAccessСode();
             if (AccessСode == null) return;
@@ -122,52 +129,7 @@ namespace EnterpriseAssetTracker.Forms
 
 
 
-        private void BunifuGeneratePassButton_Click(object sender, EventArgs e)
-        {
-            const string passwordAlphabet = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            Random random = new Random();
-            StringBuilder randomPassword = new StringBuilder();
-
-            for (int i = 0; i < 8; i++)
-            {
-                randomPassword.Append(passwordAlphabet[random.Next(0, passwordAlphabet.Length)]);
-            }
-
-            bunifuPasswordTextBox.Text = randomPassword.ToString();
-            bunifuRegisteredButton.Focus();
-        }
-
-        private void BunifuClearPassButton_Click(object sender, EventArgs e)
-        {
-            bunifuPasswordTextBox.Text = "";
-            bunifuPasswordTextBox.Focus();
-        }
-
-        private void BunifuCopyPassButton_Click(object sender, EventArgs e)
-        {
-            if (bunifuPasswordTextBox.Text == "" || bunifuPasswordTextBox.TextLength < 4 || bunifuPasswordTextBox.TextLength > 8)
-            {
-                MessageBox.Show("Пароль не введён либо введено недопустимое колличество символов!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            Clipboard.SetText("Пароль от учётной записи пользователя: " + bunifuPasswordTextBox.Text);
-            MessageBox.Show("Пароль сохранён в буфер обмена!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-            bunifuRegisteredButton.Focus();
-        }
-
-
-
-        private void BunifuCloseButton_Click(object sender, EventArgs e)
-        {
-            LoginForm loginForm = new LoginForm();
-            loginForm.Show();
-            this.Close();
-        }
-
-
-
-        private void BunifuNameTextBoxes_KeyPress(object sender, KeyPressEventArgs e)
+        private void BunifuValidationNameTextBoxes_KeyPress(object sender, KeyPressEventArgs e)
         {
             TextBox textBox = sender as TextBox;
 
@@ -191,6 +153,51 @@ namespace EnterpriseAssetTracker.Forms
                 }
                 e.Handled = false;
             }
+        }
+
+
+
+        private void BunifuGeneratePassButton_Click(object sender, EventArgs e)
+        {
+            const string passwordAlphabet = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            Random random = new Random();
+            StringBuilder randomPassword = new StringBuilder();
+
+            for (int i = 0; i < 8; i++)
+            {
+                randomPassword.Append(passwordAlphabet[random.Next(0, passwordAlphabet.Length)]);
+            }
+
+            bunifuPasswordTextBox.Text = randomPassword.ToString();
+            bunifuRegistrationButton.Focus();
+        }
+
+        private void BunifuClearPassButton_Click(object sender, EventArgs e)
+        {
+            bunifuPasswordTextBox.Text = "";
+            bunifuPasswordTextBox.Focus();
+        }
+
+        private void BunifuCopyPassButton_Click(object sender, EventArgs e)
+        {
+            if (bunifuPasswordTextBox.Text == "" || bunifuPasswordTextBox.TextLength < 4 || bunifuPasswordTextBox.TextLength > 8)
+            {
+                MessageBox.Show("Пароль не введён либо введено недопустимое колличество символов!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            Clipboard.SetText("Пароль от учётной записи пользователя: " + bunifuPasswordTextBox.Text);
+            MessageBox.Show("Пароль сохранён в буфер обмена!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+            bunifuRegistrationButton.Focus();
+        }
+
+
+
+        private void BunifuFormCloseButton_Click(object sender, EventArgs e)
+        {
+            LoginForm loginForm = new LoginForm();
+            loginForm.Show();
+            this.Close();
         }
     }
 }

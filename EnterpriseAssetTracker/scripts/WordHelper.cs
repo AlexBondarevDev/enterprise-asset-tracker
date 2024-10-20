@@ -7,6 +7,9 @@ using Word = Microsoft.Office.Interop.Word;
 
 namespace EnterpriseAssetTracker.Scripts
 {
+    /// <summary>
+    /// Contains auxiliary functionality necessary for generating reports in .docx format.
+    /// </summary>
     class WordHelper
     {
         private FileInfo _fileInfo;

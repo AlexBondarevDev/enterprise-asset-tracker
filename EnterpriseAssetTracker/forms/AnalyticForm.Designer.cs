@@ -30,14 +30,14 @@ namespace EnterpriseAssetTracker.Forms
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderEdges borderEdges4 = new Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderEdges();
-            BunifuAnimatorNS.Animation animation2 = new BunifuAnimatorNS.Animation();
+            Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderEdges borderEdges1 = new Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderEdges();
+            BunifuAnimatorNS.Animation animation1 = new BunifuAnimatorNS.Animation();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AnalyticForm));
-            Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderEdges borderEdges5 = new Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderEdges();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderEdges borderEdges6 = new Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderEdges();
+            Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderEdges borderEdges3 = new Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderEdges();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderEdges borderEdges2 = new Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderEdges();
             this.reportCartesianChart = new LiveCharts.WinForms.CartesianChart();
             this.bunifuElipse1 = new Bunifu.Framework.UI.BunifuElipse(this.components);
             this.bunifuLabel1 = new Bunifu.UI.WinForms.BunifuLabel();
@@ -48,7 +48,7 @@ namespace EnterpriseAssetTracker.Forms
             this.bunifuSelectReportDropdown = new Bunifu.UI.WinForms.BunifuDropdown();
             this.bunifuLabel6 = new Bunifu.UI.WinForms.BunifuLabel();
             this.bunifuTransition = new BunifuAnimatorNS.BunifuTransition(this.components);
-            this.bunifuCloseButton = new Bunifu.Framework.UI.BunifuImageButton();
+            this.bunifuFormCloseButton = new Bunifu.Framework.UI.BunifuImageButton();
             this.setReportDatePanel = new System.Windows.Forms.Panel();
             this.bunifuCreateReport_ReceiptWriteoffEAList_Button = new Bunifu.UI.WinForms.BunifuButton.BunifuButton();
             this.bunifuLabel9 = new Bunifu.UI.WinForms.BunifuLabel();
@@ -68,7 +68,7 @@ namespace EnterpriseAssetTracker.Forms
             this.bunifuAnnualDynamicStartDatePicker = new Bunifu.UI.WinForms.BunifuDatePicker();
             this.selectReportPanel.SuspendLayout();
             this.createReport_YearSaldoPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.bunifuCloseButton)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bunifuFormCloseButton)).BeginInit();
             this.setReportDatePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.bunifuPieChartRecordDataGridView)).BeginInit();
             this.pieChartRecordPanel.SuspendLayout();
@@ -145,11 +145,11 @@ namespace EnterpriseAssetTracker.Forms
             this.bunifuCreateReport_YearSaldoButton.ColorContrastOnClick = 45;
             this.bunifuCreateReport_YearSaldoButton.ColorContrastOnHover = 45;
             this.bunifuCreateReport_YearSaldoButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            borderEdges4.BottomLeft = true;
-            borderEdges4.BottomRight = true;
-            borderEdges4.TopLeft = true;
-            borderEdges4.TopRight = true;
-            this.bunifuCreateReport_YearSaldoButton.CustomizableEdges = borderEdges4;
+            borderEdges1.BottomLeft = true;
+            borderEdges1.BottomRight = true;
+            borderEdges1.TopLeft = true;
+            borderEdges1.TopRight = true;
+            this.bunifuCreateReport_YearSaldoButton.CustomizableEdges = borderEdges1;
             this.bunifuTransition.SetDecoration(this.bunifuCreateReport_YearSaldoButton, BunifuAnimatorNS.DecorationType.None);
             this.bunifuCreateReport_YearSaldoButton.DialogResult = System.Windows.Forms.DialogResult.None;
             this.bunifuCreateReport_YearSaldoButton.DisabledBorderColor = System.Drawing.Color.Empty;
@@ -297,37 +297,37 @@ namespace EnterpriseAssetTracker.Forms
             // 
             this.bunifuTransition.AnimationType = BunifuAnimatorNS.AnimationType.VertSlide;
             this.bunifuTransition.Cursor = null;
-            animation2.AnimateOnlyDifferences = true;
-            animation2.BlindCoeff = ((System.Drawing.PointF)(resources.GetObject("animation2.BlindCoeff")));
-            animation2.LeafCoeff = 0F;
-            animation2.MaxTime = 1F;
-            animation2.MinTime = 0F;
-            animation2.MosaicCoeff = ((System.Drawing.PointF)(resources.GetObject("animation2.MosaicCoeff")));
-            animation2.MosaicShift = ((System.Drawing.PointF)(resources.GetObject("animation2.MosaicShift")));
-            animation2.MosaicSize = 0;
-            animation2.Padding = new System.Windows.Forms.Padding(0);
-            animation2.RotateCoeff = 0F;
-            animation2.RotateLimit = 0F;
-            animation2.ScaleCoeff = ((System.Drawing.PointF)(resources.GetObject("animation2.ScaleCoeff")));
-            animation2.SlideCoeff = ((System.Drawing.PointF)(resources.GetObject("animation2.SlideCoeff")));
-            animation2.TimeCoeff = 0F;
-            animation2.TransparencyCoeff = 0F;
-            this.bunifuTransition.DefaultAnimation = animation2;
+            animation1.AnimateOnlyDifferences = true;
+            animation1.BlindCoeff = ((System.Drawing.PointF)(resources.GetObject("animation1.BlindCoeff")));
+            animation1.LeafCoeff = 0F;
+            animation1.MaxTime = 1F;
+            animation1.MinTime = 0F;
+            animation1.MosaicCoeff = ((System.Drawing.PointF)(resources.GetObject("animation1.MosaicCoeff")));
+            animation1.MosaicShift = ((System.Drawing.PointF)(resources.GetObject("animation1.MosaicShift")));
+            animation1.MosaicSize = 0;
+            animation1.Padding = new System.Windows.Forms.Padding(0);
+            animation1.RotateCoeff = 0F;
+            animation1.RotateLimit = 0F;
+            animation1.ScaleCoeff = ((System.Drawing.PointF)(resources.GetObject("animation1.ScaleCoeff")));
+            animation1.SlideCoeff = ((System.Drawing.PointF)(resources.GetObject("animation1.SlideCoeff")));
+            animation1.TimeCoeff = 0F;
+            animation1.TransparencyCoeff = 0F;
+            this.bunifuTransition.DefaultAnimation = animation1;
             // 
-            // bunifuCloseButton
+            // bunifuFormCloseButton
             // 
-            this.bunifuCloseButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.bunifuTransition.SetDecoration(this.bunifuCloseButton, BunifuAnimatorNS.DecorationType.None);
-            this.bunifuCloseButton.Image = ((System.Drawing.Image)(resources.GetObject("bunifuCloseButton.Image")));
-            this.bunifuCloseButton.ImageActive = null;
-            this.bunifuCloseButton.Location = new System.Drawing.Point(1153, 6);
-            this.bunifuCloseButton.Name = "bunifuCloseButton";
-            this.bunifuCloseButton.Size = new System.Drawing.Size(35, 39);
-            this.bunifuCloseButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.bunifuCloseButton.TabIndex = 66;
-            this.bunifuCloseButton.TabStop = false;
-            this.bunifuCloseButton.Zoom = 10;
-            this.bunifuCloseButton.Click += new System.EventHandler(this.BunifuCloseButton_Click);
+            this.bunifuFormCloseButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.bunifuTransition.SetDecoration(this.bunifuFormCloseButton, BunifuAnimatorNS.DecorationType.None);
+            this.bunifuFormCloseButton.Image = ((System.Drawing.Image)(resources.GetObject("bunifuFormCloseButton.Image")));
+            this.bunifuFormCloseButton.ImageActive = null;
+            this.bunifuFormCloseButton.Location = new System.Drawing.Point(1153, 6);
+            this.bunifuFormCloseButton.Name = "bunifuFormCloseButton";
+            this.bunifuFormCloseButton.Size = new System.Drawing.Size(35, 39);
+            this.bunifuFormCloseButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.bunifuFormCloseButton.TabIndex = 66;
+            this.bunifuFormCloseButton.TabStop = false;
+            this.bunifuFormCloseButton.Zoom = 10;
+            this.bunifuFormCloseButton.Click += new System.EventHandler(this.BunifuFormCloseButton_Click);
             // 
             // setReportDatePanel
             // 
@@ -358,11 +358,11 @@ namespace EnterpriseAssetTracker.Forms
             this.bunifuCreateReport_ReceiptWriteoffEAList_Button.ColorContrastOnClick = 45;
             this.bunifuCreateReport_ReceiptWriteoffEAList_Button.ColorContrastOnHover = 45;
             this.bunifuCreateReport_ReceiptWriteoffEAList_Button.Cursor = System.Windows.Forms.Cursors.Hand;
-            borderEdges5.BottomLeft = true;
-            borderEdges5.BottomRight = true;
-            borderEdges5.TopLeft = true;
-            borderEdges5.TopRight = true;
-            this.bunifuCreateReport_ReceiptWriteoffEAList_Button.CustomizableEdges = borderEdges5;
+            borderEdges3.BottomLeft = true;
+            borderEdges3.BottomRight = true;
+            borderEdges3.TopLeft = true;
+            borderEdges3.TopRight = true;
+            this.bunifuCreateReport_ReceiptWriteoffEAList_Button.CustomizableEdges = borderEdges3;
             this.bunifuTransition.SetDecoration(this.bunifuCreateReport_ReceiptWriteoffEAList_Button, BunifuAnimatorNS.DecorationType.None);
             this.bunifuCreateReport_ReceiptWriteoffEAList_Button.DialogResult = System.Windows.Forms.DialogResult.None;
             this.bunifuCreateReport_ReceiptWriteoffEAList_Button.DisabledBorderColor = System.Drawing.Color.Empty;
@@ -541,9 +541,9 @@ namespace EnterpriseAssetTracker.Forms
             this.bunifuPieChartRecordDataGridView.AllowCustomTheming = false;
             this.bunifuPieChartRecordDataGridView.AllowUserToAddRows = false;
             this.bunifuPieChartRecordDataGridView.AllowUserToDeleteRows = false;
-            dataGridViewCellStyle4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(223)))), ((int)(((byte)(223)))));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.Color.Black;
-            this.bunifuPieChartRecordDataGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(223)))), ((int)(((byte)(223)))));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.Black;
+            this.bunifuPieChartRecordDataGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.bunifuPieChartRecordDataGridView.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.bunifuPieChartRecordDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
@@ -551,14 +551,14 @@ namespace EnterpriseAssetTracker.Forms
             this.bunifuPieChartRecordDataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.bunifuPieChartRecordDataGridView.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
             this.bunifuPieChartRecordDataGridView.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.Color.Teal;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Segoe UI Semibold", 11.75F, System.Drawing.FontStyle.Bold);
-            dataGridViewCellStyle5.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(102)))));
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.bunifuPieChartRecordDataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.Teal;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI Semibold", 11.75F, System.Drawing.FontStyle.Bold);
+            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(102)))));
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.bunifuPieChartRecordDataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.bunifuPieChartRecordDataGridView.ColumnHeadersHeight = 40;
             this.bunifuPieChartRecordDataGridView.CurrentTheme.AlternatingRowsStyle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(223)))), ((int)(((byte)(223)))));
             this.bunifuPieChartRecordDataGridView.CurrentTheme.AlternatingRowsStyle.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
@@ -579,14 +579,14 @@ namespace EnterpriseAssetTracker.Forms
             this.bunifuPieChartRecordDataGridView.CurrentTheme.RowsStyle.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(102)))), ((int)(((byte)(178)))), ((int)(((byte)(178)))));
             this.bunifuPieChartRecordDataGridView.CurrentTheme.RowsStyle.SelectionForeColor = System.Drawing.Color.White;
             this.bunifuTransition.SetDecoration(this.bunifuPieChartRecordDataGridView, BunifuAnimatorNS.DecorationType.None);
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(229)))), ((int)(((byte)(229)))));
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
-            dataGridViewCellStyle6.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(102)))), ((int)(((byte)(178)))), ((int)(((byte)(178)))));
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.bunifuPieChartRecordDataGridView.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(229)))), ((int)(((byte)(229)))));
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
+            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(102)))), ((int)(((byte)(178)))), ((int)(((byte)(178)))));
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.bunifuPieChartRecordDataGridView.DefaultCellStyle = dataGridViewCellStyle3;
             this.bunifuPieChartRecordDataGridView.EnableHeadersVisualStyles = false;
             this.bunifuPieChartRecordDataGridView.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(216)))), ((int)(((byte)(216)))));
             this.bunifuPieChartRecordDataGridView.HeaderBackColor = System.Drawing.Color.Teal;
@@ -726,11 +726,11 @@ namespace EnterpriseAssetTracker.Forms
             this.bunifuAnnualDinamicButton.ColorContrastOnClick = 45;
             this.bunifuAnnualDinamicButton.ColorContrastOnHover = 45;
             this.bunifuAnnualDinamicButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            borderEdges6.BottomLeft = true;
-            borderEdges6.BottomRight = true;
-            borderEdges6.TopLeft = true;
-            borderEdges6.TopRight = true;
-            this.bunifuAnnualDinamicButton.CustomizableEdges = borderEdges6;
+            borderEdges2.BottomLeft = true;
+            borderEdges2.BottomRight = true;
+            borderEdges2.TopLeft = true;
+            borderEdges2.TopRight = true;
+            this.bunifuAnnualDinamicButton.CustomizableEdges = borderEdges2;
             this.bunifuTransition.SetDecoration(this.bunifuAnnualDinamicButton, BunifuAnimatorNS.DecorationType.None);
             this.bunifuAnnualDinamicButton.DialogResult = System.Windows.Forms.DialogResult.None;
             this.bunifuAnnualDinamicButton.DisabledBorderColor = System.Drawing.Color.Empty;
@@ -822,7 +822,7 @@ namespace EnterpriseAssetTracker.Forms
             this.ClientSize = new System.Drawing.Size(1200, 700);
             this.Controls.Add(this.reportCartesianChart);
             this.Controls.Add(this.pieChartRecordPanel);
-            this.Controls.Add(this.bunifuCloseButton);
+            this.Controls.Add(this.bunifuFormCloseButton);
             this.Controls.Add(this.selectReportPanel);
             this.Controls.Add(this.bunifuLabel1);
             this.Controls.Add(this.setDateForAnnualDinamicPanel);
@@ -834,7 +834,7 @@ namespace EnterpriseAssetTracker.Forms
             this.Text = "Form1";
             this.selectReportPanel.ResumeLayout(false);
             this.createReport_YearSaldoPanel.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.bunifuCloseButton)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bunifuFormCloseButton)).EndInit();
             this.setReportDatePanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.bunifuPieChartRecordDataGridView)).EndInit();
             this.pieChartRecordPanel.ResumeLayout(false);
@@ -852,7 +852,7 @@ namespace EnterpriseAssetTracker.Forms
         private Bunifu.UI.WinForms.BunifuLabel bunifuLabel6;
         public Bunifu.UI.WinForms.BunifuDropdown bunifuSelectReportDropdown;
         private BunifuAnimatorNS.BunifuTransition bunifuTransition;
-        private Bunifu.Framework.UI.BunifuImageButton bunifuCloseButton;
+        private Bunifu.Framework.UI.BunifuImageButton bunifuFormCloseButton;
         private System.Windows.Forms.Panel setReportDatePanel;
         private Bunifu.UI.WinForms.BunifuLabel bunifuLabel7;
         private Bunifu.UI.WinForms.BunifuLabel bunifuLabel9;

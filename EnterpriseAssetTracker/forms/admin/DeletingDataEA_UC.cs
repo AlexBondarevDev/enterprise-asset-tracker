@@ -8,8 +8,13 @@ using MySql.Data.MySqlClient;
 
 namespace EnterpriseAssetTracker.UsersControlers
 {
+    /// <summary>
+    /// Realization of the functionality for deleting data, which requires "Administrator" access level.
+    /// </summary>
     public partial class DeletingDataEA_UC : UserControl
     {
+        #region Component initialization.
+
         DatabaseHelper dbHelper = new DatabaseHelper();
         bool isSelectEditRecord;
         (int, int) idRecordAndIdEAForEdit;
@@ -92,7 +97,11 @@ namespace EnterpriseAssetTracker.UsersControlers
             }
         }
 
+        #endregion Component initialization.
 
+
+
+        #region Realization of the functionality for data deletion.
 
         private void bunifuDeletingButton_Click(object sender, EventArgs e)
         {
@@ -202,7 +211,32 @@ namespace EnterpriseAssetTracker.UsersControlers
             }
         }
 
+        #endregion Realization of the functionality for data deletion.
 
+
+
+        private void BunifuSearchTextBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            for (int i = 0; i < bunifuMainDataGridView.RowCount; i++)
+            {
+                bunifuMainDataGridView.Rows[i].Selected = false;
+                for (int j = 0; j < bunifuMainDataGridView.ColumnCount; j++)
+                    if (bunifuMainDataGridView.Rows[i].Cells[j].Value != null)
+                        if (bunifuMainDataGridView.Rows[i].Cells[j].Value.ToString().ToLower().Contains(bunifuSearchTextBox.Text.ToLower()))
+                        {
+                            bunifuMainDataGridView.Rows[i].Selected = true;
+                            break;
+                        }
+            }
+            if (bunifuSearchTextBox.Text == "")
+            {
+                bunifuMainDataGridView.ClearSelection();
+            }
+        }
+
+
+
+        #region Realization of auxiliary functionality.
 
         private void BunifuMainDataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -312,25 +346,6 @@ namespace EnterpriseAssetTracker.UsersControlers
             }
         }
 
-
-
-        private void BunifuSearchTextBox_KeyUp(object sender, KeyEventArgs e)
-        {
-            for (int i = 0; i < bunifuMainDataGridView.RowCount; i++)
-            {
-                bunifuMainDataGridView.Rows[i].Selected = false;
-                for (int j = 0; j < bunifuMainDataGridView.ColumnCount; j++)
-                    if (bunifuMainDataGridView.Rows[i].Cells[j].Value != null)
-                        if (bunifuMainDataGridView.Rows[i].Cells[j].Value.ToString().ToLower().Contains(bunifuSearchTextBox.Text.ToLower()))
-                        {
-                            bunifuMainDataGridView.Rows[i].Selected = true;
-                            break;
-                        }
-            }
-            if (bunifuSearchTextBox.Text == "")
-            {
-                bunifuMainDataGridView.ClearSelection();
-            }
-        }
+        #endregion Realization of auxiliary functionality.
     }
 }

@@ -238,7 +238,7 @@
 </value>
   </data>
   <data name="bunifuCustomLabel2.Text" xml:space="preserve">
-    <value>Добро пожаловать на главный экран программы "Учёт основных средств" в режиме "Администратор".
+    <value>Добро пожаловать на главный экран программы "Enterprise Asset Tracker" в режиме "Администратор".
 
 Данная программа предназначена для автоматизации учёта основных средств в пределах организации малого и среднего бизнеса. Особенностью данного режима является наличие функций, недоступных рядовому пользователю - экономисту.
 
@@ -888,7 +888,7 @@
         RK5CYII=
 </value>
   </data>
-  <data name="bunifuCloseButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="bunifuFormCloseButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAABGdBTUEAALGPC/xhBQAACDNJREFUeF7t
         nFmIHFUUhuO+L7ijghsqKO4ICi4PUVAfBAnigguiIoiKCioqRPFFJSpBjLgjLiguEZeI4EMk0TjVPYkL

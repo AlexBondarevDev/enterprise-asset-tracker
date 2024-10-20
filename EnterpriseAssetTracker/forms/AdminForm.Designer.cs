@@ -36,7 +36,7 @@ namespace EnterpriseAssetTracker.Forms
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AdminForm));
             this.bunifuElipse1 = new Bunifu.Framework.UI.BunifuElipse(this.components);
             this.panel1 = new System.Windows.Forms.Panel();
-            this.bunifuCloseButton = new Bunifu.Framework.UI.BunifuImageButton();
+            this.bunifuFormCloseButton = new Bunifu.Framework.UI.BunifuImageButton();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.bunifuCustomLabel1 = new Bunifu.Framework.UI.BunifuCustomLabel();
             this.bunifuDragControl1 = new Bunifu.Framework.UI.BunifuDragControl(this.components);
@@ -53,7 +53,7 @@ namespace EnterpriseAssetTracker.Forms
             this.panelAnimator2 = new BunifuAnimatorNS.BunifuTransition(this.components);
             this.logoAnimator = new BunifuAnimatorNS.BunifuTransition(this.components);
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.bunifuCloseButton)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bunifuFormCloseButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.menuPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.logo)).BeginInit();
@@ -68,7 +68,7 @@ namespace EnterpriseAssetTracker.Forms
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(69)))), ((int)(((byte)(80)))));
-            this.panel1.Controls.Add(this.bunifuCloseButton);
+            this.panel1.Controls.Add(this.bunifuFormCloseButton);
             this.panel1.Controls.Add(this.pictureBox1);
             this.panel1.Controls.Add(this.bunifuCustomLabel1);
             this.panelAnimator1.SetDecoration(this.panel1, BunifuAnimatorNS.DecorationType.None);
@@ -80,22 +80,22 @@ namespace EnterpriseAssetTracker.Forms
             this.panel1.Size = new System.Drawing.Size(1200, 34);
             this.panel1.TabIndex = 0;
             // 
-            // bunifuCloseButton
+            // bunifuFormCloseButton
             // 
-            this.bunifuCloseButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.panelAnimator1.SetDecoration(this.bunifuCloseButton, BunifuAnimatorNS.DecorationType.None);
-            this.panelAnimator2.SetDecoration(this.bunifuCloseButton, BunifuAnimatorNS.DecorationType.None);
-            this.logoAnimator.SetDecoration(this.bunifuCloseButton, BunifuAnimatorNS.DecorationType.None);
-            this.bunifuCloseButton.Image = ((System.Drawing.Image)(resources.GetObject("bunifuCloseButton.Image")));
-            this.bunifuCloseButton.ImageActive = null;
-            this.bunifuCloseButton.Location = new System.Drawing.Point(1168, 1);
-            this.bunifuCloseButton.Name = "bunifuCloseButton";
-            this.bunifuCloseButton.Size = new System.Drawing.Size(30, 31);
-            this.bunifuCloseButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.bunifuCloseButton.TabIndex = 5;
-            this.bunifuCloseButton.TabStop = false;
-            this.bunifuCloseButton.Zoom = 10;
-            this.bunifuCloseButton.Click += new System.EventHandler(this.BunifuCloseButton_Click);
+            this.bunifuFormCloseButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.panelAnimator1.SetDecoration(this.bunifuFormCloseButton, BunifuAnimatorNS.DecorationType.None);
+            this.panelAnimator2.SetDecoration(this.bunifuFormCloseButton, BunifuAnimatorNS.DecorationType.None);
+            this.logoAnimator.SetDecoration(this.bunifuFormCloseButton, BunifuAnimatorNS.DecorationType.None);
+            this.bunifuFormCloseButton.Image = ((System.Drawing.Image)(resources.GetObject("bunifuFormCloseButton.Image")));
+            this.bunifuFormCloseButton.ImageActive = null;
+            this.bunifuFormCloseButton.Location = new System.Drawing.Point(1168, 1);
+            this.bunifuFormCloseButton.Name = "bunifuFormCloseButton";
+            this.bunifuFormCloseButton.Size = new System.Drawing.Size(30, 31);
+            this.bunifuFormCloseButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.bunifuFormCloseButton.TabIndex = 5;
+            this.bunifuFormCloseButton.TabStop = false;
+            this.bunifuFormCloseButton.Zoom = 10;
+            this.bunifuFormCloseButton.Click += new System.EventHandler(this.BunifuFormCloseButton_Click);
             // 
             // pictureBox1
             // 
@@ -478,7 +478,7 @@ namespace EnterpriseAssetTracker.Forms
             this.Load += new System.EventHandler(this.AdminForm_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.bunifuCloseButton)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bunifuFormCloseButton)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.menuPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.logo)).EndInit();
@@ -497,7 +497,7 @@ namespace EnterpriseAssetTracker.Forms
         private BunifuAnimatorNS.BunifuTransition panelAnimator1;
         private BunifuAnimatorNS.BunifuTransition panelAnimator2;
         private BunifuAnimatorNS.BunifuTransition logoAnimator;
-        private Bunifu.Framework.UI.BunifuImageButton bunifuCloseButton;
+        private Bunifu.Framework.UI.BunifuImageButton bunifuFormCloseButton;
         private System.Windows.Forms.Panel menuPanel;
         private Bunifu.Framework.UI.BunifuFlatButton bunifuEditingLoginButton;
         private Bunifu.Framework.UI.BunifuFlatButton bunifuAssetCustodianButton;

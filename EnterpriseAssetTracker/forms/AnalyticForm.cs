@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Windows.Forms;
 using System.Windows.Media;
 using EnterpriseAssetTracker.Scripts;
@@ -8,14 +9,18 @@ using LiveCharts;
 using LiveCharts.Wpf;
 using LiveCharts.Defaults;
 using Bunifu.UI.WinForms;
-using System.IO;
 
 
 
 namespace EnterpriseAssetTracker.Forms
 {
+    /// <summary>
+    /// Contains key analytical reports and charts, such as annual dynamics and turnover balance statements.
+    /// </summary>
     public partial class AnalyticForm : Form
     {
+        #region Component initialization.
+
         public string userName;
 
         DatabaseHelper dbHelper = new DatabaseHelper();
@@ -48,12 +53,11 @@ namespace EnterpriseAssetTracker.Forms
             }
         }
 
-        private void BunifuCloseButton_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
+        #endregion Component initialization.
 
 
+
+        #region Realization of report selection for creation.
 
         private void BunifuSelectReportDropdown_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -134,7 +138,11 @@ namespace EnterpriseAssetTracker.Forms
             }
         }
 
+        #endregion Realization of report selection for creation.
 
+
+
+        #region Realization of report generation.
 
         private void BunifuReportStartDatePicker_ValueChanged(object sender, EventArgs e)
         {
@@ -411,6 +419,15 @@ namespace EnterpriseAssetTracker.Forms
                     Stroke = (Brush)brushConverter.ConvertFromString("#FFFEC007")
                 }
             };
+        }
+
+        #endregion Realization of report generation.
+
+
+
+        private void BunifuFormCloseButton_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

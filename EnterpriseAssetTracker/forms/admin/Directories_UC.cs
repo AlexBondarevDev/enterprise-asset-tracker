@@ -10,8 +10,13 @@ using MySql.Data.MySqlClient;
 
 namespace EnterpriseAssetTracker.UsersControlers
 {
+    /// <summary>
+    /// Realization of the functionality for editing program directories.
+    /// </summary>
     public partial class Directories_UC : UserControl
     {
+        #region Component initialization.
+
         DatabaseHelper dbHelper = new DatabaseHelper();
         bool isSelectEditRecord;
         int idSelectRecord;
@@ -52,6 +57,7 @@ namespace EnterpriseAssetTracker.UsersControlers
             }
         }
 
+        #endregion Component initialization.
 
 
         private void BunifuAddRecordButton_Click(object sender, EventArgs e)
@@ -221,6 +227,25 @@ namespace EnterpriseAssetTracker.UsersControlers
             }
         }
 
+        private void BunifuSearchTextBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            for (int i = 0; i < bunifuMainDataGridView.RowCount; i++)
+            {
+                bunifuMainDataGridView.Rows[i].Selected = false;
+                for (int j = 0; j < bunifuMainDataGridView.ColumnCount; j++)
+                    if (bunifuMainDataGridView.Rows[i].Cells[j].Value != null)
+                        if (bunifuMainDataGridView.Rows[i].Cells[j].Value.ToString().ToLower().Contains(bunifuSearchTextBox.Text.ToLower()))
+                        {
+                            bunifuMainDataGridView.Rows[i].Selected = true;
+                            break;
+                        }
+            }
+            if (bunifuSearchTextBox.Text == "")
+            {
+                bunifuMainDataGridView.ClearSelection();
+            }
+        }
+
         private List<string> GetDirectories(bool isOtionalWHERE)
         {
             string optionalWHERE = "";
@@ -316,27 +341,6 @@ namespace EnterpriseAssetTracker.UsersControlers
             {
                 isSelectEditRecord = false;
                 bunifuSelectRecordTextBox.Text = "";
-            }
-        }
-
-
-
-        private void BunifuSearchTextBox_KeyUp(object sender, KeyEventArgs e)
-        {
-            for (int i = 0; i < bunifuMainDataGridView.RowCount; i++)
-            {
-                bunifuMainDataGridView.Rows[i].Selected = false;
-                for (int j = 0; j < bunifuMainDataGridView.ColumnCount; j++)
-                    if (bunifuMainDataGridView.Rows[i].Cells[j].Value != null)
-                        if (bunifuMainDataGridView.Rows[i].Cells[j].Value.ToString().ToLower().Contains(bunifuSearchTextBox.Text.ToLower()))
-                        {
-                            bunifuMainDataGridView.Rows[i].Selected = true;
-                            break;
-                        }
-            }
-            if (bunifuSearchTextBox.Text == "")
-            {
-                bunifuMainDataGridView.ClearSelection();
             }
         }
     }

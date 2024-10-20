@@ -10,8 +10,13 @@ using System.Windows.Forms;
 
 namespace EnterpriseAssetTracker.Forms
 {
+    /// <summary>
+    /// Serves for user authentication in the system.
+    /// </summary>
     public partial class LoginForm : Form
     {
+        #region Component initialization.
+
         DatabaseHelper dbHelper = new DatabaseHelper();
 
         public LoginForm()
@@ -36,14 +41,23 @@ namespace EnterpriseAssetTracker.Forms
             if (userList == null)
             {
                 bunifuLoginButton.Visible = false;
-                bunifuRegisteredButton.Visible = false;
+                bunifuGoRegistrationFormButton.Visible = false;
                 userList = new List<string>();
             }
 
             return userList;
         }
 
-        
+        #endregion Component initialization.
+
+
+
+        #region Realization of user authentication.
+
+        private void BunifuUserDropdown_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            bunifuPasswordTextBox.Focus();
+        }
 
         private void BunifuLoginButton_Click(object sender, EventArgs e)
         {
@@ -62,9 +76,6 @@ namespace EnterpriseAssetTracker.Forms
             bunifuPasswordTextBox.Text = "";
         }
 
-        /// <summary>
-        /// Checking the password and going to the User/Admin forms.
-        /// </summary>
         private void PasswordVerification(string username, string password)
         {
             string query = "SELECT isAdmin FROM authorization WHERE name_economist = @username AND password = @password";
@@ -114,29 +125,24 @@ namespace EnterpriseAssetTracker.Forms
             }
         }
 
+        #endregion Realization of user authentication.
 
 
-        private void BunifuRegisteredButton_Click(object sender, EventArgs e)
+
+        private void BunifuGoRegistrationFormButton_Click(object sender, EventArgs e)
         {
-            RegisteredForm registeredForm = new RegisteredForm();
+            RegistrationForm registeredForm = new RegistrationForm();
             registeredForm.Show();
             this.Close();
         }
 
 
-        private void BunifuCloseButton_Click(object sender, EventArgs e)
+        private void BunifuFormCloseButton_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("Вы уверены, что хотите выйти?", "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 Application.Exit();
             }
-        }
-
-
-
-        private void BunifuUserDropdown_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            bunifuPasswordTextBox.Focus();
         }
     }
 }

@@ -12,8 +12,13 @@ using BunifuTextbox = Bunifu.UI.WinForms.BunifuTextbox;
 
 namespace EnterpriseAssetTracker.UsersControlers
 {
+    /// <summary>
+    /// Realization of functionality for accounting for enterprise assets objects.
+    /// </summary>
     public partial class ReceiptEA_UC : UserControl
     {
+        #region Component initialization.
+
         public string userName;
 
         DatabaseHelper dbHelper = new DatabaseHelper();
@@ -146,106 +151,11 @@ namespace EnterpriseAssetTracker.UsersControlers
             RefreshData("");
         }
 
+        #endregion Component initialization.
 
 
 
-        private void BunifuMainDataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            try
-            {
-                isSelectEditRecord = true;
-                fieldsEditedRecord.Clear();
-
-                for (int i = 0; i < bunifuMainDataGridView.ColumnCount; i++)
-                {
-                    fieldsEditedRecord.Add(bunifuMainDataGridView.Rows[e.RowIndex].Cells[i].Value.ToString());
-                }
-
-                if (bunifuOperationPages.SelectedTab == EditRecordPage)
-                {
-                    LoadDataInFieldsForEditRecord();
-                }
-                else if (bunifuOperationPages.SelectedTab == CreateDocPage)
-                {
-                    LoadDateInCreateDocDGV(e);
-                }
-            }
-            catch
-            {
-                ClearFieldsForEditRecord();
-                bunifuCreateDocDataGridView.Rows.Clear();
-            }
-        }
-
-
-
-
-        private void ValidateEAtagTextBoxes(object sender, KeyPressEventArgs e)
-        {
-            if (sender is TextBox textBox)
-            {
-                char key = e.KeyChar;
-
-                bool isControl = Char.IsControl(key);
-                bool isDigit = Char.IsDigit(key);
-
-                if (isControl || isDigit)
-                {
-                    if (isControl || textBox.Text.Length < 3)
-                    {
-                        e.Handled = false;
-                    }
-                    else
-                    {
-                        e.Handled = true;
-                    }
-                }
-                else
-                {
-                    e.Handled = true;
-                }
-            }
-        }
-
-        private void ValidateInitialCostTextBoxes(object sender, KeyPressEventArgs e)
-        {
-            if (sender is TextBox textBox)
-            {
-                char key = e.KeyChar;
-                e.Handled = true;
-
-                bool isControl = Char.IsControl(key);
-                bool isDigit = Char.IsDigit(key);
-                bool isSeparator = key == ',';
-
-                if (isDigit || isControl || isSeparator)
-                {
-                    if (textBox.Text == "0" && key == '0')
-                    {
-                        e.Handled = true;
-                    }
-                    else if (textBox.Text.Length == 0 && isSeparator)
-                    {
-                        e.Handled = true;
-                    }
-                    else if (textBox.Text.Contains(",") && isSeparator)
-                    {
-                        e.Handled = true;
-                    }
-                    else if (textBox.Text.Contains(",") && textBox.Text.Split(',')[1].Length >= 2 && !isControl)
-                    {
-                        e.Handled = true;
-                    }
-                    else
-                    {
-                        e.Handled = false;
-                    }
-                }
-            }
-        }
-
-
-
+        #region Realization of the functionality for adding data.
 
         private void BunifuGoAddPageButton_Click(object sender, EventArgs e)
         {
@@ -449,8 +359,11 @@ namespace EnterpriseAssetTracker.UsersControlers
             bunifuAddR_TotalCostTextBox.Text = "";
         }
 
+        #endregion Realization of the functionality for adding data.
 
 
+
+        #region Realization of data modification functionality.
 
         private void BunifuGoEditPageButton_Click(object sender, EventArgs e)
         {
@@ -465,6 +378,34 @@ namespace EnterpriseAssetTracker.UsersControlers
             bunifuEditR_EANameTextBox.Focus();
 
             LoadDataInFieldsForEditRecord();
+        }
+
+        private void BunifuMainDataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                isSelectEditRecord = true;
+                fieldsEditedRecord.Clear();
+
+                for (int i = 0; i < bunifuMainDataGridView.ColumnCount; i++)
+                {
+                    fieldsEditedRecord.Add(bunifuMainDataGridView.Rows[e.RowIndex].Cells[i].Value.ToString());
+                }
+
+                if (bunifuOperationPages.SelectedTab == EditRecordPage)
+                {
+                    LoadDataInFieldsForEditRecord();
+                }
+                else if (bunifuOperationPages.SelectedTab == CreateDocPage)
+                {
+                    LoadDateInCreateDocDGV(e);
+                }
+            }
+            catch
+            {
+                ClearFieldsForEditRecord();
+                bunifuCreateDocDataGridView.Rows.Clear();
+            }
         }
 
         private void LoadDataInFieldsForEditRecord()
@@ -780,8 +721,11 @@ namespace EnterpriseAssetTracker.UsersControlers
             return true;
         }
 
+        #endregion Realization of data modification functionality.
 
 
+
+        #region Realization of data search functionality.
 
         private void BunifuGoSearchPageButton_Click(object sender, EventArgs e)
         {
@@ -809,8 +753,11 @@ namespace EnterpriseAssetTracker.UsersControlers
             }
         }
 
+        #endregion Realization of data search functionality.
 
 
+
+        #region Realization of data filtration functionality.
 
         private void BunifuGoFiltrationPageButton_Click(object sender, EventArgs e)
         {
@@ -890,8 +837,11 @@ namespace EnterpriseAssetTracker.UsersControlers
             }
         }
 
+        #endregion Realization of data filtration functionality.
 
 
+
+        #region Realization of document creation functionality based on data.
 
         private void BunifuGoCreateDocPageButton_Click(object sender, EventArgs e)
         {
@@ -1108,5 +1058,77 @@ namespace EnterpriseAssetTracker.UsersControlers
 
             return writeoffInfo;
         }
+
+        #endregion Realization of document creation functionality based on data.
+
+
+
+        #region Realization of auxiliary functionality.
+
+        private void ValidateEAtagTextBoxes(object sender, KeyPressEventArgs e)
+        {
+            if (sender is TextBox textBox)
+            {
+                char key = e.KeyChar;
+
+                bool isControl = Char.IsControl(key);
+                bool isDigit = Char.IsDigit(key);
+
+                if (isControl || isDigit)
+                {
+                    if (isControl || textBox.Text.Length < 3)
+                    {
+                        e.Handled = false;
+                    }
+                    else
+                    {
+                        e.Handled = true;
+                    }
+                }
+                else
+                {
+                    e.Handled = true;
+                }
+            }
+        }
+
+        private void ValidateInitialCostTextBoxes(object sender, KeyPressEventArgs e)
+        {
+            if (sender is TextBox textBox)
+            {
+                char key = e.KeyChar;
+                e.Handled = true;
+
+                bool isControl = Char.IsControl(key);
+                bool isDigit = Char.IsDigit(key);
+                bool isSeparator = key == ',';
+
+                if (isDigit || isControl || isSeparator)
+                {
+                    if (textBox.Text == "0" && key == '0')
+                    {
+                        e.Handled = true;
+                    }
+                    else if (textBox.Text.Length == 0 && isSeparator)
+                    {
+                        e.Handled = true;
+                    }
+                    else if (textBox.Text.Contains(",") && isSeparator)
+                    {
+                        e.Handled = true;
+                    }
+                    else if (textBox.Text.Contains(",") && textBox.Text.Split(',')[1].Length >= 2 && !isControl)
+                    {
+                        e.Handled = true;
+                    }
+                    else
+                    {
+                        e.Handled = false;
+                    }
+                }
+            }
+        }
+
+        #endregion Realization of auxiliary functionality.
     }
 }

@@ -6,8 +6,13 @@ using EnterpriseAssetTracker.UsersControlers;
 
 namespace EnterpriseAssetTracker.Forms
 {
+    /// <summary>
+    /// Serves as the main working form for users with the "Administrator" access level.
+    /// </summary>
     public partial class AdminForm : Form
     {
+        #region Component initialization.
+
         public string User;
 
         public AdminForm()
@@ -20,36 +25,11 @@ namespace EnterpriseAssetTracker.Forms
             bunifuCustomLabel1.Text += User;
         }
 
+        #endregion Component initialization.
 
 
-        private void BunifuCloseButton_Click(object sender, EventArgs e)
-        {
-            if (MessageBox.Show($"{User}, Вы уверены, что хотите закончить работу?", "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-            {
-                this.Close();
-            }
-        }
 
-        /// <summary>
-        /// Switch between expanded and collapsed menu positions.
-        /// </summary>
-        private void MenyButton_Click(object sender, EventArgs e)
-        {
-            if (menuPanel.Width == 60)
-            {
-                menuPanel.Visible = false;
-                menuPanel.Width = 240;
-                panelAnimator2.ShowSync(menuPanel);
-                logoAnimator.ShowSync(logo);
-            }
-            else
-            {
-                logoAnimator.HideSync(logo);
-                menuPanel.Visible = false;
-                menuPanel.Width = 60;
-                panelAnimator1.ShowSync(menuPanel);
-            }
-        }
+        #region Implementation of section selection for work.
 
         private void BunifuDeletingDataEAButton_Click(object sender, EventArgs e)
         {
@@ -84,6 +64,39 @@ namespace EnterpriseAssetTracker.Forms
             userControl.Dock = DockStyle.Fill;
             workPanel.Controls.Add(userControl);
             userControl.BringToFront();
+        }
+
+        #endregion Implementation of section selection for work.
+
+
+
+        /// <summary>
+        /// Switch between expanded and collapsed menu positions.
+        /// </summary>
+        private void MenyButton_Click(object sender, EventArgs e)
+        {
+            if (menuPanel.Width == 60)
+            {
+                menuPanel.Visible = false;
+                menuPanel.Width = 240;
+                panelAnimator2.ShowSync(menuPanel);
+                logoAnimator.ShowSync(logo);
+            }
+            else
+            {
+                logoAnimator.HideSync(logo);
+                menuPanel.Visible = false;
+                menuPanel.Width = 60;
+                panelAnimator1.ShowSync(menuPanel);
+            }
+        }
+
+        private void BunifuFormCloseButton_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show($"{User}, Вы уверены, что хотите закончить работу?", "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                this.Close();
+            }
         }
     }
 }

@@ -8,6 +8,9 @@ using MySql.Data.MySqlClient;
 
 namespace EnterpriseAssetTracker.Scripts
 {
+    /// <summary>
+    /// Contains frequently used queries and methods for get data, generating directories and reports.
+    /// </summary>
     class DatabaseHelper
     {
         MySqlConnection connection = new MySqlConnection("server=localhost;port=3306;username=root;password=root;database=eat_db");
@@ -69,8 +72,7 @@ namespace EnterpriseAssetTracker.Scripts
 
 
 
-
-        //Start MainDataGridView queries
+        #region MainDataGridView queries.
 
         public string selectEA_on_writeoff =
             "SELECT " +
@@ -151,22 +153,11 @@ namespace EnterpriseAssetTracker.Scripts
             "`isAdmin` " +
             "FROM `authorization` ";
 
-        //End MainDataGridView queries
+        #endregion MainDataGridView queries.
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-        //Start GetFieldName queries for Directories
+        #region GetFieldName queries for Directories.
 
         public List<string> GetUsers_fieldName(string optionalWHERE)
         {
@@ -236,17 +227,11 @@ namespace EnterpriseAssetTracker.Scripts
             return recordList;
         }
 
-        //End GetFieldName queries for Directories
+        #endregion GetFieldName queries for Directories.
 
 
 
-
-
-
-
-
-
-        //Start GetIdByName queries for operation INSERT and UPDATE
+        #region GetIdByName queries for operation INSERT and UPDATE.
 
         public int GetIdByName_Positions(string searchedName)
         {
@@ -343,14 +328,11 @@ namespace EnterpriseAssetTracker.Scripts
             return serchedId;
         }
 
-        //End GetIdByName queries for operation INSERT and UPDATE
+        #endregion GetIdByName queries for operation INSERT and UPDATE.
 
 
 
-
-
-
-        //Start queries for documents and reports
+        #region Queries for documents and reports.
 
         public DataTable GetReport_InventoryCardEA_repairEAInfo(int idEnterpriseAssets)
         {
@@ -543,6 +525,6 @@ namespace EnterpriseAssetTracker.Scripts
             }
         }
 
-        //End queries for documents and reports
+        #endregion Queries for documents and reports.
     }
 }

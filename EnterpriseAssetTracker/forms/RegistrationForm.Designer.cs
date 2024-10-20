@@ -1,7 +1,7 @@
 ﻿
 namespace EnterpriseAssetTracker.Forms
 {
-    partial class RegisteredForm
+    partial class RegistrationForm
     {
         /// <summary>
         /// Required designer variable.
@@ -30,7 +30,7 @@ namespace EnterpriseAssetTracker.Forms
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RegisteredForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RegistrationForm));
             Bunifu.UI.WinForms.BunifuTextbox.BunifuTextBox.StateProperties stateProperties1 = new Bunifu.UI.WinForms.BunifuTextbox.BunifuTextBox.StateProperties();
             Bunifu.UI.WinForms.BunifuTextbox.BunifuTextBox.StateProperties stateProperties2 = new Bunifu.UI.WinForms.BunifuTextbox.BunifuTextBox.StateProperties();
             Bunifu.UI.WinForms.BunifuTextbox.BunifuTextBox.StateProperties stateProperties3 = new Bunifu.UI.WinForms.BunifuTextbox.BunifuTextBox.StateProperties();
@@ -60,11 +60,11 @@ namespace EnterpriseAssetTracker.Forms
             this.bunifuGeneratePassButton = new Bunifu.Framework.UI.BunifuImageButton();
             this.bunifuPasswordTextBox = new Bunifu.UI.WinForms.BunifuTextbox.BunifuTextBox();
             this.bunifuLabel5 = new Bunifu.UI.WinForms.BunifuLabel();
-            this.bunifuRegisteredButton = new Bunifu.UI.WinForms.BunifuButton.BunifuButton();
+            this.bunifuRegistrationButton = new Bunifu.UI.WinForms.BunifuButton.BunifuButton();
             this.bunifuFatherNameTextBox = new Bunifu.UI.WinForms.BunifuTextbox.BunifuTextBox();
             this.bunifuSurnameTextBox = new Bunifu.UI.WinForms.BunifuTextbox.BunifuTextBox();
             this.bunifuNameTextBox = new Bunifu.UI.WinForms.BunifuTextbox.BunifuTextBox();
-            this.bunifuCloseButton = new Bunifu.Framework.UI.BunifuImageButton();
+            this.bunifuFormCloseButton = new Bunifu.Framework.UI.BunifuImageButton();
             this.bunifuLabel3 = new Bunifu.UI.WinForms.BunifuLabel();
             this.bunifuLabel4 = new Bunifu.UI.WinForms.BunifuLabel();
             this.bunifuLabel2 = new Bunifu.UI.WinForms.BunifuLabel();
@@ -78,7 +78,7 @@ namespace EnterpriseAssetTracker.Forms
             ((System.ComponentModel.ISupportInitialize)(this.bunifuCopyPassButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bunifuClearPassButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bunifuGeneratePassButton)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.bunifuCloseButton)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bunifuFormCloseButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bunifuImageButton2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -93,11 +93,11 @@ namespace EnterpriseAssetTracker.Forms
             this.panel1.Controls.Add(this.bunifuGeneratePassButton);
             this.panel1.Controls.Add(this.bunifuPasswordTextBox);
             this.panel1.Controls.Add(this.bunifuLabel5);
-            this.panel1.Controls.Add(this.bunifuRegisteredButton);
+            this.panel1.Controls.Add(this.bunifuRegistrationButton);
             this.panel1.Controls.Add(this.bunifuFatherNameTextBox);
             this.panel1.Controls.Add(this.bunifuSurnameTextBox);
             this.panel1.Controls.Add(this.bunifuNameTextBox);
-            this.panel1.Controls.Add(this.bunifuCloseButton);
+            this.panel1.Controls.Add(this.bunifuFormCloseButton);
             this.panel1.Controls.Add(this.bunifuLabel3);
             this.panel1.Controls.Add(this.bunifuLabel4);
             this.panel1.Controls.Add(this.bunifuLabel2);
@@ -333,75 +333,75 @@ namespace EnterpriseAssetTracker.Forms
             this.bunifuLabel5.TextAlignment = System.Drawing.ContentAlignment.TopLeft;
             this.bunifuLabel5.TextFormat = Bunifu.UI.WinForms.BunifuLabel.TextFormattingOptions.Default;
             // 
-            // bunifuRegisteredButton
+            // bunifuRegistrationButton
             // 
-            this.bunifuRegisteredButton.AllowToggling = false;
-            this.bunifuRegisteredButton.AnimationSpeed = 200;
-            this.bunifuRegisteredButton.AutoGenerateColors = false;
-            this.bunifuRegisteredButton.BackColor = System.Drawing.Color.Transparent;
-            this.bunifuRegisteredButton.BackColor1 = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(90)))));
-            this.bunifuRegisteredButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("bunifuRegisteredButton.BackgroundImage")));
-            this.bunifuRegisteredButton.BorderStyle = Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderStyles.Solid;
-            this.bunifuRegisteredButton.ButtonText = "Зарегистрироваться";
-            this.bunifuRegisteredButton.ButtonTextMarginLeft = 0;
-            this.bunifuRegisteredButton.ColorContrastOnClick = 45;
-            this.bunifuRegisteredButton.ColorContrastOnHover = 45;
-            this.bunifuRegisteredButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.bunifuRegistrationButton.AllowToggling = false;
+            this.bunifuRegistrationButton.AnimationSpeed = 200;
+            this.bunifuRegistrationButton.AutoGenerateColors = false;
+            this.bunifuRegistrationButton.BackColor = System.Drawing.Color.Transparent;
+            this.bunifuRegistrationButton.BackColor1 = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(90)))));
+            this.bunifuRegistrationButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("bunifuRegistrationButton.BackgroundImage")));
+            this.bunifuRegistrationButton.BorderStyle = Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderStyles.Solid;
+            this.bunifuRegistrationButton.ButtonText = "Зарегистрироваться";
+            this.bunifuRegistrationButton.ButtonTextMarginLeft = 0;
+            this.bunifuRegistrationButton.ColorContrastOnClick = 45;
+            this.bunifuRegistrationButton.ColorContrastOnHover = 45;
+            this.bunifuRegistrationButton.Cursor = System.Windows.Forms.Cursors.Hand;
             borderEdges1.BottomLeft = true;
             borderEdges1.BottomRight = true;
             borderEdges1.TopLeft = true;
             borderEdges1.TopRight = true;
-            this.bunifuRegisteredButton.CustomizableEdges = borderEdges1;
-            this.bunifuRegisteredButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.bunifuRegisteredButton.DisabledBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(191)))), ((int)(((byte)(191)))));
-            this.bunifuRegisteredButton.DisabledFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
-            this.bunifuRegisteredButton.DisabledForecolor = System.Drawing.Color.FromArgb(((int)(((byte)(168)))), ((int)(((byte)(160)))), ((int)(((byte)(168)))));
-            this.bunifuRegisteredButton.FocusState = Bunifu.UI.WinForms.BunifuButton.BunifuButton.ButtonStates.Pressed;
-            this.bunifuRegisteredButton.Font = new System.Drawing.Font("Century Gothic", 15.75F);
-            this.bunifuRegisteredButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.bunifuRegisteredButton.IconLeftCursor = System.Windows.Forms.Cursors.Hand;
-            this.bunifuRegisteredButton.IconMarginLeft = 11;
-            this.bunifuRegisteredButton.IconPadding = 10;
-            this.bunifuRegisteredButton.IconRightCursor = System.Windows.Forms.Cursors.Hand;
-            this.bunifuRegisteredButton.IdleBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(90)))));
-            this.bunifuRegisteredButton.IdleBorderRadius = 3;
-            this.bunifuRegisteredButton.IdleBorderThickness = 1;
-            this.bunifuRegisteredButton.IdleFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(90)))));
-            this.bunifuRegisteredButton.IdleIconLeftImage = null;
-            this.bunifuRegisteredButton.IdleIconRightImage = null;
-            this.bunifuRegisteredButton.IndicateFocus = false;
-            this.bunifuRegisteredButton.Location = new System.Drawing.Point(261, 621);
-            this.bunifuRegisteredButton.Name = "bunifuRegisteredButton";
-            this.bunifuRegisteredButton.onHoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(129)))), ((int)(((byte)(90)))));
-            this.bunifuRegisteredButton.onHoverState.BorderRadius = 3;
-            this.bunifuRegisteredButton.onHoverState.BorderStyle = Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderStyles.Solid;
-            this.bunifuRegisteredButton.onHoverState.BorderThickness = 1;
-            this.bunifuRegisteredButton.onHoverState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(129)))), ((int)(((byte)(90)))));
-            this.bunifuRegisteredButton.onHoverState.ForeColor = System.Drawing.Color.White;
-            this.bunifuRegisteredButton.onHoverState.IconLeftImage = null;
-            this.bunifuRegisteredButton.onHoverState.IconRightImage = null;
-            this.bunifuRegisteredButton.OnIdleState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(90)))));
-            this.bunifuRegisteredButton.OnIdleState.BorderRadius = 3;
-            this.bunifuRegisteredButton.OnIdleState.BorderStyle = Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderStyles.Solid;
-            this.bunifuRegisteredButton.OnIdleState.BorderThickness = 1;
-            this.bunifuRegisteredButton.OnIdleState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(90)))));
-            this.bunifuRegisteredButton.OnIdleState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.bunifuRegisteredButton.OnIdleState.IconLeftImage = null;
-            this.bunifuRegisteredButton.OnIdleState.IconRightImage = null;
-            this.bunifuRegisteredButton.OnPressedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(90)))));
-            this.bunifuRegisteredButton.OnPressedState.BorderRadius = 3;
-            this.bunifuRegisteredButton.OnPressedState.BorderStyle = Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderStyles.Solid;
-            this.bunifuRegisteredButton.OnPressedState.BorderThickness = 1;
-            this.bunifuRegisteredButton.OnPressedState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(90)))));
-            this.bunifuRegisteredButton.OnPressedState.ForeColor = System.Drawing.Color.White;
-            this.bunifuRegisteredButton.OnPressedState.IconLeftImage = null;
-            this.bunifuRegisteredButton.OnPressedState.IconRightImage = null;
-            this.bunifuRegisteredButton.Size = new System.Drawing.Size(263, 45);
-            this.bunifuRegisteredButton.TabIndex = 6;
-            this.bunifuRegisteredButton.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.bunifuRegisteredButton.TextMarginLeft = 0;
-            this.bunifuRegisteredButton.UseDefaultRadiusAndThickness = true;
-            this.bunifuRegisteredButton.Click += new System.EventHandler(this.BunifuRegisteredButton_Click);
+            this.bunifuRegistrationButton.CustomizableEdges = borderEdges1;
+            this.bunifuRegistrationButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.bunifuRegistrationButton.DisabledBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(191)))), ((int)(((byte)(191)))));
+            this.bunifuRegistrationButton.DisabledFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
+            this.bunifuRegistrationButton.DisabledForecolor = System.Drawing.Color.FromArgb(((int)(((byte)(168)))), ((int)(((byte)(160)))), ((int)(((byte)(168)))));
+            this.bunifuRegistrationButton.FocusState = Bunifu.UI.WinForms.BunifuButton.BunifuButton.ButtonStates.Pressed;
+            this.bunifuRegistrationButton.Font = new System.Drawing.Font("Century Gothic", 15.75F);
+            this.bunifuRegistrationButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.bunifuRegistrationButton.IconLeftCursor = System.Windows.Forms.Cursors.Hand;
+            this.bunifuRegistrationButton.IconMarginLeft = 11;
+            this.bunifuRegistrationButton.IconPadding = 10;
+            this.bunifuRegistrationButton.IconRightCursor = System.Windows.Forms.Cursors.Hand;
+            this.bunifuRegistrationButton.IdleBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(90)))));
+            this.bunifuRegistrationButton.IdleBorderRadius = 3;
+            this.bunifuRegistrationButton.IdleBorderThickness = 1;
+            this.bunifuRegistrationButton.IdleFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(90)))));
+            this.bunifuRegistrationButton.IdleIconLeftImage = null;
+            this.bunifuRegistrationButton.IdleIconRightImage = null;
+            this.bunifuRegistrationButton.IndicateFocus = false;
+            this.bunifuRegistrationButton.Location = new System.Drawing.Point(261, 621);
+            this.bunifuRegistrationButton.Name = "bunifuRegistrationButton";
+            this.bunifuRegistrationButton.onHoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(129)))), ((int)(((byte)(90)))));
+            this.bunifuRegistrationButton.onHoverState.BorderRadius = 3;
+            this.bunifuRegistrationButton.onHoverState.BorderStyle = Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderStyles.Solid;
+            this.bunifuRegistrationButton.onHoverState.BorderThickness = 1;
+            this.bunifuRegistrationButton.onHoverState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(129)))), ((int)(((byte)(90)))));
+            this.bunifuRegistrationButton.onHoverState.ForeColor = System.Drawing.Color.White;
+            this.bunifuRegistrationButton.onHoverState.IconLeftImage = null;
+            this.bunifuRegistrationButton.onHoverState.IconRightImage = null;
+            this.bunifuRegistrationButton.OnIdleState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(90)))));
+            this.bunifuRegistrationButton.OnIdleState.BorderRadius = 3;
+            this.bunifuRegistrationButton.OnIdleState.BorderStyle = Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderStyles.Solid;
+            this.bunifuRegistrationButton.OnIdleState.BorderThickness = 1;
+            this.bunifuRegistrationButton.OnIdleState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(90)))));
+            this.bunifuRegistrationButton.OnIdleState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.bunifuRegistrationButton.OnIdleState.IconLeftImage = null;
+            this.bunifuRegistrationButton.OnIdleState.IconRightImage = null;
+            this.bunifuRegistrationButton.OnPressedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(90)))));
+            this.bunifuRegistrationButton.OnPressedState.BorderRadius = 3;
+            this.bunifuRegistrationButton.OnPressedState.BorderStyle = Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderStyles.Solid;
+            this.bunifuRegistrationButton.OnPressedState.BorderThickness = 1;
+            this.bunifuRegistrationButton.OnPressedState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(90)))));
+            this.bunifuRegistrationButton.OnPressedState.ForeColor = System.Drawing.Color.White;
+            this.bunifuRegistrationButton.OnPressedState.IconLeftImage = null;
+            this.bunifuRegistrationButton.OnPressedState.IconRightImage = null;
+            this.bunifuRegistrationButton.Size = new System.Drawing.Size(263, 45);
+            this.bunifuRegistrationButton.TabIndex = 6;
+            this.bunifuRegistrationButton.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.bunifuRegistrationButton.TextMarginLeft = 0;
+            this.bunifuRegistrationButton.UseDefaultRadiusAndThickness = true;
+            this.bunifuRegistrationButton.Click += new System.EventHandler(this.BunifuRegistrationButton_Click);
             // 
             // bunifuFatherNameTextBox
             // 
@@ -476,7 +476,7 @@ namespace EnterpriseAssetTracker.Forms
             this.bunifuFatherNameTextBox.TextPlaceholder = "";
             this.bunifuFatherNameTextBox.UseSystemPasswordChar = false;
             this.bunifuFatherNameTextBox.WordWrap = true;
-            this.bunifuFatherNameTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.BunifuNameTextBoxes_KeyPress);
+            this.bunifuFatherNameTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.BunifuValidationNameTextBoxes_KeyPress);
             // 
             // bunifuSurnameTextBox
             // 
@@ -552,7 +552,7 @@ namespace EnterpriseAssetTracker.Forms
             this.bunifuSurnameTextBox.TextPlaceholder = "";
             this.bunifuSurnameTextBox.UseSystemPasswordChar = false;
             this.bunifuSurnameTextBox.WordWrap = true;
-            this.bunifuSurnameTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.BunifuNameTextBoxes_KeyPress);
+            this.bunifuSurnameTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.BunifuValidationNameTextBoxes_KeyPress);
             // 
             // bunifuNameTextBox
             // 
@@ -627,21 +627,21 @@ namespace EnterpriseAssetTracker.Forms
             this.bunifuNameTextBox.TextPlaceholder = "";
             this.bunifuNameTextBox.UseSystemPasswordChar = false;
             this.bunifuNameTextBox.WordWrap = true;
-            this.bunifuNameTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.BunifuNameTextBoxes_KeyPress);
+            this.bunifuNameTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.BunifuValidationNameTextBoxes_KeyPress);
             // 
-            // bunifuCloseButton
+            // bunifuFormCloseButton
             // 
-            this.bunifuCloseButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.bunifuCloseButton.Image = ((System.Drawing.Image)(resources.GetObject("bunifuCloseButton.Image")));
-            this.bunifuCloseButton.ImageActive = null;
-            this.bunifuCloseButton.Location = new System.Drawing.Point(753, 12);
-            this.bunifuCloseButton.Name = "bunifuCloseButton";
-            this.bunifuCloseButton.Size = new System.Drawing.Size(35, 39);
-            this.bunifuCloseButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.bunifuCloseButton.TabIndex = 6;
-            this.bunifuCloseButton.TabStop = false;
-            this.bunifuCloseButton.Zoom = 10;
-            this.bunifuCloseButton.Click += new System.EventHandler(this.BunifuCloseButton_Click);
+            this.bunifuFormCloseButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.bunifuFormCloseButton.Image = ((System.Drawing.Image)(resources.GetObject("bunifuFormCloseButton.Image")));
+            this.bunifuFormCloseButton.ImageActive = null;
+            this.bunifuFormCloseButton.Location = new System.Drawing.Point(753, 12);
+            this.bunifuFormCloseButton.Name = "bunifuFormCloseButton";
+            this.bunifuFormCloseButton.Size = new System.Drawing.Size(35, 39);
+            this.bunifuFormCloseButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.bunifuFormCloseButton.TabIndex = 6;
+            this.bunifuFormCloseButton.TabStop = false;
+            this.bunifuFormCloseButton.Zoom = 10;
+            this.bunifuFormCloseButton.Click += new System.EventHandler(this.BunifuFormCloseButton_Click);
             // 
             // bunifuLabel3
             // 
@@ -755,15 +755,15 @@ namespace EnterpriseAssetTracker.Forms
             this.bunifuDragControl1.TargetControl = null;
             this.bunifuDragControl1.Vertical = true;
             // 
-            // RegisteredForm
+            // RegistrationForm
             // 
-            this.AcceptButton = this.bunifuRegisteredButton;
+            this.AcceptButton = this.bunifuRegistrationButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 680);
             this.Controls.Add(this.panel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Name = "RegisteredForm";
+            this.Name = "RegistrationForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Reg";
             this.panel1.ResumeLayout(false);
@@ -771,7 +771,7 @@ namespace EnterpriseAssetTracker.Forms
             ((System.ComponentModel.ISupportInitialize)(this.bunifuCopyPassButton)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bunifuClearPassButton)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bunifuGeneratePassButton)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.bunifuCloseButton)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bunifuFormCloseButton)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bunifuImageButton2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
@@ -781,9 +781,9 @@ namespace EnterpriseAssetTracker.Forms
         #endregion
 
         private System.Windows.Forms.Panel panel1;
-        private Bunifu.UI.WinForms.BunifuButton.BunifuButton bunifuRegisteredButton;
+        private Bunifu.UI.WinForms.BunifuButton.BunifuButton bunifuRegistrationButton;
         private Bunifu.UI.WinForms.BunifuTextbox.BunifuTextBox bunifuNameTextBox;
-        private Bunifu.Framework.UI.BunifuImageButton bunifuCloseButton;
+        private Bunifu.Framework.UI.BunifuImageButton bunifuFormCloseButton;
         private Bunifu.UI.WinForms.BunifuLabel bunifuLabel3;
         private Bunifu.UI.WinForms.BunifuLabel bunifuLabel1;
         private Bunifu.Framework.UI.BunifuImageButton bunifuImageButton2;

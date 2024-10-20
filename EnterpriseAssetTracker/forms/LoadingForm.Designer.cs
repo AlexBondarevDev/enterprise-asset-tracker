@@ -111,7 +111,7 @@ namespace EnterpriseAssetTracker.Forms
             // 
             this.timer.Enabled = true;
             this.timer.Interval = 45;
-            this.timer.Tick += new System.EventHandler(this.Timer1_Tick);
+            this.timer.Tick += new System.EventHandler(this.Timer_Tick);
             // 
             // LoadingForm
             // 

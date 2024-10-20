@@ -10,8 +10,13 @@ using MySql.Data.MySqlClient;
 
 namespace EnterpriseAssetTracker.UsersControlers
 {
+    /// <summary>
+    /// Realization of functionality for assigning fixed assets to asset custodians.
+    /// </summary>
     public partial class AssignmentEA_UC : UserControl
     {
+        #region Component initialization.
+
         public string userName;
 
         DatabaseHelper dbHelper = new DatabaseHelper();
@@ -37,16 +42,14 @@ namespace EnterpriseAssetTracker.UsersControlers
                 connection.Open();
 
                 using (var command = new MySqlCommand(query, connection))
+                using (var adapter = new MySqlDataAdapter(command))
                 {
-                    using (var adapter = new MySqlDataAdapter(command))
-                    {
-                        DataTable table = new DataTable();
-                        adapter.Fill(table);
-                        bunifuMainDataGridView.DataSource = table.DefaultView;
-                        bunifuMainDataGridView.Columns[0].Visible = false;
-                        bunifuMainDataGridView.Columns[1].Visible = false;
-                        bunifuMainDataGridView.Columns[2].Visible = false;
-                    }
+                    DataTable table = new DataTable();
+                    adapter.Fill(table);
+                    bunifuMainDataGridView.DataSource = table.DefaultView;
+                    bunifuMainDataGridView.Columns[0].Visible = false;
+                    bunifuMainDataGridView.Columns[1].Visible = false;
+                    bunifuMainDataGridView.Columns[2].Visible = false;
                 }
             }
             isSelectEditRecord = false;
@@ -73,8 +76,50 @@ namespace EnterpriseAssetTracker.UsersControlers
             bunifuFiltrationDropdown.SelectedIndex = 0;
         }
 
+        #endregion Component initialization.
 
 
+
+        #region Realization of data modification functionality.
+
+        private void BunifuGoEditPageButton_Click(object sender, EventArgs e)
+        {
+            if (!isSelectEditRecord)
+            {
+                MessageBox.Show("Не выбран элемент для изменения!", "Внимание!");
+                return;
+            }
+
+            bunifuOperationPages.SelectedTab = EditPage;
+            groupBox.Text = "Операция: Изменение данных";
+            bunifuNameEATextBox.Text = fieldsEditedRecord[3].ToString();
+            bunifuAssetTagLabel.Text = fieldsEditedRecord[4].ToString();
+            bunifuEditRecordDropdown.Text = fieldsEditedRecord[5].ToString();
+        }
+
+        private void BunifuMainDataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                isSelectEditRecord = true;
+                fieldsEditedRecord.Clear();
+
+                for (int i = 0; i < bunifuMainDataGridView.ColumnCount; i++)
+                {
+                    fieldsEditedRecord.Add(bunifuMainDataGridView.Rows[e.RowIndex].Cells[i].Value.ToString());
+                }
+            }
+            catch
+            {
+                isSelectEditRecord = false;
+                fieldsEditedRecord.Clear();
+            }
+        }
+
+        private void BunifuEditRecordDropdown_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            bunifuEditRecordButton.Enabled = true;
+        }
 
         private void BunifuEditRecordButton_Click(object sender, EventArgs e)
         {
@@ -87,31 +132,29 @@ namespace EnterpriseAssetTracker.UsersControlers
                 dbHelper.openConnection();
 
                 using (var connection = dbHelper.GetConnection())
+                using (var command = new MySqlCommand("UPDATE `assignment_ea` SET `id_enterprise_assets` = @id_enterprise_assets, `id_asset_custodian` = @id_asset_custodian WHERE `id_assignment_ea` = @id_assignment_ea;", connection))
                 {
-                    using (var command = new MySqlCommand("UPDATE `assignment_ea` SET `id_enterprise_assets` = @id_enterprise_assets, `id_asset_custodian` = @id_asset_custodian WHERE `id_assignment_ea` = @id_assignment_ea;", connection))
+                    command.Parameters.AddWithValue("@id_enterprise_assets", fieldsEditedRecord[1]);
+                    command.Parameters.AddWithValue("@id_asset_custodian", id_NewAssetCustodian);
+                    command.Parameters.AddWithValue("@id_assignment_ea", fieldsEditedRecord[0]);
+
+                    if (command.ExecuteNonQuery() == 1)
                     {
-                        command.Parameters.AddWithValue("@id_enterprise_assets", fieldsEditedRecord[1]);
-                        command.Parameters.AddWithValue("@id_asset_custodian", id_NewAssetCustodian);
-                        command.Parameters.AddWithValue("@id_assignment_ea", fieldsEditedRecord[0]);
+                        MessageBox.Show("Основное средство успешно закреплено за материально ответственным лицом!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                        if (command.ExecuteNonQuery() == 1)
-                        {
-                            MessageBox.Show("Основное средство успешно закреплено за материально ответственным лицом!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        dbHelper.closeConnection();
 
-                            dbHelper.closeConnection();
+                        LoadDataInMainDataGridView(dbHelper.selectAssignmentEA);
 
-                            LoadDataInMainDataGridView(dbHelper.selectAssignmentEA);
-
-                            isSelectEditRecord = false;
-                            fieldsEditedRecord.Clear();
-                            bunifuOperationPages.SelectedTab = StartPage;
-                            groupBox.Text = "Операция:";
-                        }
-                        else
-                        {
-                            MessageBox.Show("Ошибка закрепления основного средства! Попробуете ещё раз или перезагрузите программу.", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            dbHelper.closeConnection();
-                        }
+                        isSelectEditRecord = false;
+                        fieldsEditedRecord.Clear();
+                        bunifuOperationPages.SelectedTab = StartPage;
+                        groupBox.Text = "Операция:";
+                    }
+                    else
+                    {
+                        MessageBox.Show("Ошибка закрепления основного средства! Попробуете ещё раз или перезагрузите программу.", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        dbHelper.closeConnection();
                     }
                 }
             }
@@ -120,6 +163,19 @@ namespace EnterpriseAssetTracker.UsersControlers
                 MessageBox.Show("Связь с базой данных не установлена! Проверьте соединение с сетью и перезапустите программу!", "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 dbHelper.closeConnection();
             }
+        }
+
+        #endregion Realization of data modification functionality.
+
+
+
+        #region Realization of data search functionality.
+
+        private void BunifuGoSearchPageButton_Click(object sender, EventArgs e)
+        {
+            bunifuOperationPages.SelectedTab = SearchPage;
+            groupBox.Text = "Операция: Поиск";
+            bunifuSearchTextBox.Focus();
         }
 
         private void BunifuSearchTextBox_KeyUp(object sender, KeyEventArgs e)
@@ -141,6 +197,27 @@ namespace EnterpriseAssetTracker.UsersControlers
             }
         }
 
+        #endregion Realization of data search functionality.
+
+
+
+        #region Realization of data filtration functionality.
+
+        private void BunifuGoFiltrPageButton_Click(object sender, EventArgs e)
+        {
+            bunifuOperationPages.SelectedTab = FiltrationPage;
+            groupBox.Text = "Операция: Фильтрация";
+        }
+       
+        private void BunifuFiltrationDropdown_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch (bunifuFiltrationDropdown.Text)
+            {
+                case "материально ответственному лицу": { bunifuFiltrationPages.SelectedTab = FiltrAssetCustodianPage; break; }
+                case "должности": { bunifuFiltrationPages.SelectedTab = FiltrPositionPage; break; }
+            }
+        }
+
         private void BunifuFiltrationButton_Click(object sender, EventArgs e)
         {
             string queri = "";
@@ -157,6 +234,18 @@ namespace EnterpriseAssetTracker.UsersControlers
             }
 
             LoadDataInMainDataGridView($"{dbHelper.selectAssignmentEA} {queri}");
+        }
+
+        #endregion Realization of data filtration functionality.
+
+
+
+        #region Realization of document creation functionality based on data.
+
+        private void BunifuGoCreateDocPageButton_Click(object sender, EventArgs e)
+        {
+            bunifuOperationPages.SelectedTab = CreateDocPage;
+            groupBox.Text = "Операция: Отчёт на МОЛ";
         }
 
         private void BunifuCreateReportButton_Click(object sender, EventArgs e)
@@ -207,78 +296,6 @@ namespace EnterpriseAssetTracker.UsersControlers
             bunifuCreateReportButton.Enabled = true;
         }
 
-
-
-        private void BunifuEditRecordDropdown_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            bunifuEditRecordButton.Enabled = true;
-        }
-
-        private void BunifuFiltrationDropdown_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            switch (bunifuFiltrationDropdown.Text)
-            {
-                case "материально ответственному лицу": { bunifuFiltrationPages.SelectedTab = FiltrAssetCustodianPage; break; }
-                case "должности": { bunifuFiltrationPages.SelectedTab = FiltrPositionPage; break; }
-            }
-        }
-
-
-
-
-        private void BunifuGoEditPageButton_Click(object sender, EventArgs e)
-        {
-            if (!isSelectEditRecord)
-            {
-                MessageBox.Show("Не выбран элемент для изменения!", "Внимание!");
-                return;
-            }
-
-            bunifuOperationPages.SelectedTab = EditPage;
-            groupBox.Text = "Операция: Изменение данных";
-            bunifuNameEATextBox.Text = fieldsEditedRecord[3].ToString();
-            bunifuAssetTagLabel.Text = fieldsEditedRecord[4].ToString();
-            bunifuEditRecordDropdown.Text = fieldsEditedRecord[5].ToString();
-        }
-
-        private void BunifuGoSearchPageButton_Click(object sender, EventArgs e)
-        {
-            bunifuOperationPages.SelectedTab = SearchPage;
-            groupBox.Text = "Операция: Поиск";
-            bunifuSearchTextBox.Focus();
-        }
-
-        private void BunifuGoFiltrPageButton_Click(object sender, EventArgs e)
-        {
-            bunifuOperationPages.SelectedTab = FiltrationPage;
-            groupBox.Text = "Операция: Фильтрация";
-        }
-
-        private void BunifuGoCreateDocPageButton_Click(object sender, EventArgs e)
-        {
-            bunifuOperationPages.SelectedTab = CreateDocPage;
-            groupBox.Text = "Операция: Отчёт на МОЛ";
-        }
-
-
-
-        private void BunifuMainDataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            try
-            {
-                isSelectEditRecord = true;
-                fieldsEditedRecord.Clear();
-
-                for (int i = 0; i < bunifuMainDataGridView.ColumnCount; i++)
-                {
-                    fieldsEditedRecord.Add(bunifuMainDataGridView.Rows[e.RowIndex].Cells[i].Value.ToString());
-                }
-            }
-            catch
-            {
-                isSelectEditRecord = false;
-                fieldsEditedRecord.Clear();
-            }
-        }
+        #endregion Realization of document creation functionality based on data.
     }
 }

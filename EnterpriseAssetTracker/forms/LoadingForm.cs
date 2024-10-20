@@ -5,6 +5,9 @@ using System.Windows.Forms;
 
 namespace EnterpriseAssetTracker.Forms
 {
+    /// <summary>
+    /// Serves as the aplication loading form.
+    /// </summary>
     public partial class LoadingForm : Form
     {
         public LoadingForm()
@@ -12,8 +15,7 @@ namespace EnterpriseAssetTracker.Forms
             InitializeComponent();
         }
 
-
-        private void Timer1_Tick(object sender, EventArgs e)
+        private void Timer_Tick(object sender, EventArgs e)
         {
             if (bunifuCircleProgress.Value == 100)
             {

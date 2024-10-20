@@ -11,8 +11,13 @@ using MySql.Data.MySqlClient;
 
 namespace EnterpriseAssetTracker.UsersControlers
 {
+    /// <summary>
+    /// Realization of functionality for writing off enterprise assets.
+    /// </summary>
     public partial class WriteOffEA_UC : UserControl
     {
+        #region Component initialization.
+
         public string userName;
 
         DatabaseHelper dbHelper = new DatabaseHelper();
@@ -96,8 +101,6 @@ namespace EnterpriseAssetTracker.UsersControlers
             }
         }
 
-
-
         private void BunifuMainDataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             try
@@ -126,7 +129,11 @@ namespace EnterpriseAssetTracker.UsersControlers
             }
         }
 
+        #endregion Component initialization.
 
+
+
+        #region Realization of the functionality for adding data.
 
         private void BunifuGoAddRecordButton_Click(object sender, EventArgs e)
         {
@@ -243,7 +250,11 @@ namespace EnterpriseAssetTracker.UsersControlers
             }
         }
 
+        #endregion Realization of the functionality for adding data.
 
+
+
+        #region Realization of data modification functionality.
 
         private void BunifuGoEditRecordPageButton_Click(object sender, EventArgs e)
         {
@@ -337,7 +348,11 @@ namespace EnterpriseAssetTracker.UsersControlers
             }
         }
 
+        #endregion Realization of data modification functionality.
 
+
+
+        #region Realization of data filtration functionality.
 
         private void BunifuGoFiltrPageButton_Click(object sender, EventArgs e)
         {
@@ -386,7 +401,11 @@ namespace EnterpriseAssetTracker.UsersControlers
             }
         }
 
+        #endregion Realization of data filtration functionality.
 
+
+
+        #region Realization of document creation functionality based on data.
 
         private void BunifuGoWriteoffActPageButton_Click(object sender, EventArgs e)
         {
@@ -468,8 +487,11 @@ namespace EnterpriseAssetTracker.UsersControlers
             bunifuCreateDocDataGridView.Rows.Clear();
         }
 
+        #endregion Realization of document creation functionality based on data.
 
 
+
+        #region Realization of data search functionality.
 
         private void BunifuGoSearchPageButton_Click(object sender, EventArgs e)
         {
@@ -496,5 +518,7 @@ namespace EnterpriseAssetTracker.UsersControlers
                 bunifuMainDataGridView.ClearSelection();
             }
         }
+
+        #endregion Realization of data search functionality.
     }
 }

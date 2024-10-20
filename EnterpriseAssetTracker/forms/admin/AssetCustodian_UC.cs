@@ -11,8 +11,13 @@ using BunifuTextbox = Bunifu.UI.WinForms.BunifuTextbox;
 
 namespace EnterpriseAssetTracker.UsersControlers
 {
+    /// <summary>
+    /// Realization of the functionality for managing data about asset custodians.
+    /// </summary>
     public partial class AssetCustodian_UC : UserControl
     {
+        #region Component initialization.
+
         DatabaseHelper dbHelper = new DatabaseHelper();
         bool isSelectEditRecord;
         List<string> fieldsEditedRecord = new List<string>();
@@ -57,6 +62,18 @@ namespace EnterpriseAssetTracker.UsersControlers
             bunifuFiltrationDropdown.SelectedIndex = 1;
         }
 
+        #endregion Component initialization.
+
+
+
+        #region Realization of the functionality for adding data.
+
+        private void BunifuGoAddPageButton_Click(object sender, EventArgs e)
+        {
+            bunifuPages.SelectedTab = AddPage;
+            groupBox.Text = "Операция: Добавление МОЛ";
+            bunifuAddSurnameTextBox.Focus();
+        }
 
         private void BunifuAddButton_Click(object sender, EventArgs e)
         {
@@ -151,6 +168,30 @@ namespace EnterpriseAssetTracker.UsersControlers
             }
 
             return true;
+        }
+
+        #endregion Realization of the functionality for adding data.
+
+
+
+        #region Realization of data modification functionality.
+
+        private void BunifuGoEditPageButton_Click(object sender, EventArgs e)
+        {
+            if (!isSelectEditRecord)
+            {
+                MessageBox.Show("Не выбран элемент для изменения!", "Внимание!");
+                return;
+            }
+
+            bunifuPages.SelectedTab = EditPage;
+            groupBox.Text = "Операция: Изменение данных";
+            bunifuEditSurnameTextBox.Focus();
+
+            bunifuEditSurnameTextBox.Text = fieldsEditedRecord[2];
+            bunifuEditNameTextBox.Text = fieldsEditedRecord[3];
+            bunifuEditFather_nameTextBox.Text = fieldsEditedRecord[4];
+            bunifuEditPageDropdown.Text = fieldsEditedRecord[5];
         }
 
         private void BunifuMainDataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -254,7 +295,11 @@ namespace EnterpriseAssetTracker.UsersControlers
                 dbHelper.closeConnection();
             }
         }
-        
+
+        #endregion Realization of data modification functionality.
+
+
+
         private void BunifuDeleteButton_Click(object sender, EventArgs e)
         {
             if (!isSelectEditRecord)
@@ -320,6 +365,15 @@ namespace EnterpriseAssetTracker.UsersControlers
         }
 
 
+
+        #region Realization of data filtration functionality.
+
+        private void BunifuGoFiltrationPageButton_Click(object sender, EventArgs e)
+        {
+            bunifuPages.SelectedTab = FiltrationPage;
+            groupBox.Text = "Операция: Фильтрация по должности";
+        }
+
         private void BunifuFiltrationButton_Click(object sender, EventArgs e)
         {
             try
@@ -330,6 +384,19 @@ namespace EnterpriseAssetTracker.UsersControlers
             {
                 MessageBox.Show("Связь с базой данных не установлена! Пожалуйста, проверьте соединение с интернетом и перезапустите программу!", "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        #endregion Realization of data filtration functionality.
+
+
+
+        #region Realization of data search functionality.
+
+        private void BunifuGoSearchPageButton_Click(object sender, EventArgs e)
+        {
+            bunifuPages.SelectedTab = SearchPage;
+            groupBox.Text = "Операция: Поиск";
+            bunifuSearchTextBox.Focus();
         }
 
         private void BunifuSearchTextBox_KeyUp(object sender, KeyEventArgs e)
@@ -351,45 +418,7 @@ namespace EnterpriseAssetTracker.UsersControlers
             }
         }
 
-
-
-        private void BunifuGoAddPageButton_Click(object sender, EventArgs e)
-        {
-            bunifuPages.SelectedTab = AddPage;
-            groupBox.Text = "Операция: Добавление МОЛ";
-            bunifuAddSurnameTextBox.Focus();
-        }
-
-        private void BunifuGoEditPageButton_Click(object sender, EventArgs e)
-        {
-            if (!isSelectEditRecord)
-            {
-                MessageBox.Show("Не выбран элемент для изменения!", "Внимание!");
-                return;
-            }
-
-            bunifuPages.SelectedTab = EditPage;
-            groupBox.Text = "Операция: Изменение данных";
-            bunifuEditSurnameTextBox.Focus();
-
-            bunifuEditSurnameTextBox.Text = fieldsEditedRecord[2];
-            bunifuEditNameTextBox.Text = fieldsEditedRecord[3];
-            bunifuEditFather_nameTextBox.Text = fieldsEditedRecord[4];
-            bunifuEditPageDropdown.Text = fieldsEditedRecord[5];
-        }
-
-        private void BunifuGoFiltrationPageButton_Click(object sender, EventArgs e)
-        {
-            bunifuPages.SelectedTab = FiltrationPage;
-            groupBox.Text = "Операция: Фильтрация по должности";
-        }
-
-        private void BunifuGoSearchPageButton_Click(object sender, EventArgs e)
-        {
-            bunifuPages.SelectedTab = SearchPage;
-            groupBox.Text = "Операция: Поиск";
-            bunifuSearchTextBox.Focus();
-        }
+        #endregion Realization of data search functionality.
 
 
 

@@ -11,8 +11,13 @@ using Bunifu.UI.WinForms;
 
 namespace EnterpriseAssetTracker.UsersControlers
 {
+    /// <summary>
+    /// Realization of functionality for accounting repair data of enterprise assets.
+    /// </summary>
     public partial class RepairEA_UC : UserControl
     {
+        #region Component initialization.
+
         DatabaseHelper dbHelper = new DatabaseHelper();
         List<string> fieldsEditedRecord = new List<string>();
         bool isSelectEditRecord = false;
@@ -170,8 +175,11 @@ namespace EnterpriseAssetTracker.UsersControlers
             }
         }
 
+        #endregion Component initialization.
 
 
+
+        #region Realization of the functionality for adding data.
 
         private void BunifuGoAddRPageButtonButton_Click(object sender, EventArgs e)
         {
@@ -275,6 +283,7 @@ namespace EnterpriseAssetTracker.UsersControlers
                 dbHelper.closeConnection();
             }
         }
+
 
 
 
@@ -420,8 +429,11 @@ namespace EnterpriseAssetTracker.UsersControlers
             bunifuCompleteR_EndDateDatePicker.MinDate = bunifuCompleteR_StartDateDatePicker.Value;
         }
 
+        #endregion Realization of the functionality for adding data.
 
 
+
+        #region Realization of data modification functionality.
 
         private void RefreshDataInComponentForEditRepair()
         {
@@ -562,8 +574,17 @@ namespace EnterpriseAssetTracker.UsersControlers
             }
         }
 
+        #endregion Realization of data modification functionality.
 
 
+
+        #region Realization of data filtration functionality.
+
+        private void BunifuGoFiltrPageButton_Click(object sender, EventArgs e)
+        {
+            bunifuOperationPages.SelectedTab = FiltrPage;
+            groupBox.Text = "Операция: Фильтрация";
+        }
 
         private void BunifuFiltrationDropdown_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -656,9 +677,49 @@ namespace EnterpriseAssetTracker.UsersControlers
             }
         }
 
+        #endregion Realization of data filtration functionality.
 
 
 
+        #region Realization of data search functionality.
+
+        private void BunifuGoSearchPageButtonButton_Click(object sender, EventArgs e)
+        {
+            bunifuOperationPages.SelectedTab = SearchPage;
+            groupBox.Text = "Операция: Поиск";
+            bunifuSearchTextBox.Focus();
+        }
+      
+        private void BunifuSearchTextBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            for (int i = 0; i < bunifuMainDataGridView.RowCount; i++)
+            {
+                bunifuMainDataGridView.Rows[i].Selected = false;
+                for (int j = 0; j < bunifuMainDataGridView.ColumnCount; j++)
+                    if (bunifuMainDataGridView.Rows[i].Cells[j].Value != null)
+                        if (bunifuMainDataGridView.Rows[i].Cells[j].Value.ToString().ToLower().Contains(bunifuSearchTextBox.Text.ToLower()))
+                        {
+                            bunifuMainDataGridView.Rows[i].Selected = true;
+                            break;
+                        }
+            }
+            if (bunifuSearchTextBox.Text == "")
+            {
+                bunifuMainDataGridView.ClearSelection();
+            }
+        }
+
+        #endregion Realization of data search functionality.
+
+
+
+        #region Realization of document creation functionality based on data.
+
+        private void BunifuGoCreateDocPageButton_Click(object sender, EventArgs e)
+        {
+            bunifuOperationPages.SelectedTab = CreateDocPage;
+            groupBox.Text = "Операция: Акт ремонта";
+        }
 
         private void LoadDateInCreateDocDGV(DataGridViewCellEventArgs e)
         {
@@ -742,28 +803,11 @@ namespace EnterpriseAssetTracker.UsersControlers
             bunifuCreateDocDataGridView.Rows.Clear();
         }
 
+        #endregion Realization of document creation functionality based on data.
 
 
-        private void BunifuGoSearchPageButtonButton_Click(object sender, EventArgs e)
-        {
-            bunifuOperationPages.SelectedTab = SearchPage;
-            groupBox.Text = "Операция: Поиск";
-            bunifuSearchTextBox.Focus();
-        }
 
-        private void BunifuGoFiltrPageButton_Click(object sender, EventArgs e)
-        {
-            bunifuOperationPages.SelectedTab = FiltrPage;
-            groupBox.Text = "Операция: Фильтрация";
-        }
-
-        private void BunifuGoCreateDocPageButton_Click(object sender, EventArgs e)
-        {
-            bunifuOperationPages.SelectedTab = CreateDocPage;
-            groupBox.Text = "Операция: Акт ремонта";
-        }
-
-
+        #region Realization of auxiliary functionality.
 
         private void BunifuAllEA_CheckBox_CheckedChanged(object sender, Bunifu.UI.WinForms.BunifuCheckBox.CheckedChangedEventArgs e)
         {
@@ -819,23 +863,6 @@ namespace EnterpriseAssetTracker.UsersControlers
             }
         }
 
-        private void BunifuSearchTextBox_KeyUp(object sender, KeyEventArgs e)
-        {
-            for (int i = 0; i < bunifuMainDataGridView.RowCount; i++)
-            {
-                bunifuMainDataGridView.Rows[i].Selected = false;
-                for (int j = 0; j < bunifuMainDataGridView.ColumnCount; j++)
-                    if (bunifuMainDataGridView.Rows[i].Cells[j].Value != null)
-                        if (bunifuMainDataGridView.Rows[i].Cells[j].Value.ToString().ToLower().Contains(bunifuSearchTextBox.Text.ToLower()))
-                        {
-                            bunifuMainDataGridView.Rows[i].Selected = true;
-                            break;
-                        }
-            }
-            if (bunifuSearchTextBox.Text == "")
-            {
-                bunifuMainDataGridView.ClearSelection();
-            }
-        }
+        #endregion Realization of auxiliary functionality.
     }
 }
